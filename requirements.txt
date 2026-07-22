@@ -1,0 +1,12 @@
+# Bu deney ortaminin tam olarak tekrarlanabilmesi icin sabitlenmis (pinned)
+# Python bagimliliklari. Kurulum: pip install -r requirements.txt
+scipy==1.18.0
+matplotlib==3.11.1
+numpy==2.5.1
+python-docx==1.2.0
+
+# Faz 1 (coklu-model ceviri altyapisi) icin - yalnizca ceviri uretmek
+# isteniyorsa gereklidir, degerlendirme/harness calistirmak icin sart degildir:
+google-genai==2.13.0
+openai==2.46.0
+python-dotenv==1.2.2

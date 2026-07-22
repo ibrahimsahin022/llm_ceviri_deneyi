@@ -356,3 +356,73 @@ bu gerçek ve tekrarlanabilir bir bulgudur (ayrıntı: `results/platform_compari
   (gelecekteki bir faz için not edilmiştir).
 
 ---
+
+## Faz 5 — Tekrarlanabilirlik ve Belgeleme
+
+### (a) Değişen/eklenen dosyalar
+- **Yeni:** `requirements.txt` — `pip freeze` ile sabitlenmiş tam sürümler
+  (scipy 1.18.0, matplotlib 3.11.1, numpy 2.5.1, python-docx 1.2.0,
+  google-genai 2.13.0, openai 2.46.0, python-dotenv 1.2.2).
+- **Değişti:** `README.md` — dataset açıklaması n=55'e güncellendi, klasör
+  yapısına Faz 1-4'ün tüm yeni dosyaları eklendi, yeni **"Nasıl Tam Olarak
+  Tekrarlanır"** bölümü eklendi: araç sürümleri tablosu (Windows+Linux yan
+  yana), kullanılan tüm model kimlikleri + erişim tarihleri + sampling
+  parametreleri tablosu, tam komut listesi, ve LLM API'lerinin bit-bit
+  tekrarlanabilir olmadığına dair dürüst bir uyarı.
+
+### (b) Gerçekten doğrulanan durum
+Bu faz yeni bir deneysel ölçüm üretmez; önceki 4 fazda zaten gerçekten
+ölçülmüş olan tüm sürüm/kimlik/parametre bilgilerini tek bir yerde
+(`README.md`) toparlar ve doğrular. Doğrulanan bilgiler:
+- Windows: gcc 16.1.0 (MSYS2/UCRT64), rustc 1.97.1 (commit 8bab26f4f).
+- Linux/Docker: gcc 13.3.0 (Ubuntu), rustc 1.97.1 (**aynı commit** —
+  Faz 4'te `docker compose run` çıktısından doğrulandı).
+- Claude Sonnet 5: `translations_rust/` ve `translations_rust_refined/`
+  içindeki 55 örneğin tamamı; örnekleme parametreleri CLI arayüzü
+  üzerinden üretildiği için tam olarak bilinmiyor (bu, açıkça belirtilen
+  bir sınırlamadır).
+- Gemini: `gemini-flash-latest` (API `gemini-3.6-flash`'e çözümlüyor),
+  erişim 2026-07-22, `temperature=0.2`/`top_p=1.0` — `results/manifest_gemini.json`'da
+  kayıtlı, gerçek.
+- GPT-4o/DeepSeek: hiç çağrılmadı (anahtar yok), yalnızca `--dry-run` ile
+  istem inşası doğrulandı.
+
+### (c) Makaleye önerilen taslak metin
+
+**§3.7 Deneysel Ortam ve Araçlar'a eklenecek not:**
+> Tekrarlanabilirlik için tüm araç sürümleri, model kimlikleri, erişim
+> tarihleri ve sabit sampling parametreleri `README.md`'nin "Nasıl Tam
+> Olarak Tekrarlanır" bölümünde ve `requirements.txt`'te belgelenmiştir.
+> Bootstrap/Monte Carlo tabanlı istatistikler (§4.3, §6) sabit bir seed
+> (42) ile bit-bit tekrarlanabilirken, LLM API çağrıları (Gemini) düşük
+> ve sabit bir `temperature` (0.2) değerinde olsa dahi sağlayıcı-taraflı
+> değişkenlik nedeniyle bit-bit tekrarlanabilir değildir; bu, çalışmanın
+> açıkça kabul ettiği bir sınırlamadır.
+
+---
+
+## Genel Özet (5 Faz Tamamlandı)
+
+Hakem tarafından tespit edilen beş zayıflığın tümü için somut, gerçek
+ölçümlere dayalı ilerleme kaydedilmiştir — hiçbir sayı uydurulmamış,
+her adım gerçekten çalıştırılan betiklerle doğrulanmıştır:
+
+| # | Zayıflık | Durum | Ana bulgu |
+|---|---|---|---|
+| 1 | Tek model | **Kısmen giderildi** | Gemini ile 19/48 örnek gerçek ölçüm (%94.74 EA); OpenAI/DeepSeek altyapısı hazır, anahtar bekliyor |
+| 2 | Küçük örneklem/istatistiksel güç | **Ölçüldü, tam giderilmedi** | n=48→53; gerçekleşen güç yalnızca %15.6 — güç sorununun kendisi nicel olarak kanıtlandı |
+| 3 | Tek dosyalı kod | **Kısmen giderildi** | n=53→55, 2 çok-dosyalı örnek eklendi, ikisi de PASS (CE artışı gözlenmedi, ama n=2 ile sınırlı) |
+| 4 | Tek platform | **Gerçek ikinci platformda doğrulandı** | Linux/LP64'te Round 2 EA %100'den %94.55'e düştü — platforma-özgü "düzeltme" bulgusu |
+| 5 | Tekrarlanabilirlik belgesi | **Giderildi** | Tüm sürümler/kimlikler/parametreler `README.md` + `requirements.txt`'te belgelendi |
+
+**En önemli tek bulgu (Faz 4):** Round 2'nin iddia edilen "%100 doğruluk"
+rakamının bir kısmı platforma özgüydü — Windows için yazılan iki düzeltme
+Linux'ta geçersiz hale geldi. Bu, makalenin genel tezini ("iyileştirme
+döngüsü etkilidir ama üst-sınır bir performanstır ve dikkatli
+yorumlanmalıdır") daha da güçlü bir biçimde doğrulamaktadır: iyileştirme,
+yalnızca test edildiği koşullar için geçerli olabilir.
+
+Git geçmişi (`git log`) her fazın ayrı, gözden geçirilebilir commit'ler
+halinde uygulandığını gösterir (bir baseline commit + 4 faz commit'i).
+
+---
