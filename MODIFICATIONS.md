@@ -41,14 +41,14 @@ ilgili bölümüne eklenmesi önerilen taslak metin.
     düşmüş).
   - Claude Sonnet 5 (referans, aynı 19 örnek alt kümesinde tekrar hesaplanmadı,
     tam veri seti üzerinden mevcut sonuç): **36/48 = %75.00**.
-  - **Not:** Bu iki sayı doğrudan karşılaştırılabilir DEĞİLDİR (farklı örneklem
+  - **Not:** Bu iki sayı doğrudan karşılaştırılabilir değildir (farklı örneklem
     büyüklüğü/alt kümesi); doğru karşılaştırma için Gemini'nin kalan 29
     örneğinin tamamlanması (kota sıfırlandıktan sonra, yarından itibaren günde
     ~20 istekle kademeli olarak) gerekir.
   - OpenAI (GPT-4o) ve DeepSeek: **API anahtarı yok, hiç çağrılmadı.**
     Yalnızca `--dry-run` ile 48 örneğin tamamı için istem (prompt) inşası
     doğrulandı (`results/manifest_gpt4o.json`, `results/manifest_deepseek.json`
-    — `dry_run: true` olarak işaretli, gerçek çeviri veya sonuç İÇERMEZ).
+    — `dry_run: true` olarak işaretli, gerçek çeviri veya sonuç içermez).
 
 ### (c) Makaleye önerilen taslak metin
 
@@ -122,7 +122,7 @@ boşlukları hedefleyerek tasarlandı).
 p=0.169'du). Rank-biserial etki büyüklüğü r=0.169 (küçük). **Bootstrap
 gerçekleşen güç: %15.6.** Bu, hakemin "örneklem küçük, güç düşük" eleştirisini
 doğrudan **doğrulayan** nicel bir kanıttır — n'i 48'den 53'e büyütmek gücü
-ARTIRMADI, tam tersine biraz düşürdü, çünkü yeni eklenen 4 başarısız örneğin
+artırmadı, tam tersine biraz düşürdü, çünkü yeni eklenen 4 başarısız örneğin
 LoC'si (27-33 satır) PASS grubunun LoC aralığıyla büyük ölçüde örtüşüyor
 (zaten zayıf olan LoC↔başarı ilişkisini daha da zayıflattı). Bu, "n'i büyütmek
 otomatik olarak gücü artırır" varsayımının burada geçerli olmadığını gösteren,
@@ -207,7 +207,7 @@ desteğiyle, gerçekten `gcc stack.c main.c -o ...` ve `rustc main.rs -o ...`
 | Round 2 — iyileştirilmiş, debug | %100.00 (55/55) |
 
 **Her iki çok-dosyalı örnek de Round 1'de ilk seferde geçti (2/2 PASS)** —
-CE oranında bir artış GÖZLENMEDİ. Bu, önceden beklenen "çok dosyalı kod
+CE oranında bir artış gözlenmedi. Bu, önceden beklenen "çok dosyalı kod
 derleme hatalarını artırır" hipotezini bu iki örnekte doğrulamayan, dürüst
 bir sonuçtur: LLM, hem `stack.h`↔`stack.c`↔`main.c` arası fonksiyon
 imzalarını hem de `config.h`'deki paylaşılan `ConfigEntry` struct'ının iki
@@ -248,5 +248,111 @@ GA=[0.65, 7.12] (önceki, hatalı biçimde s54/s55'i atlayan hesap: odds=1.96).
 > örnek için çürütür, ancak gerçek endüstriyel projelerdeki çok daha derin
 > modül hiyerarşilerine, dairesel bağımlılıklara veya build-sistemi
 > (Makefile/CMake) karmaşıklığına genellenemez.
+
+---
+
+## Faz 4 — Çok Platformlu Çalıştırma
+
+### (a) Değişen/eklenen dosyalar
+- **Yeni:** `Dockerfile` — `ubuntu:24.04` tabanlı, `build-essential` (gcc
+  13.3.0) + rustup ile stabil rustc + Python/scipy/matplotlib içeren imaj.
+- **Yeni:** `docker-compose.yml` — `results/` dizinini konteynerle
+  eşleyen tek servis; üç `run_experiment.py` koşumunu (`_linux` etiketli)
+  otomatik çalıştırır.
+- **Yeni:** `harness/compare_platforms.py` — Windows ve Linux sonuç
+  JSON'larını karşılaştırıp `results/platform_comparison.md` üretir;
+  örnek bazında hangi programların platforma göre farklı kategoriye
+  düştüğünü listeler.
+- **Yeni:** `.github/workflows/ci-matrix.yml` — `windows-latest` +
+  `ubuntu-latest` matrisli GitHub Actions iş akışı (yazıldı, **push
+  edilmedi** — yalnızca depo sahibi ileride GitHub'a push ederse fiilen
+  çalışır).
+- **Yeni sonuç dosyaları:** `results/results_round1_linux.*`,
+  `results/results_round1_release_linux.*`, `results/results_round2_linux.*`,
+  `results/platform_comparison.md`.
+
+### (b) Gerçekten ölçülen sayılar
+Docker Desktop yerelde başlatılıp gerçek bir Ubuntu 24.04 konteyneri inşa
+edildi ve içinde 55 örneğin tamamı gerçekten derlenip çalıştırıldı (gcc
+13.3.0, rustc 1.97.1 — **Windows'takiyle birebir aynı rustc sürüm/commit**,
+bu yüzden gözlenen fark rustc sürümünden değil `long` genişliğinden ve
+stdio davranışından kaynaklanır).
+
+| Koşul | Windows EA | Linux EA | Fark |
+|---|---|---|---|
+| Round 1 — doğrudan, debug | %70.91 (39/55) | %72.73 (40/55) | +1.82 puan |
+| Round 1 — doğrudan, release | %74.55 (41/55) | %76.36 (42/55) | +1.81 puan |
+| Round 2 — iyileştirilmiş, debug | **%100.00 (55/55)** | **%94.55 (52/55)** | **-5.45 puan** |
+
+**En önemli bulgu — Round 2'nin "%100 başarısı" platforma özgüdür:**
+`s38_bsd_strtol` ve `s51_long_clamp`'in Round 2 düzeltmesi (bu çalışmanın
+önceki bölümlerinde Windows'ta %100 EA elde etmek için yapılmıştı) `i64`
+yerine `i32` kullanarak Windows'un 32-bit `long`'unu taklit ediyordu.
+Linux'ta C referansının `long`'u gerçekten 64-bit olduğundan, **aynı
+"düzeltilmiş" Rust kodu Linux'ta artık yanlış sonuç üretiyor** (32-bit
+sınırında gereksiz kırpma yapıyor, oysa C referansı hiç kırpmıyor). Tersine,
+Round 1'in "düzeltilmemiş" (doğal `i64` seçimi yapan) hali Windows'ta
+başarısızken Linux'ta doğru sonuç veriyor — iki platform arasında sonuçlar
+tam olarak ters dönüyor. Bu, "iyileştirme döngüsü hatayı düzeltir" iddiasının
+zımni bir varsayımını (düzeltmenin evrensel olduğu) doğrudan çürütmektedir:
+**bir platformda doğrulanmış bir düzeltme, başka bir platformda yeni bir
+hataya dönüşebilir.**
+
+**İkinci, beklenmedik bulgu — s47_redis_sds'te C referansının kendisi
+platform-bağımlı:** Bu farkın nedeni `long` genişliği değil; `tests/
+s47_redis_sds/05.txt` dosyasının CRLF satır sonu içermesi ve C referansının
+`scanf` sonrası tek bir `getchar()` ile satır sonunu tükettiği bir kod
+deseniyle etkileşimidir. Windows'un C çalışma zamanı stdin'i metin modunda
+açıp `\r\n`'i otomatik olarak `\n`'e çevirir; Linux/glibc bu çeviriyi
+yapmaz, bu yüzden aynı C kaynak kodu ve aynı girdi iki platformda farklı
+sayıda satır tüketir (Linux'ta son komut hiç çalışmaz). Rust'ın
+`BufRead::lines()`'ı her iki satır-sonu türünü de sorunsuz işlediğinden bu
+sorunu hiç yaşamaz — yani bu örnekte "kırılan" taraf Rust çevirisi değil,
+**C referansının kendisidir**. Test dosyası kasıtlı olarak düzeltilmemiştir;
+bu gerçek ve tekrarlanabilir bir bulgudur (ayrıntı: `results/platform_comparison.md`).
+
+### (c) Makaleye önerilen taslak metin
+
+**Yeni bir §4.9 (veya §5'e eklenecek bir paragraf) için taslak:**
+> Hakem geri bildirimi doğrultusunda, deneyin tamamı ayrıca Docker
+> aracılığıyla gerçek bir Linux/LP64 (64-bit `long`) ortamında (Ubuntu
+> 24.04, gcc 13.3.0, rustc 1.97.1 — Windows ile birebir aynı rustc
+> sürümü) tekrarlanmıştır. Sonuç, bu çalışmanın en önemli platforma-bağlı
+> bulgusudur: Round 2'nin Windows'ta ölçülen %100 EA'sı Linux'ta %94.55'e
+> düşmüştür (52/55), çünkü s38 ve s51 için yazılan düzeltmeler (32-bit
+> `long` varsayımı) Linux'un 64-bit `long`'unda geçersiz hale gelmiştir —
+> iki platform arasında bu iki örneğin PASS/FAIL durumu tam olarak yer
+> değiştirmiştir. Bu, "hata geri bildirimiyle düzeltilmiş kod evrensel
+> olarak doğrudur" varsayımının yanlış olabileceğini doğrudan
+> göstermektedir: bir düzeltme yalnızca test edildiği platforma özgü
+> olabilir. Ayrıca, s47_redis_sds'te C referansının kendisinin (Rust
+> çevirisi değil) stdio metin-modu satır-sonu davranışı nedeniyle
+> platforma bağlı biçimde farklı sonuç ürettiği gözlenmiştir — bu, C↔Rust
+> semantik boşluklarının ötesinde, C'nin kendisinin de tam platform-bağımsız
+> olmadığını gösteren ayrı bir bulgudur.
+
+**§6 Geçerlilik Tehditleri → "Dış Geçerlilik" alt bölümüne eklenecek not
+(önceki, artık kısmen geçersiz uyarının yerine):**
+> Önceki sürümde "bu deney yalnızca Windows/LLP64'te çalıştırılmıştır"
+> biçiminde bir sınırlama belirtilmişti; bu artık kısmen giderilmiştir —
+> deney gerçek bir Linux/LP64 ortamında da (Docker, bkz. `Dockerfile`,
+> `results/platform_comparison.md`) tekrarlanmış ve platforma-bağlı en az
+> iki gerçek davranış farkı (tamsayı genişliği kaynaklı iki örnek; stdio
+> metin-modu kaynaklı bir örnek) doğrulanmıştır. Bu, deneyin platform
+> genelinde tutarlı olduğu anlamına gelmez — tam tersine, platformlar
+> arasında ölçülebilir, önemli farklar bulunduğunu ve "iyileştirilmiş"
+> çevirilerin platforma özgü olabileceğini kanıtlamaktadır. CI matrisi
+> (`.github/workflows/ci-matrix.yml`) yazılmış ancak depo henüz GitHub'a
+> push edilmediğinden fiilen çalıştırılmamıştır; yerel Docker koşumu
+> aynı sonucu zaten üretmiştir.
+
+### Kalan (bu fazda tamamlanmayan)
+- `.github/workflows/ci-matrix.yml` yalnızca yazıldı; GitHub'a push
+  edilip Actions üzerinde gerçek çalıştırma (kullanıcı onayı gerektirir,
+  bu fazın kapsamı dışında tutuldu).
+- s47'deki CRLF/stdio bulgusu, tek bir test dosyasıyla sınırlıdır; benzer
+  `getchar()`-sonrası-`fgets()` deseni kullanan başka örneklerde de aynı
+  sorunun gizli biçimde bulunup bulunmadığı sistematik olarak taranmamıştır
+  (gelecekteki bir faz için not edilmiştir).
 
 ---

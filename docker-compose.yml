@@ -1,0 +1,15 @@
+services:
+  experiment-linux:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./results:/repo/results
+    command: >
+      bash -c "
+        gcc --version | head -1 &&
+        rustc --version &&
+        python3 harness/run_experiment.py --label round1_linux &&
+        python3 harness/run_experiment.py --release --label round1_release_linux &&
+        python3 harness/run_experiment.py --rust-dir translations_rust_refined --label round2_linux
+      "

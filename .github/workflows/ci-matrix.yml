@@ -1,0 +1,84 @@
+# Faz 4 (cok platformlu calistirma) - windows-latest + ubuntu-latest matrisi.
+#
+# Not: Bu is akisi yalnizca depo GitHub'a push edildikten ve Actions
+# etkinlestirildikten sonra fiilen calisir. Yazarlar bu betigi yerel olarak
+# Docker (bkz. Dockerfile, docker-compose.yml, harness/compare_platforms.py)
+# ile de calistirip gercek Linux/LP64 sonuclarini elde etmistir - bu is
+# akisi, ayni karsilastirmayi GitHub'in kendi CI altyapisinda (gercek
+# ubuntu-latest ve windows-latest ortamlarinda) tekrarlamak ve sonuclari
+# herkese acik/otomatik olarak dogrulanabilir kilmak icindir.
+name: Coklu Platform Deney Matrisi
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  run-experiment:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust kur
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python bagimliliklarini kur
+        run: pip install scipy matplotlib
+
+      - name: gcc kur (Windows - MSYS2)
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: mingw-w64-ucrt-x86_64-gcc
+          path-type: inherit
+
+      - name: gcc mevcut mu kontrol et (Linux)
+        if: runner.os == 'Linux'
+        run: gcc --version
+
+      - name: Araç sürümlerini raporla
+        run: |
+          gcc --version
+          rustc --version
+
+      - name: Round 1 (debug)
+        run: python harness/run_experiment.py --label round1_ci_${{ matrix.os }}
+
+      - name: Round 1 (release)
+        run: python harness/run_experiment.py --release --label round1_release_ci_${{ matrix.os }}
+
+      - name: Round 2
+        run: python harness/run_experiment.py --rust-dir translations_rust_refined --label round2_ci_${{ matrix.os }}
+
+      - name: Sonuclari artifact olarak yukle
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.os }}
+          path: results/results_*_ci_${{ matrix.os }}.*
+
+  compare:
+    needs: run-experiment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: results/
+          merge-multiple: true
+      - name: Platform karsilastirma raporu uret
+        run: python harness/compare_platforms.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: platform-comparison-report
+          path: results/platform_comparison.md
