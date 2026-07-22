@@ -1,0 +1,386 @@
+[
+  {
+    "sample_id": "s01_sum",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1012,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s02_gcd",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1015,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s03_factorial",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 976,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s04_fibonacci",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1024,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s05_count_primes",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1107,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s06_reverse_string",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1163,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s07_bubble_sort",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1334,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s08_binary_search",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1317,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s09_djb2_hash",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1219,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s10_caesar_cipher",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1354,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s11_collatz",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1137,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s12_matrix_mult",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1816,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s13_word_count",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1153,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s14_fnv_hash",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1174,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s15_float_avg",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1075,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s16_rle_encode",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1228,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s17_determinant",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1699,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s18_expr_eval",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 2760,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s19_global_counter",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1170,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s20_char_sum",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1223,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s21_matrix_transpose",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1235,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s22_gray_code",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 884,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s23_histogram",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1191,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s24_roman",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1220,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s25_linked_list_ops",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 2690,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s26_rpn_calculator",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 2409,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s27_csv_stats",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 2601,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s28_bst_traversal",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 2547,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s29_hashtable_cmds",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 4373,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s30_luhn_check",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1661,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s31_soundex",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 2303,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s32_levenshtein",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 2163,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s33_knapsack",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 2622,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s34_hanoi",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1420,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s35_lcs",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 2529,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s36_crc32",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 2010,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s37_bsd_getopt",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 4912,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s38_bsd_strtol",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 5070,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s39_bsd_heapsort",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 5000,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s40_diff_sum",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1583,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s41_float_bits",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1157,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s42_bitfields",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1295,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s43_switch_fallthrough",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1456,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s44_fib_memo_static",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1562,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s45_goto_cleanup",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 1778,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s46_musl_qsort",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 7265,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s47_redis_sds",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 16191,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  },
+  {
+    "sample_id": "s48_cjson_number",
+    "model_id": "gpt4o (DRY-RUN, cagrilmadi)",
+    "prompt_chars": 10973,
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "dry_run": true
+  }
+]

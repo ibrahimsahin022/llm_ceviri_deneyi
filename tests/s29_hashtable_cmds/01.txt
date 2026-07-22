@@ -1,0 +1,6 @@
+5
+INSERT a 1
+INSERT b 2
+GET a
+DEL a
+GET a

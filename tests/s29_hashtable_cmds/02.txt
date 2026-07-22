@@ -1,0 +1,4 @@
+3
+GET x
+INSERT x 100
+GET x

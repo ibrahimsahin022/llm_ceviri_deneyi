@@ -1,0 +1,4 @@
+3
+NEW   Hello World  
+TRIM  
+UPPER

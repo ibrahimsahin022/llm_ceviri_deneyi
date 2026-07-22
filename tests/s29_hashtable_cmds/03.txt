@@ -1,0 +1,5 @@
+4
+INSERT k 5
+INSERT k 10
+GET k
+DEL zzz

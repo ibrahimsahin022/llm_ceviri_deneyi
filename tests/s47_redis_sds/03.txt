@@ -1,0 +1,3 @@
+2
+NEW abc
+CMP abd

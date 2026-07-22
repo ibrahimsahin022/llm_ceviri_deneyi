@@ -1,0 +1,5 @@
+4
+NEW Merhaba
+CAT , Dunya
+LOWER
+RANGE 0 -1
