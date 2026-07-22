@@ -2,24 +2,24 @@
   "label": "round1_release",
   "rust_dir": "translations_rust",
   "release": true,
-  "total_samples": 48,
-  "passed_samples": 38,
-  "execution_accuracy_pct": 79.17,
+  "total_samples": 53,
+  "passed_samples": 39,
+  "execution_accuracy_pct": 73.58,
   "sample_category_counts": {
     "compilation_error": 1,
     "non_termination": 0,
-    "runtime_error": 1,
-    "functional_error": 8,
-    "pass": 38
+    "runtime_error": 2,
+    "functional_error": 11,
+    "pass": 39
   },
   "case_category_counts": {
     "compilation_error": 0,
     "non_termination": 0,
-    "runtime_error": 1,
-    "functional_error": 13,
-    "pass": 168
+    "runtime_error": 3,
+    "functional_error": 20,
+    "pass": 183
   },
-  "total_cases": 182,
+  "total_cases": 206,
   "results": [
     {
       "id": "s01_sum",
@@ -1233,7 +1233,7 @@
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (12308) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s40_diff_sum.rs:11:23:"
+          "stderr": "thread 'main' (5420) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s40_diff_sum.rs:11:23:"
         },
         {
           "input": "02.txt",
@@ -1540,6 +1540,197 @@
           "category": "functional_error",
           "expected": "123456789.123456\n99999999999999.9\n1e-06\n3\n-3",
           "got": "123456789.123456\n99999999999999.9\n0.000001\n3\n-3"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s49_negative_byte_count",
+      "loc_c": 27,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "11 0",
+          "got": "11 0"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "12 12",
+          "got": "12 0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1 0",
+          "got": "1 0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0 0",
+          "got": "0 0"
+        },
+        {
+          "input": "05.txt",
+          "category": "functional_error",
+          "expected": "38 8",
+          "got": "38 0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s50_id_generator",
+      "loc_c": 30,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1000",
+          "got": "1000"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1000\n1001\n1002\n1003\n1004",
+          "got": "1000\n1001\n1002\n1003\n1004"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "",
+          "got": ""
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1000\n1001\n1002\n1003\n1004\n1005\n1006\n1007\n1008\n1009",
+          "got": "1000\n1001\n1002\n1003\n1004\n1005\n1006\n1007\n1008\n1009"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s51_long_clamp",
+      "loc_c": 33,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "10",
+          "got": "10"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "2147483647",
+          "got": "4000000000"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "-2147483648",
+          "got": "-4000000000"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "1000000000",
+          "got": "1000000000"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s52_window_sum",
+      "loc_c": 33,
+      "category": "runtime_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "12",
+          "got": "12"
+        },
+        {
+          "input": "02.txt",
+          "category": "runtime_error",
+          "expected": "30",
+          "got": "",
+          "stderr": "thread 'main' (14848) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
+        },
+        {
+          "input": "03.txt",
+          "category": "runtime_error",
+          "expected": "0",
+          "got": "",
+          "stderr": "thread 'main' (21740) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "10",
+          "got": "10"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "9",
+          "got": "9"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s53_tax_bracket",
+      "loc_c": 31,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "100",
+          "got": "100"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "300",
+          "got": "200"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "700",
+          "got": "400"
+        },
+        {
+          "input": "05.txt",
+          "category": "functional_error",
+          "expected": "1500",
+          "got": "800"
         }
       ],
       "compile_error": "",

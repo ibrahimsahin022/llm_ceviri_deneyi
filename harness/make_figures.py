@@ -138,12 +138,12 @@ plt.close(fig)
 rootcauses = [
     ("Unsigned tamsayı taşması", 2, "runtime_error"),      # s09, s14
     ("String modeli (karakter/bayt)", 2, "functional_error"),  # s06, s13
-    ("char işaret (signedness)", 1, "functional_error"),   # s20
+    ("char işaret (signedness)", 2, "functional_error"),   # s20, s49
     ("Çıktı biçimlendirme (%g)", 3, "functional_error"),   # s15, s27, s48
     ("Global durum → static mut", 1, "compilation_error"), # s19
-    ("Tamsayı genişliği (platform)", 1, "functional_error"),  # s38
-    ("usize taşması (yeni)", 1, "runtime_error"),  # s40
-    ("Switch fallthrough (yeni)", 1, "functional_error"),  # s43
+    ("Tamsayı genişliği (platform)", 2, "functional_error"),  # s38, s51
+    ("usize taşması (yeni)", 2, "runtime_error"),  # s40, s52
+    ("Switch fallthrough (yeni)", 2, "functional_error"),  # s43, s53
 ]
 rootcauses.sort(key=lambda t: t[1])
 names = [t[0] for t in rootcauses]
@@ -166,6 +166,44 @@ ax.legend(handles=legend_el, loc="lower right", frameon=False, fontsize=9.5)
 ax.grid(axis="y", alpha=0)
 fig.tight_layout()
 fig.savefig(FIG / "fig5_rootcause.png", bbox_inches="tight")
+plt.close(fig)
+
+# ============ FIGUR 4b: Bootstrap %95 guven arali ile EA (Faz 2) ============
+import numpy as np
+rng = np.random.default_rng(seed=42)  # stats_report.py ile ayni seed
+
+def bootstrap_ci(pass_flags, n_boot=5000):
+    arr = np.array(pass_flags, dtype=float)
+    point = 100.0 * arr.mean()
+    boots = np.array([100.0 * rng.choice(arr, size=len(arr), replace=True).mean()
+                       for _ in range(n_boot)])
+    lo, hi = np.percentile(boots, [2.5, 97.5])
+    return point, lo, hi
+
+labels4b, points4b, los4b, his4b = [], [], [], []
+for lab, name in COND:
+    d = load(lab)
+    if d:
+        flags = [r["category"] == "pass" for r in d["results"]]
+        point, lo, hi = bootstrap_ci(flags)
+        labels4b.append(name)
+        points4b.append(point)
+        los4b.append(point - lo)
+        his4b.append(hi - point)
+
+fig, ax = plt.subplots(figsize=(6.6, 4.2))
+bars = ax.bar(labels4b, points4b, color=[COL["bar"], COL["non_termination"], COL["pass"]],
+              width=0.5, yerr=[los4b, his4b], capsize=6,
+              error_kw=dict(elinewidth=1.3, ecolor="#333"))
+ax.set_ylabel("Yürütme Doğruluğu (EA) % (bootstrap %95 GA ile)")
+ax.set_ylim(0, 112)
+ax.set_title("Şekil 4b. EA ve bootstrap %95 güven aralığı (n=5000 tekrar)", pad=12)
+for b, v in zip(bars, points4b):
+    ax.text(b.get_x() + b.get_width() / 2, v + 8, f"%{v:.1f}", ha="center",
+            fontsize=11, fontweight="bold")
+ax.grid(axis="x", alpha=0)
+fig.tight_layout()
+fig.savefig(FIG / "fig4b_bootstrap_ci.png", bbox_inches="tight")
 plt.close(fig)
 
 print("Figurler uretildi:")

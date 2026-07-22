@@ -47,3 +47,8 @@ s45_goto_cleanup,43,pass,4,4
 s46_musl_qsort,262,pass,5,5
 s47_redis_sds,522,pass,5,5
 s48_cjson_number,389,functional_error,5,1
+s49_negative_byte_count,27,functional_error,5,3
+s50_id_generator,30,pass,4,4
+s51_long_clamp,33,functional_error,5,3
+s52_window_sum,33,runtime_error,5,3
+s53_tax_bracket,31,functional_error,5,2

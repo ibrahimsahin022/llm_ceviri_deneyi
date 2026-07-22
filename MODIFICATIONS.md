@@ -80,3 +80,87 @@ tamamlandığında `python harness/compare_models.py` yeniden çalıştırılıp
 bölüm tam n=48 sayılarıyla güncellenecektir.
 
 ---
+
+## Faz 2 — Örneklem Gücü ve İstatistik
+
+### (a) Değişen/eklenen dosyalar
+- **Yeni:** `harness/stats_report.py` — bootstrap %95 GA (EA için), Mann-Whitney
+  rank-biserial etki büyüklüğü + bootstrap-tabanlı gerçekleşen güç (achieved
+  power), Fisher odds oranı için log-yaklaşık %95 GA. Çıktı: `results/stats_report.md`.
+  Sabit seed (42) ile tam tekrarlanabilir.
+- **Değişti:** `harness/make_figures.py` — kök-neden listesi (Şekil 5) güncellendi
+  (C/F/G/H kategorilerinin her biri artık 2 bağımsız örnekle temsil ediliyor);
+  yeni **Şekil 4b** eklendi (`fig4b_bootstrap_ci.png` — üç koşulda EA + bootstrap
+  %95 GA çubukları).
+- **Yeni C örnekleri (5):** `samples_c/s49_negative_byte_count.c` (Kategori C,
+  2. örnek), `s50_id_generator.c` (Kategori E, 2. örnek), `s51_long_clamp.c`
+  (Kategori F, 2. örnek), `s52_window_sum.c` (Kategori G, 2. örnek),
+  `s53_tax_bracket.c` (Kategori H, 2. örnek) + `tests/s49.../`..`tests/s53.../`.
+- **Yeni çeviriler:** `translations_rust/s49-s53*.rs` (Round 1, zero-shot),
+  `translations_rust_refined/s49-s53*.rs` (Round 2, düzeltilmiş; `s50` zaten
+  Round 1'de PASS olduğu için değişmeden kopyalandı).
+
+### (b) Gerçekten ölçülen sayılar
+Veri seti **n=48 → n=53**. Gerçek harness koşumu (Round 1, debug):
+
+| Kosul | EA (n=53) | Bootstrap %95 GA |
+|---|---|---|
+| Round 1 — dogrudan, debug | %69.81 (37/53) | [%56.60, %81.13] |
+| Round 1 — dogrudan, release | %73.58 (39/53) | [%60.38, %84.91] |
+| Round 2 — iyilestirilmis, debug | %100.00 (53/53) | [%100.00, %100.00] |
+
+5 yeni örnekten **4'ü başarısız oldu, 1'i (s50_id_generator) ilk seferde
+geçti** — bu, kategori E'nin (global mutable durum → `static mut`) her
+zaman başarısız olmadığını, modelin bazı gerçekleşmelerde doğru `unsafe`
+sarmalamayı yapabildiğini gösteren dürüst, tek yönlü olmayan bir bulgudur.
+Başarısız 4 örnek (s49, s51, s52, s53), ilgili kategorinin (C, F, G, H)
+zaten bilinen kök nedenini bağımsız bir ikinci örnekte doğruladı — hiçbiri
+yeni bir kök neden ortaya çıkarmadı (beklenen: bunlar zaten bilinen
+boşlukları hedefleyerek tasarlandı).
+
+**Mann-Whitney U (LoC, PASS vs FAIL):** U=246.0, p=0.3371 (n=45 iken
+p=0.169'du). Rank-biserial etki büyüklüğü r=0.169 (küçük). **Bootstrap
+gerçekleşen güç: %15.6.** Bu, hakemin "örneklem küçük, güç düşük" eleştirisini
+doğrudan **doğrulayan** nicel bir kanıttır — n'i 48'den 53'e büyütmek gücü
+ARTIRMADI, tam tersine biraz düşürdü, çünkü yeni eklenen 4 başarısız örneğin
+LoC'si (27-33 satır) PASS grubunun LoC aralığıyla büyük ölçüde örtüşüyor
+(zaten zayıf olan LoC↔başarı ilişkisini daha da zayıflattı). Bu, "n'i büyütmek
+otomatik olarak gücü artırır" varsayımının burada geçerli olmadığını gösteren,
+literatürde de bilinen ("etki büyüklüğü sabit kalırsa, örneklem türüne bağlı
+olarak güç öngörülemez şekilde değişebilir") dürüst bir bulgudur.
+
+**Fisher (pointer kullanımı):** odds=1.96, p=0.372, %95 GA=[0.59, 6.52] (n=45
+iken odds=2.50, p=0.318 idi — GA hâlâ 1.0'i genişçe kapsıyor, anlamlılık
+değişmedi).
+
+### (c) Makaleye önerilen taslak metin
+
+**§4.3 Kod Uzunluğu ile Başarı İlişkisi'ne eklenecek paragraf:**
+> Hakem geri bildirimi doğrultusunda, mevcut sekiz kök-neden kategorisinden
+> dördü (C, F, G, H — önceden yalnızca birer örnekle temsil ediliyordu) için
+> bağımsız birer ikinci örnek eklenmiş (n=48→53) ve istatistiksel güç
+> doğrudan ölçülmüştür. Mann-Whitney U testinin bootstrap-tabanlı
+> gerçekleşen gücü yalnızca %15.6'dır (n=53) — bu, "kod uzunluğu ile başarı
+> arasında anlamlı ilişki yoktur" bulgusunun, ilişkinin gerçekten
+> bulunmamasından mı yoksa testin bu örneklem büyüklüğünde yetersiz güçte
+> olmasından mı kaynaklandığını ayırt edemediğimizi doğrudan, nicel olarak
+> gösterir. Ayrıca örneklem büyüdükçe gücün arttığı değil, hafifçe azaldığı
+> gözlenmiştir (%21.7→%15.6) — bu, küçük ölçekli veri seti genişletmelerinin
+> istatistiksel gücü otomatik olarak iyileştirmediğini, etki büyüklüğünün
+> kendisinin de örneklemle birlikte değiştiğini göstermektedir.
+
+**§6 Geçerlilik Tehditleri → "İstatistiksel Geçerlilik" alt bölümüne eklenecek not:**
+> Bootstrap tabanlı güç analizi (`harness/stats_report.py`, sabit seed=42,
+> 5000 tekrar), Mann-Whitney testinin bu veri setinde yalnızca %15.6
+> gerçekleşen güce sahip olduğunu göstermektedir — konvansiyonel %80 güç
+> eşiğinin çok altında. Bu nedenle "anlamlı ilişki gözlenmemiştir" ifadesi,
+> "ilişki yoktur" biçiminde okunmamalıdır; mevcut n ile bir Tip II hatası
+> (gerçek bir etkiyi kaçırma) olasılığı yüksektir.
+
+### Kalan (bu fazda tamamlanmayan)
+Plan, istatistiksel gücü belirgin biçimde artıracak ölçüde büyük bir n
+artışı hedeflemiyordu (5 hedefli örnek); gerçek anlamda yeterli güce (%80)
+ulaşmak için FAIL grubunda muhtemelen onlarca ek bağımsız örnek gerekir —
+bu, gelecekteki bir faz/çalışma için not edilmiştir.
+
+---
