@@ -2,24 +2,24 @@
   "label": "round1_release",
   "rust_dir": "translations_rust",
   "release": true,
-  "total_samples": 53,
-  "passed_samples": 39,
-  "execution_accuracy_pct": 73.58,
+  "total_samples": 55,
+  "passed_samples": 41,
+  "execution_accuracy_pct": 74.55,
   "sample_category_counts": {
     "compilation_error": 1,
     "non_termination": 0,
     "runtime_error": 2,
     "functional_error": 11,
-    "pass": 39
+    "pass": 41
   },
   "case_category_counts": {
     "compilation_error": 0,
     "non_termination": 0,
     "runtime_error": 3,
     "functional_error": 20,
-    "pass": 183
+    "pass": 193
   },
-  "total_cases": 206,
+  "total_cases": 216,
   "results": [
     {
       "id": "s01_sum",
@@ -1233,7 +1233,7 @@
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (5420) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s40_diff_sum.rs:11:23:"
+          "stderr": "thread 'main' (21736) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s40_diff_sum.rs:11:23:"
         },
         {
           "input": "02.txt",
@@ -1672,14 +1672,14 @@
           "category": "runtime_error",
           "expected": "30",
           "got": "",
-          "stderr": "thread 'main' (14848) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
+          "stderr": "thread 'main' (24680) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (21740) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
+          "stderr": "thread 'main' (9700) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
         },
         {
           "input": "04.txt",
@@ -1731,6 +1731,84 @@
           "category": "functional_error",
           "expected": "1500",
           "got": "800"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s54_stack_module",
+      "loc_c": 95,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "OK\nOK\n20\n20\n1\n10",
+          "got": "OK\nOK\n20\n20\n1\n10"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "EMPTY\nEMPTY",
+          "got": "EMPTY\nEMPTY"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "OK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK",
+          "got": "OK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "OK\nOK\n3\n5\nEMPTY\nOK\n7\n1",
+          "got": "OK\nOK\n3\n5\nEMPTY\nOK\n7\n1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s55_config_parser",
+      "loc_c": 112,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "test\n8080\nNOT_FOUND",
+          "got": "test\n8080\nNOT_FOUND"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "value with spaces\nval2",
+          "got": "value with spaces\nval2"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "NOT_FOUND",
+          "got": "NOT_FOUND"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "localhost\n9090",
+          "got": "localhost\n9090"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "",
+          "got": ""
         }
       ],
       "compile_error": "",

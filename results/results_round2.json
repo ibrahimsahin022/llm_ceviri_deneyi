@@ -2,24 +2,24 @@
   "label": "round2",
   "rust_dir": "translations_rust_refined",
   "release": false,
-  "total_samples": 53,
-  "passed_samples": 53,
+  "total_samples": 55,
+  "passed_samples": 55,
   "execution_accuracy_pct": 100.0,
   "sample_category_counts": {
     "compilation_error": 0,
     "non_termination": 0,
     "runtime_error": 0,
     "functional_error": 0,
-    "pass": 53
+    "pass": 55
   },
   "case_category_counts": {
     "compilation_error": 0,
     "non_termination": 0,
     "runtime_error": 0,
     "functional_error": 0,
-    "pass": 209
+    "pass": 219
   },
-  "total_cases": 209,
+  "total_cases": 219,
   "results": [
     {
       "id": "s01_sum",
@@ -1747,6 +1747,84 @@
           "category": "pass",
           "expected": "1500",
           "got": "1500"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s54_stack_module",
+      "loc_c": 95,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "OK\nOK\n20\n20\n1\n10",
+          "got": "OK\nOK\n20\n20\n1\n10"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "EMPTY\nEMPTY",
+          "got": "EMPTY\nEMPTY"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "OK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK",
+          "got": "OK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "OK\nOK\n3\n5\nEMPTY\nOK\n7\n1",
+          "got": "OK\nOK\n3\n5\nEMPTY\nOK\n7\n1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s55_config_parser",
+      "loc_c": 112,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "test\n8080\nNOT_FOUND",
+          "got": "test\n8080\nNOT_FOUND"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "value with spaces\nval2",
+          "got": "value with spaces\nval2"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "NOT_FOUND",
+          "got": "NOT_FOUND"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "localhost\n9090",
+          "got": "localhost\n9090"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "",
+          "got": ""
         }
       ],
       "compile_error": "",

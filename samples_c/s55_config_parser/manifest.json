@@ -1,0 +1,4 @@
+{
+  "c_files": ["parser.c", "lookup.c", "main.c"],
+  "rust_main": "main.rs"
+}

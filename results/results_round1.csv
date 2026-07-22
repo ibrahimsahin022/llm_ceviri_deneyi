@@ -52,3 +52,5 @@ s50_id_generator,30,pass,4,4
 s51_long_clamp,33,functional_error,5,3
 s52_window_sum,33,runtime_error,5,3
 s53_tax_bracket,31,functional_error,5,2
+s54_stack_module,95,pass,5,5
+s55_config_parser,112,pass,5,5

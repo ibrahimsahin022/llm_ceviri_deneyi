@@ -164,3 +164,89 @@ ulaşmak için FAIL grubunda muhtemelen onlarca ek bağımsız örnek gerekir �
 bu, gelecekteki bir faz/çalışma için not edilmiştir.
 
 ---
+
+## Faz 3 — Çok Dosyalı / Gerçekçi Kod
+
+### (a) Değişen/eklenen dosyalar
+- **Yeni:** `samples_c/s54_stack_module/` — `stack.h` (struct + fonksiyon
+  bildirimleri), `stack.c` (uygulama), `main.c` (kullanım), `manifest.json`
+  (`{"c_files": ["stack.c","main.c"], "rust_main": "main.rs"}`).
+- **Yeni:** `samples_c/s55_config_parser/` — `config.h` (paylaşılan
+  `ConfigEntry` struct'ı, **iki ayrı** .c dosyası tarafından kullanılıyor),
+  `parser.c`, `lookup.c`, `main.c`, `manifest.json`.
+- **Yeni:** `translations_rust/s54_stack_module/{main.rs,stack.rs}`,
+  `translations_rust/s55_config_parser/{main.rs,config.rs,parser.rs,lookup.rs}`
+  (ve `translations_rust_refined/` altında aynıları — ikisi de Round 1'de
+  PASS olduğu için değişikliksiz kopyalandı).
+- **Yeni:** `tests/s54_stack_module/`, `tests/s55_config_parser/` (5'er test
+  girdisi; kapasite sınırı, boş yığın, yinelenen anahtar, boş değer gibi
+  kenar durumları kapsar).
+- **Değişti:** `harness/run_experiment.py` — `discover_samples()` artık
+  `samples_c/*.c` (tek dosya, değişmedi) yanında `samples_c/*/manifest.json`
+  içeren dizinleri de keşfediyor; `compile_c()` çoklu `.c` dosyasını tek
+  `gcc` çağrısında derliyor; Rust tarafı için hiçbir değişiklik gerekmedi
+  — `rustc <main.rs>` zaten aynı dizindeki `mod x;` dosyalarını otomatik
+  çözüyor (Cargo'ya gerek yok). Geriye dönük tam uyumlu (mevcut 53 tek-dosya
+  örnek hiç etkilenmedi).
+- **Düzeltildi:** `harness/stats_report.py` — Fisher (işaretçi kullanımı)
+  analizi yalnızca `samples_c/*.c` üzerinde tarama yapıyordu, bu yüzden
+  çok-dosyalı örnekleri (s54, s55) sessizce atlıyordu; artık
+  `results_round1.json`'daki tüm id'ler üzerinden gidip çok-dosyalı
+  örnekler için ilgili alt dizindeki tüm `.c` dosyalarını birleştirerek
+  tarıyor.
+
+### (b) Gerçekten ölçülen sayılar
+Veri seti **n=53 → n=55**. Gerçek harness koşumu (multi-file derleme
+desteğiyle, gerçekten `gcc stack.c main.c -o ...` ve `rustc main.rs -o ...`
+çalıştırılarak):
+
+| Koşul | EA (n=55) |
+|---|---|
+| Round 1 — doğrudan, debug | %70.91 (39/55) |
+| Round 1 — doğrudan, release | %74.55 (41/55) |
+| Round 2 — iyileştirilmiş, debug | %100.00 (55/55) |
+
+**Her iki çok-dosyalı örnek de Round 1'de ilk seferde geçti (2/2 PASS)** —
+CE oranında bir artış GÖZLENMEDİ. Bu, önceden beklenen "çok dosyalı kod
+derleme hatalarını artırır" hipotezini bu iki örnekte doğrulamayan, dürüst
+bir sonuçtur: LLM, hem `stack.h`↔`stack.c`↔`main.c` arası fonksiyon
+imzalarını hem de `config.h`'deki paylaşılan `ConfigEntry` struct'ının iki
+farklı `.c` dosyasındaki (`parser.c`, `lookup.c`) kullanımını Rust'ın
+`mod` sistemine tutarlı biçimde eşlemiştir (`stack.rs` bir `struct Stack`
++ `impl` bloğu; `config.rs`/`parser.rs`/`lookup.rs` üçlüsü paylaşılan
+`ConfigEntry` struct'ını `crate::config::ConfigEntry` olarak tutarlı
+biçimde referanslamıştır). **Önemli sınırlama:** yalnızca 2 örnek, ikisi de
+orta karmaşıklıkta (2-3 dosya, tek seviye modül); bu, "çok dosyalı kod her
+zaman sorunsuz çevrilir" biçiminde genellenemez — çok daha büyük/derin
+modül hiyerarşilerine sahip gerçek projelerde farklı sonuç alınabilir
+(bkz. §6 notu).
+
+Fisher testi düzeltmesi sonrası (s54/s55 dahil): odds=2.16, p=0.245, %95
+GA=[0.65, 7.12] (önceki, hatalı biçimde s54/s55'i atlayan hesap: odds=1.96).
+
+### (c) Makaleye önerilen taslak metin
+
+**§3.1 Veri Seti'ne eklenecek paragraf:**
+> Hakem geri bildirimi doğrultusunda, veri setinin tek-dosyalı yapısının
+> derleme başarı oranını yapay biçimde yükseltebileceği eleştirisini kısmen
+> sınamak amacıyla, iki çok-dosyalı C örneği eklenmiştir (s54-s55): biri
+> (`s54_stack_module`) klasik bir başlık+uygulama+kullanım (.h/.c/.c) modül
+> deseni, diğeri (`s55_config_parser`) paylaşılan bir struct tanımının iki
+> ayrı derleme birimi tarafından kullanıldığı bir desendir. Harness, bu
+> örnekleri bir `manifest.json` aracılığıyla keşfedip çoklu dosyayı tek bir
+> `gcc`/`rustc` çağrısında derleyecek şekilde genişletilmiştir (Rust
+> tarafında `mod` sistemi Cargo gerektirmeden çoklu dosyayı doğal olarak
+> destekler). Her iki örnek de Round 1'de ilk seferde geçmiştir (2/2 PASS);
+> bu, çok dosyalı yapının bu iki orta-karmaşıklıktaki örnekte CE oranını
+> artırmadığını göstermektedir, ancak yalnızca 2 örnekle sınırlı bir
+> gözlemdir.
+
+**§6 Geçerlilik Tehditleri → "Dış Geçerlilik" alt bölümüne eklenecek not:**
+> Çok-dosyalı doğrulama yalnızca 2 örnekle (2-3 dosya, tek seviye modül
+> hiyerarşisi) sınırlıdır ve her ikisi de PASS olmuştur. Bu, "çok dosyalı
+> yapı CE oranını artırır" biçimindeki önceki varsayımsal uyarıyı bu iki
+> örnek için çürütür, ancak gerçek endüstriyel projelerdeki çok daha derin
+> modül hiyerarşilerine, dairesel bağımlılıklara veya build-sistemi
+> (Makefile/CMake) karmaşıklığına genellenemez.
+
+---

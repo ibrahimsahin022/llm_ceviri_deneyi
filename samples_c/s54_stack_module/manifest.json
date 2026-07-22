@@ -1,0 +1,4 @@
+{
+  "c_files": ["stack.c", "main.c"],
+  "rust_main": "main.rs"
+}

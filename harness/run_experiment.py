@@ -68,24 +68,56 @@ def normalize(b: bytes) -> bytes:
 
 
 def discover_samples(rust_dir: Path):
+    """Iki tur ornek kesfeder:
+    1) Tek dosya: samples_c/<id>.c + <rust_dir>/<id>.rs (mevcut, degismedi)
+    2) Cok dosya (Faz 3): samples_c/<id>/manifest.json ile isaretli bir dizin
+       -> {"c_files": [...], "rust_main": "main.rs"}. Rust tarafi
+       <rust_dir>/<id>/<rust_main> + ayni dizindeki `mod` dosyalaridir
+       (Cargo gerekmez; rustc `mod x;` ifadesini otomatik olarak ayni
+       dizindeki x.rs'e cozer)."""
     samples = []
-    for c_file in sorted((ROOT / "samples_c").glob("*.c")):
+    samples_c_dir = ROOT / "samples_c"
+
+    for c_file in sorted(samples_c_dir.glob("*.c")):
         sid = c_file.stem
-        rs_file = rust_dir / f"{sid}.rs"
-        tests_dir = ROOT / "tests" / sid
         samples.append({
             "id": sid,
+            "multi": False,
             "c": c_file,
-            "rs": rs_file,
-            "tests": tests_dir,
+            "rs": rust_dir / f"{sid}.rs",
+            "tests": ROOT / "tests" / sid,
             "loc_c": sum(1 for _ in c_file.open(encoding="utf-8", errors="replace")),
         })
+
+    for manifest_path in sorted(samples_c_dir.glob("*/manifest.json")):
+        sid = manifest_path.parent.name
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        c_dir = manifest_path.parent
+        c_files = [c_dir / f for f in manifest["c_files"]]
+        rs_dir = rust_dir / sid
+        rs_main = rs_dir / manifest["rust_main"]
+        loc = sum(
+            sum(1 for _ in f.open(encoding="utf-8", errors="replace"))
+            for f in c_files
+        )
+        samples.append({
+            "id": sid,
+            "multi": True,
+            "c": c_files,
+            "rs": rs_main,
+            "rs_dir": rs_dir,
+            "tests": ROOT / "tests" / sid,
+            "loc_c": loc,
+        })
+
+    samples.sort(key=lambda s: s["id"])
     return samples
 
 
 def compile_c(sample, build_dir: Path):
     out = build_dir / f"{sample['id']}_c{EXE}"
-    r = sh(["gcc", "-O2", "-o", str(out), str(sample["c"]), "-lm"])
+    c_sources = sample["c"] if sample["multi"] else [sample["c"]]
+    r = sh(["gcc", "-O2", "-o", str(out), *[str(f) for f in c_sources], "-lm"])
     return (r.returncode == 0, out, r.stderr.decode(errors="replace"))
 
 

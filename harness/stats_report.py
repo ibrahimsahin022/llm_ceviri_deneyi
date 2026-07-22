@@ -156,14 +156,20 @@ def main():
 
     # ---- 3) Fisher (pointer kullanimi) - odds orani + CI ----
     if d1:
-        res_by_id = {r["id"]: r for r in d1["results"]}
         ptr_pass = ptr_fail = nonptr_pass = nonptr_fail = 0
-        for c_file in sorted((ROOT / "samples_c").glob("*.c")):
-            sid = c_file.stem
-            r = res_by_id.get(sid)
-            if not r:
-                continue
-            src = c_file.read_text(encoding="utf-8", errors="replace")
+        for r in d1["results"]:
+            sid = r["id"]
+            single = ROOT / "samples_c" / f"{sid}.c"
+            if single.exists():
+                src = single.read_text(encoding="utf-8", errors="replace")
+            else:
+                # Faz 3: cok dosyali ornek (samples_c/<id>/*.c) - tum
+                # kaynak dosyalarin birlesimi uzerinde pointer taramasi yap
+                multi_dir = ROOT / "samples_c" / sid
+                src = "\n".join(
+                    f.read_text(encoding="utf-8", errors="replace")
+                    for f in sorted(multi_dir.glob("*.c"))
+                ) if multi_dir.exists() else ""
             ptr = has_pointer(src)
             ok = r["category"] == "pass"
             if ptr and ok:
