@@ -2,24 +2,24 @@
   "label": "round1",
   "rust_dir": "translations_rust",
   "release": false,
-  "total_samples": 55,
-  "passed_samples": 39,
-  "execution_accuracy_pct": 70.91,
+  "total_samples": 57,
+  "passed_samples": 40,
+  "execution_accuracy_pct": 70.18,
   "sample_category_counts": {
     "compilation_error": 1,
     "non_termination": 0,
     "runtime_error": 4,
-    "functional_error": 11,
-    "pass": 39
+    "functional_error": 12,
+    "pass": 40
   },
   "case_category_counts": {
     "compilation_error": 0,
     "non_termination": 0,
     "runtime_error": 9,
-    "functional_error": 20,
-    "pass": 187
+    "functional_error": 22,
+    "pass": 195
   },
-  "total_cases": 216,
+  "total_cases": 226,
   "results": [
     {
       "id": "s01_sum",
@@ -289,21 +289,21 @@
           "category": "runtime_error",
           "expected": "261238937",
           "got": "",
-          "stderr": "thread 'main' (14912) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s09_djb2_hash.rs:9:16:"
+          "stderr": "thread 'main' (26580) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s09_djb2_hash.rs:9:16:"
         },
         {
           "input": "02.txt",
           "category": "runtime_error",
           "expected": "2704141334",
           "got": "",
-          "stderr": "thread 'main' (13048) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s09_djb2_hash.rs:9:16:"
+          "stderr": "thread 'main' (27528) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s09_djb2_hash.rs:9:16:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "2546203896",
           "got": "",
-          "stderr": "thread 'main' (2516) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s09_djb2_hash.rs:9:16:"
+          "stderr": "thread 'main' (16016) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s09_djb2_hash.rs:9:16:"
         }
       ],
       "compile_error": "",
@@ -433,21 +433,21 @@
           "category": "runtime_error",
           "expected": "1335831723",
           "got": "",
-          "stderr": "thread 'main' (20912) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s14_fnv_hash.rs:10:9:"
+          "stderr": "thread 'main' (21684) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s14_fnv_hash.rs:10:9:"
         },
         {
           "input": "02.txt",
           "category": "runtime_error",
           "expected": "22495912",
           "got": "",
-          "stderr": "thread 'main' (16184) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s14_fnv_hash.rs:10:9:"
+          "stderr": "thread 'main' (16568) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s14_fnv_hash.rs:10:9:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "2924308450",
           "got": "",
-          "stderr": "thread 'main' (24568) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s14_fnv_hash.rs:10:9:"
+          "stderr": "thread 'main' (18152) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s14_fnv_hash.rs:10:9:"
         }
       ],
       "compile_error": "",
@@ -1239,7 +1239,7 @@
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (28384) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s40_diff_sum.rs:10:17:"
+          "stderr": "thread 'main' (7856) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s40_diff_sum.rs:10:17:"
         },
         {
           "input": "02.txt",
@@ -1678,14 +1678,14 @@
           "category": "runtime_error",
           "expected": "30",
           "got": "",
-          "stderr": "thread 'main' (22188) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:12:17:"
+          "stderr": "thread 'main' (19960) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:12:17:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (21860) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:12:17:"
+          "stderr": "thread 'main' (22204) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:12:17:"
         },
         {
           "input": "04.txt",
@@ -1815,6 +1815,84 @@
           "category": "pass",
           "expected": "",
           "got": ""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s56_macro_table",
+      "loc_c": 97,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "add(20,10)=30\nm=21 x=22",
+          "got": "add(20,10)=30\nm=20 x=21"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "sub(20,10)=10\nm=21 x=22",
+          "got": "sub(20,10)=10\nm=20 x=21"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "mul(3,4)=12\nm=10 x=4",
+          "got": "mul(3,4)=12\nm=10 x=4"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "div(10,0)=0\nm=10 x=11",
+          "got": "div(10,0)=0\nm=10 x=11"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "add(-5,-5)=-10\nm=10 x=-4",
+          "got": "add(-5,-5)=-10\nm=10 x=-4"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s57_shared_counter_threads",
+      "loc_c": 71,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "4000",
+          "got": "4000"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "5000",
+          "got": "5000"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "16000",
+          "got": "16000"
         }
       ],
       "compile_error": "",

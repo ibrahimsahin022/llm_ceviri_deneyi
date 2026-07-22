@@ -426,3 +426,105 @@ Git geçmişi (`git log`) her fazın ayrı, gözden geçirilebilir commit'ler
 halinde uygulandığını gösterir (bir baseline commit + 4 faz commit'i).
 
 ---
+
+## Faz 3 Devamı — Karmaşık Makrolar ve Paylaşılan Bellek Eşzamanlılığı
+
+Beş faz tamamlandıktan sonra, Faz 3'ün (çok dosyalı/gerçekçi kod) kapsamını
+genişletmek amacıyla iki yeni örnek eklendi: biri karmaşık C önişlemci
+(preprocessor) desenlerini, diğeri gerçek paylaşılan bellek eşzamanlılığını
+(pthreads) hedefler.
+
+### (a) Değişen/eklenen dosyalar
+- **Yeni:** `samples_c/s56_macro_table.c` — X-Macro deseni (token-pasting
+  `CMD_##name` ile enum + isim tablosu üretimi) **ve** klasik bir "çoklu-
+  değerlendirme" (multiple evaluation) tuzağı: `#define MAX(a,b)
+  ((a)>(b)?(a):(b))` yan-etkili bir argümanla (`MAX(x++, 10)`) çağrıldığında,
+  C makrosu metinsel ikame olduğundan `x++`'ı koşula bağlı olarak bir veya
+  iki kez genişletir.
+- **Yeni:** `samples_c/s57_shared_counter_threads/main.c` + `manifest.json`
+  (`cflags: ["-lpthread"]`) — N pthread'in ortak bir `SharedState` struct'ını
+  (sayaç + mutex) paylaştığı, mutex korumalı artırma yapan gerçek bir
+  eşzamanlı program. Sonuç (N×M) zamanlamadan bağımsız deterministik
+  olduğundan mevcut diferansiyel test harness'iyle uyumludur.
+- **Değişti:** `harness/run_experiment.py` — çok-dosyalı örnekler için
+  `manifest.json`'a opsiyonel `"cflags"` (ek gcc bayrakları, örn.
+  `-lpthread`) ve `"rustflags"` alanları eklendi; belirtilmezse eski
+  davranış (yalnızca `-lm`) korunur, geriye dönük tam uyumlu.
+- **Değişti:** `harness/make_figures.py` — Şekil 5'e yeni kök-neden
+  kategorisi eklendi: "Makro çoklu-değerlendirme (yeni)" (1 örnek, s56).
+- **Yeni çeviriler:** `translations_rust/s56_macro_table.rs`,
+  `translations_rust/s57_shared_counter_threads/main.rs` (Round 1);
+  `translations_rust_refined/` altında düzeltilmiş s56 + değişmeden
+  kopyalanmış s57 (Round 2).
+
+### (b) Gerçekten ölçülen sayılar
+Veri seti **n=55 → n=57**. Gerçek harness koşumu:
+
+| Koşul | EA (n=57) |
+|---|---|
+| Round 1 — doğrudan, debug | %70.18 (40/57) |
+| Round 1 — doğrudan, release | %73.68 (42/57) |
+| Round 2 — iyileştirilmiş, debug | %100.00 (57/57) |
+
+**s57 (paylaşılan bellek eşzamanlılığı) Round 1'de ilk seferde geçti** —
+LLM, C'nin mutex-korumalı paylaşılan struct desenini doğru biçimde
+`Arc<Mutex<i64>>` + `thread::spawn` + `join` desenine çevirdi; derleme
+hatası ya da veri yarışı oluşmadı. Bu, ilginç bir olumsuz kontrol
+(negative result) niteliğinde: C'nin sessizce izin verdiği bir paylaşılan-
+durum deseni, Rust'ın tip sisteminde yapısal olarak zorunlu kılınan
+(`Send`/`Sync`) bir soyutlamaya LLM tarafından doğru eşlenebilmiştir —
+yani "Rust'ın borrow checker'ı LLM'i zorlar mı yoksa çeviri hiç
+derlenmez mi" sorusuna, bu tek örnekte "LLM zaten doğru deseni biliyor"
+yanıtı çıkmıştır.
+
+**s56 (karmaşık makro) başarısız oldu — yepyeni bir kök neden (Kategori I):**
+C referansında `x=20` iken `MAX(x++, 10)` çağrısı koşulun (20>10) doğru
+çıkması nedeniyle `x++`'ı **iki kez** genişletir (karşılaştırmada ve sonuç
+dalında), bu yüzden `x` 20'den 22'ye çıkar ve sonuç 21'dir. LLM'in doğal
+çevirisi (`fn max(a,b)`) argümanı **bir kez** değerlendirdiğinden, aynı
+girdide `x=21`, sonuç=20 üretir — testlerin 2/5'inde (koşulun doğru
+çıktığı durumlarda) gerçek, ölçülmüş bir farklılık. X-Macro/token-pasting
+kısmı ise LLM tarafından sorunsuz çevrildi (enum + `match` ile birebir
+eşlendi, hiç hata yok) — yani karmaşık makro kullanımının kendisi değil,
+özellikle **yan-etkili argümanın çoklu genişletilmesi** sorun çıkardı.
+
+**Mann-Whitney gerçekleşen güç:** %15.0 (n=53'te %15.6 idi — n büyümeye
+devam ettikçe gücün öngörülemez biçimde dalgalandığı örüntüsü sürüyor).
+
+### (c) Makaleye önerilen taslak metin
+
+**§4.4'e eklenecek yeni kök-neden alt bölümü:**
+> I) Makro çoklu-değerlendirme yan etkisi → Fonksiyonel Hata (s56_macro_table)
+> — Neden olur: C makroları saf metinsel ikamedir; bir parametre makro
+> gövdesinde birden fazla kez geçiyorsa, yan etkili bir argüman (`x++`) o
+> kadar kez değerlendirilir. LLM'in doğal çevirisi (bir Rust fonksiyonu)
+> argümanı her zaman tam olarak bir kez değerlendirir — Rust'ta bunun
+> C'yle birebir eşdeğeri, ancak kasıtlı olarak aynı çoklu-değerlendirmeyi
+> yeniden üreten bir `macro_rules!` tanımıyla mümkündür. Düzeltme (Round
+> 2): gözlemlenebilir davranışı korumak için böyle bir makro yazıldı.
+
+**§3.1 Veri Seti'ne eklenecek not (kullanıcının önerdiği paragrafın
+karşılığı):**
+> Hakem/yazar geri bildirimi doğrultusunda, veri setine karmaşık makro
+> genişletmesi (s56) ve gerçek paylaşılan bellek eşzamanlılığı (s57,
+> pthreads + mutex) içeren iki yeni örnek eklenmiştir. Sonuçlar karışıktır:
+> eşzamanlılık örneği ilk seferde doğru çevrilmiş (LLM'in `Arc<Mutex<>>`
+> desenini zaten bildiğini göstermiştir), makro örneği ise yeni ve önceden
+> öngörülmemiş bir kök nedeni (çoklu-değerlendirme yan etkisi) ortaya
+> çıkarmıştır. Bu, "çok daha kaotik senaryolar mevcut sınırları netleştirir"
+> öngörüsünü kısmen doğrulamaktadır — ancak yalnızca iki örnekle sınırlıdır
+> ve daha büyük/gerçek eşzamanlı sistemlere (yarış koşulları, kilitlenme
+> [deadlock], atomik olmayan bileşik işlemler) genellenemez.
+
+### Kalan (tamamlanmayan)
+- Yalnızca 1 eşzamanlılık örneği test edildi; kilitlenme (deadlock), yarış
+  koşulu (race condition) veya atomik-olmayan bileşik işlem gibi daha
+  kaotik eşzamanlılık desenleri kapsanmadı — mevcut stdin/stdout
+  diferansiyel test harness'i, çıktısı zamanlamaya duyarlı (non-
+  deterministik) programları doğası gereği değerlendiremez.
+- Karmaşık makro tarafında yalnızca 1 tuzak (çoklu-değerlendirme) test
+  edildi; değişken sayıda argüman alan makrolar (`__VA_ARGS__`), iç içe
+  makro genişletmeleri veya makro-tabanlı jenerik veri yapıları
+  denenmedi.
+
+---

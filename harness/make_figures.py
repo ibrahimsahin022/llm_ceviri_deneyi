@@ -144,6 +144,7 @@ rootcauses = [
     ("Tamsayı genişliği (platform)", 2, "functional_error"),  # s38, s51
     ("usize taşması (yeni)", 2, "runtime_error"),  # s40, s52
     ("Switch fallthrough (yeni)", 2, "functional_error"),  # s43, s53
+    ("Makro çoklu-değerlendirme (yeni)", 1, "functional_error"),  # s56
 ]
 rootcauses.sort(key=lambda t: t[1])
 names = [t[0] for t in rootcauses]

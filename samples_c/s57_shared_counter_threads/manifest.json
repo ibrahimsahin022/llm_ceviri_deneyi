@@ -1,0 +1,5 @@
+{
+  "c_files": ["main.c"],
+  "rust_main": "main.rs",
+  "cflags": ["-lpthread"]
+}

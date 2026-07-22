@@ -108,6 +108,10 @@ def discover_samples(rust_dir: Path):
             "rs_dir": rs_dir,
             "tests": ROOT / "tests" / sid,
             "loc_c": loc,
+            # opsiyonel: ek gcc/rustc bayraklari (orn. pthread ornekleri icin
+            # "-lpthread"). Belirtilmezse eski davranis (yalnizca -lm) korunur.
+            "cflags": manifest.get("cflags", []),
+            "rustflags": manifest.get("rustflags", []),
         })
 
     samples.sort(key=lambda s: s["id"])
@@ -117,7 +121,8 @@ def discover_samples(rust_dir: Path):
 def compile_c(sample, build_dir: Path):
     out = build_dir / f"{sample['id']}_c{EXE}"
     c_sources = sample["c"] if sample["multi"] else [sample["c"]]
-    r = sh(["gcc", "-O2", "-o", str(out), *[str(f) for f in c_sources], "-lm"])
+    extra_cflags = sample.get("cflags", [])
+    r = sh(["gcc", "-O2", "-o", str(out), *[str(f) for f in c_sources], "-lm", *extra_cflags])
     return (r.returncode == 0, out, r.stderr.decode(errors="replace"))
 
 
@@ -128,7 +133,7 @@ def compile_rust(sample, build_dir: Path, release: bool):
     else:
         # Gelistiricinin varsayilani (cargo run / debug): tasma kontrolu ACIK
         flags = ["-C", "opt-level=0", "-C", "debug-assertions=on", "-C", "overflow-checks=on"]
-    cmd = ["rustc", *flags, "-o", str(out), str(sample["rs"])]
+    cmd = ["rustc", *flags, *sample.get("rustflags", []), "-o", str(out), str(sample["rs"])]
     r = sh(cmd)
     return (r.returncode == 0, out, r.stderr.decode(errors="replace"))
 

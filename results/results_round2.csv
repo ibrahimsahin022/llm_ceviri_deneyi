@@ -54,3 +54,5 @@ s52_window_sum,33,pass,5,5
 s53_tax_bracket,31,pass,5,5
 s54_stack_module,95,pass,5,5
 s55_config_parser,112,pass,5,5
+s56_macro_table,97,pass,5,5
+s57_shared_counter_threads,71,pass,5,5

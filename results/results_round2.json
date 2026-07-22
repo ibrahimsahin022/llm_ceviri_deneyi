@@ -2,24 +2,24 @@
   "label": "round2",
   "rust_dir": "translations_rust_refined",
   "release": false,
-  "total_samples": 55,
-  "passed_samples": 55,
+  "total_samples": 57,
+  "passed_samples": 57,
   "execution_accuracy_pct": 100.0,
   "sample_category_counts": {
     "compilation_error": 0,
     "non_termination": 0,
     "runtime_error": 0,
     "functional_error": 0,
-    "pass": 55
+    "pass": 57
   },
   "case_category_counts": {
     "compilation_error": 0,
     "non_termination": 0,
     "runtime_error": 0,
     "functional_error": 0,
-    "pass": 219
+    "pass": 229
   },
-  "total_cases": 219,
+  "total_cases": 229,
   "results": [
     {
       "id": "s01_sum",
@@ -1825,6 +1825,84 @@
           "category": "pass",
           "expected": "",
           "got": ""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s56_macro_table",
+      "loc_c": 97,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "add(20,10)=30\nm=21 x=22",
+          "got": "add(20,10)=30\nm=21 x=22"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "sub(20,10)=10\nm=21 x=22",
+          "got": "sub(20,10)=10\nm=21 x=22"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "mul(3,4)=12\nm=10 x=4",
+          "got": "mul(3,4)=12\nm=10 x=4"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "div(10,0)=0\nm=10 x=11",
+          "got": "div(10,0)=0\nm=10 x=11"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "add(-5,-5)=-10\nm=10 x=-4",
+          "got": "add(-5,-5)=-10\nm=10 x=-4"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s57_shared_counter_threads",
+      "loc_c": 71,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "4000",
+          "got": "4000"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "5000",
+          "got": "5000"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "16000",
+          "got": "16000"
         }
       ],
       "compile_error": "",
