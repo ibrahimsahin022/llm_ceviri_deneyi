@@ -18,3 +18,6 @@ s16_rle_encode,22,pass,3,3
 s17_determinant,35,pass,4,4
 s18_expr_eval,88,pass,6,6
 s19_global_counter,21,pass,3,3
+s20_char_sum,17,pass,3,3
+s21_matrix_transpose,20,pass,3,3
+s22_gray_code,10,pass,4,4

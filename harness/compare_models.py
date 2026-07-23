@@ -66,12 +66,15 @@ def main():
               "Once harness/generate_translations.py ile ceviri uretin.")
         return
 
-    lines = ["| Model | Kapsam (degerlendirilen/toplam 48) | EA (örnek) | EA % | CE | RE | FE | NT |",
+    dataset_total = len(list((ROOT / "samples_c").glob("*.c"))) + \
+        len(list((ROOT / "samples_c").glob("*/manifest.json")))
+
+    lines = [f"| Model | Kapsam (degerlendirilen/toplam {dataset_total}) | EA (örnek) | EA % | CE | RE | FE | NT |",
              "|---|---|---|---|---|---|---|---|"]
     for name, d in rows:
         c = d["sample_category_counts"]
-        coverage = f"{d['total_samples']}/48"
-        note = "" if d["total_samples"] == 48 else " [KISMI - kota/hata nedeniyle eksik]"
+        coverage = f"{d['total_samples']}/{dataset_total}"
+        note = "" if d["total_samples"] == dataset_total else " [KISMI - kota/hata nedeniyle eksik]"
         lines.append(
             f"| {name} | {coverage}{note} | {d['passed_samples']}/{d['total_samples']} | "
             f"%{d['execution_accuracy_pct']:.2f} | {c['compilation_error']} | "

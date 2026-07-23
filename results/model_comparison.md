@@ -1,6 +1,6 @@
 # Model Karşılaştırması (gerçek ölçüm)
 
-| Model | Kapsam (degerlendirilen/toplam 48) | EA (örnek) | EA % | CE | RE | FE | NT |
+| Model | Kapsam (degerlendirilen/toplam 57) | EA (örnek) | EA % | CE | RE | FE | NT |
 |---|---|---|---|---|---|---|---|
-| claude-sonnet-5 (referans, round1) | 48/48 | 36/48 | %75.00 | 1 | 3 | 8 | 0 |
-| gemini | 19/48 [KISMI - kota/hata nedeniyle eksik] | 18/19 | %94.74 | 0 | 0 | 1 | 0 |
+| claude-sonnet-5 (referans, round1) | 57/57 | 40/57 | %70.18 | 1 | 4 | 12 | 0 |
+| gemini | 22/57 [KISMI - kota/hata nedeniyle eksik] | 21/22 | %95.45 | 0 | 0 | 1 | 0 |

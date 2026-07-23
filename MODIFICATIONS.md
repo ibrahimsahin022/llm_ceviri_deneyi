@@ -29,20 +29,22 @@ ilgili bölümüne eklenmesi önerilen taslak metin.
 
 ### (b) Gerçekten ölçülen sayılar
 - **Gemini (`gemini-flash-latest`, gerçek API çağrısı):** Google AI Studio
-  ücretsiz katmanının **günlük kota sınırı** (`GenerateRequestsPerDayPerProjectPerModel-FreeTier`,
-  limit=20 istek/gün/model) nedeniyle yalnızca **19/48** örnek çevrildi;
-  20. istekten itibaren tüm çağrılar `429 RESOURCE_EXHAUSTED` ile reddedildi
-  (ham hata mesajları `results/manifest_gemini.json`'da saklı). Kullanıcı
-  talimatıyla mevcut 19 örnek üzerinden kısmi ama gerçek bir ölçüm raporlanıyor;
-  hiçbir sayı uydurulmadı.
-  - **Gemini EA (n=19, kısmi kapsam): 18/19 = %94.74** (1 FE: `s15_float_avg` —
+  ücretsiz katmanının kota sınırı (`GenerateRequestsPerDayPerProjectPerModel-FreeTier`,
+  limit=20 istek/gün/model — ancak gözlemlenen davranış katı bir günlük sıfırlamadan
+  çok kısa/kayan bir pencereye benziyor: birden fazla oturumda "1 istek başarılı,
+  hemen ardından 429" örüntüsü tekrarlandı) nedeniyle üç ayrı oturumda toplam
+  **22/57** örnek çevrilebildi (19 → 20 → 22, kalan 35 örnek için tekrar tekrar
+  `429 RESOURCE_EXHAUSTED` alındı; ham hata mesajları `results/manifest_gemini.json`'da
+  saklı). Kullanıcı talimatıyla mevcut 22 örnek üzerinden kısmi ama gerçek bir
+  ölçüm raporlanıyor; hiçbir sayı uydurulmadı.
+  - **Gemini EA (n=22, kısmi kapsam): 21/22 = %95.45** (1 FE: `s15_float_avg` —
     Claude'da da aynı kök nedenden [Kategori D, %g biçimlendirme] başarısız
     olan örnekle aynı; ilginç biçimde bağımsız bir model de aynı boşluğa
     düşmüş).
-  - Claude Sonnet 5 (referans, aynı 19 örnek alt kümesinde tekrar hesaplanmadı,
-    tam veri seti üzerinden mevcut sonuç): **36/48 = %75.00**.
+  - Claude Sonnet 5 (referans, aynı 22 örnek alt kümesinde tekrar hesaplanmadı,
+    tam veri seti üzerinden mevcut sonuç): **40/57 = %70.18**.
   - **Not:** Bu iki sayı doğrudan karşılaştırılabilir değildir (farklı örneklem
-    büyüklüğü/alt kümesi); doğru karşılaştırma için Gemini'nin kalan 29
+    büyüklüğü/alt kümesi); doğru karşılaştırma için Gemini'nin kalan 35
     örneğinin tamamlanması (kota sıfırlandıktan sonra, yarından itibaren günde
     ~20 istekle kademeli olarak) gerekir.
   - OpenAI (GPT-4o) ve DeepSeek: **API anahtarı yok, hiç çağrılmadı.**
@@ -57,8 +59,8 @@ ilgili bölümüne eklenmesi önerilen taslak metin.
 > geri bildirimi doğrultusunda, model-bağımsız bir çeviri altyapısı
 > (`harness/translators/`) kuruldu ve Google Gemini (`gemini-flash-latest`)
 > için gerçek, otomatik API çağrılarıyla kısmi bir tekrar ölçüm yapıldı
-> (19/48 örnek, Google AI Studio ücretsiz katmanının günlük kota sınırı
-> nedeniyle). Bu kısmi örneklemde Gemini EA = %94.74 (18/19) ölçülmüştür;
+> (22/57 örnek, Google AI Studio ücretsiz katmanının kota sınırı
+> nedeniyle). Bu kısmi örneklemde Gemini EA = %95.45 (21/22) ölçülmüştür;
 > tek başarısızlık, Claude'da da aynı kök nedenden (çıktı biçimlendirme
 > semantiği, §4.4.D) kaynaklanmıştır — bu, en azından bu tek örnekte, ilgili
 > semantik boşluğun modele özgü olmayabileceğine dair ön bir işarettir. OpenAI
@@ -68,16 +70,20 @@ ilgili bölümüne eklenmesi önerilen taslak metin.
 
 **§6 Geçerlilik Tehditleri → "Dış Geçerlilik" alt bölümüne eklenecek not:**
 > Çoklu-model karşılaştırması bu sürümde tamamlanmamıştır: Gemini için
-> yalnızca 19/48 örnek (günlük API kotası nedeniyle), GPT-4o ve DeepSeek için
+> yalnızca 22/57 örnek (API kotası nedeniyle), GPT-4o ve DeepSeek için
 > hiç gerçek sonuç yoktur. Dolayısıyla "bulgular yalnızca Claude Sonnet 5'e
 > özgüdür" sınırlaması büyük ölçüde geçerliliğini korumaktadır; kısmi Gemini
 > verisi yalnızca bir ön işarettir, kapsamlı bir karşılaştırma değildir.
 
 ### Sonraki adım
 Google AI Studio kotası sıfırlandıkça (`python harness/generate_translations.py
---model gemini --only <eksik-id'ler> --sleep 4`) kalan 29 örnek tamamlanabilir;
+--model gemini --only <eksik-id'ler> --sleep 4`) kalan 35 örnek tamamlanabilir;
 tamamlandığında `python harness/compare_models.py` yeniden çalıştırılıp bu
-bölüm tam n=48 sayılarıyla güncellenecektir.
+bölüm tam n=57 sayılarıyla güncellenecektir. `generate_translations.py`
+artık çok-dosyalı örnekleri de (s54, s55, s57 — birden fazla `.c` dosyasını
+tek istemde birleştirip modelden tek bir `main.rs` isteyerek) destekler;
+ayrıca manifest artık her çalıştırmada sıfırlanmaz, yalnızca işlenen id'ler
+güncellenir (önceki gerçek kayıtlar korunur).
 
 ---
 
@@ -409,7 +415,7 @@ her adım gerçekten çalıştırılan betiklerle doğrulanmıştır:
 
 | # | Zayıflık | Durum | Ana bulgu |
 |---|---|---|---|
-| 1 | Tek model | **Kısmen giderildi** | Gemini ile 19/48 örnek gerçek ölçüm (%94.74 EA); OpenAI/DeepSeek altyapısı hazır, anahtar bekliyor |
+| 1 | Tek model | **Kısmen giderildi** | Gemini ile 22/57 örnek gerçek ölçüm (%95.45 EA); OpenAI/DeepSeek altyapısı hazır, anahtar bekliyor |
 | 2 | Küçük örneklem/istatistiksel güç | **Ölçüldü, tam giderilmedi** | n=48→53; gerçekleşen güç yalnızca %15.6 — güç sorununun kendisi nicel olarak kanıtlandı |
 | 3 | Tek dosyalı kod | **Kısmen giderildi** | n=53→55, 2 çok-dosyalı örnek eklendi, ikisi de PASS (CE artışı gözlenmedi, ama n=2 ile sınırlı) |
 | 4 | Tek platform | **Gerçek ikinci platformda doğrulandı** | Linux/LP64'te Round 2 EA %100'den %94.55'e düştü — platforma-özgü "düzeltme" bulgusu |
