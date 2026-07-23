@@ -564,7 +564,7 @@ tarihsel bir ölçümdü ve güncel n=57 veri setini yansıtmıyordu. Deney,
 |---|---|---|
 | A — Oracle | Tam derleyici hatası + panik metni + fark | 57/57 = %100.00 |
 | B — Orta | Derleyici/panik metni tam; FE'de yalnızca girdi | 49/57 = %85.96 |
-| C — Minimal | Yalnızca "N test başarısız" (CE hariç) | 41/57 = %71.93 |
+| C — Minimal | Yalnızca gerçek başarısız test sayısı, ör. "3 test başarısız" (CE hariç) | 41/57 = %71.93 |
 
 Seviye B'de düzeltilen 9 örnek: s19 (CE), s09/s14/s40/s52 (RE — panik metni
 tasma türünü belirtti), s06/s13/s20/s49 (FE — girdideki çok baytlı Türkçe

@@ -86,7 +86,7 @@ aşamasındaki 8 başarısızlıkla sınırlıydı, şimdi tüm veri setini kaps
 |---|---|---|---|
 | A — Oracle (mevcut Round 2) | Tam derleyici hatası + panik metni + beklenen/alınan farkı | 57/57 | %100.00 |
 | B — Orta (CI-benzeri) | Derleyici/panik metni tam; FE için yalnızca girdi, fark yok | 49/57 | %85.96 |
-| C — Minimal | Yalnızca "N test başarısız" (CE hariç, o her zaman görünür) | 41/57 | %71.93 |
+| C — Minimal | Yalnızca gerçek başarısız test sayısı, ör. "3 test başarısız" (CE hariç, o her zaman görünür) | 41/57 | %71.93 |
 
 **Yöntem:** `translations_rust_levelB/` ve `translations_rust_levelC/` klasörleri
 57 örneğin tamamını kapsayacak şekilde tamamlandı (Round 1'in kopyaları);
