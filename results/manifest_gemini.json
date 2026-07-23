@@ -65,176 +65,704 @@
   {
     "sample_id": "s23_histogram",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 23.541001514s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '23s'}]}}"
+    "timestamp_utc": "2026-07-23T08:09:13.361561+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: tek satir metin.\n   Cikti: metindeki kucuk harflerin frekansi, \"harf:adet\" bicinde,\n   a'dan z'ye sirali (yalnizca gecen harfler yazdirilir). */\nint main(void) {\n    char buf[4096];\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    int freq[26] = {0};\n    for (int i = 0; buf[i] != '\\0'; i++) {\n        char c = buf[i];\n        if (c >= 'a' && c <= 'z') freq[c - 'a']++;\n    }\n    for (int i = 0; i < 26; i++) {\n        if (freq[i] > 0) printf(\"%c:%d\\n\", 'a' + i, freq[i]);\n    }\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 225,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 449,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 449
+          }
+        ],
+        "thoughts_token_count": 3774,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4448,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s24_roman",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 23.388601421s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '23s'}]}}"
+    "timestamp_utc": "2026-07-23T08:11:49.899161+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: tek bir tam sayi n (1..3999).\n   Cikti: n'in Roma rakamiyla yazimi. Ornek: 1994 -> MCMXCIV. */\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    int vals[] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};\n    const char *syms[] = {\"M\", \"CM\", \"D\", \"CD\", \"C\", \"XC\",\n                          \"L\", \"XL\", \"X\", \"IX\", \"V\", \"IV\", \"I\"};\n    for (int i = 0; i < 13; i++) {\n        while (n >= vals[i]) {\n            printf(\"%s\", syms[i]);\n            n -= vals[i];\n        }\n    }\n    printf(\"\\n\");\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 271,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 481,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 481
+          }
+        ],
+        "thoughts_token_count": 1046,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 1798,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s25_linked_list_ops",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 23.163887743s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '23s'}]}}"
+    "timestamp_utc": "2026-07-23T08:14:33.993242+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n\n/* Girdi: ilk satir N, sonraki satirda N adet tam sayi.\n   Islem: degerlerden bagli liste (linked list) kurar, listeyi ters cevirir,\n   ters listeyi yazdirir, sonra toplam/min/max degerlerini yazdirir.\n   Ornek: N=4, \"3 1 4 1\" -> \"1 4 1 3\" / \"sum=9 min=1 max=4\" */\n\nstruct Node {\n    int value;\n    struct Node *next;\n};\n\nstatic struct Node *append(struct Node *head, int v) {\n    struct Node *n = (struct Node *)malloc(sizeof(struct Node));\n    n->value = v;\n    n->next = NULL;\n    if (head == NULL) return n;\n    struct Node *cur = head;\n    while (cur->next != NULL) cur = cur->next;\n    cur->next = n;\n    return head;\n}\n\nstatic struct Node *reverse_list(struct Node *head) {\n    struct Node *prev = NULL;\n    struct Node *cur = head;\n    while (cur != NULL) {\n        struct Node *next = cur->next;\n        cur->next = prev;\n        prev = cur;\n        cur = next;\n    }\n    return prev;\n}\n\nstatic void free_list(struct Node *head) {\n    while (head != NULL) {\n        struct Node *next = head->next;\n        free(head);\n        head = next;\n    }\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    struct Node *head = NULL;\n    for (int i = 0; i < n; i++) {\n        int v;\n        scanf(\"%d\", &v);\n        head = append(head, v);\n    }\n\n    head = reverse_list(head);\n\n    long sum = 0;\n    int have_min = 0;\n    int mn = 0, mx = 0;\n    struct Node *cur = head;\n    int first = 1;\n    while (cur != NULL) {\n        if (!first) printf(\" \");\n        printf(\"%d\", cur->value);\n        first = 0;\n        sum += cur->value;\n        if (!have_min) {\n            mn = cur->value;\n            mx = cur->value;\n            have_min = 1;\n        } else {\n            if (cur->value < mn) mn = cur->value;\n            if (cur->value > mx) mx = cur->value;\n        }\n        cur = cur->next;\n    }\n    printf(\"\\n\");\n    if (have_min) {\n        printf(\"sum=%ld min=%d max=%d\\n\", sum, mn, mx);\n    } else {\n        printf(\"sum=0\\n\");\n    }\n\n    free_list(head);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 400,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 929,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 929
+          }
+        ],
+        "thoughts_token_count": 2637,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3966,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s26_rpn_calculator",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 22.970302335s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '22s'}]}}"
+    "timestamp_utc": "2026-07-23T08:17:29.021052+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n/* Girdi: tek satir, bosluklarla ayrilmis ters-Polonya (postfix/RPN) ifade.\n   Sayilar tam sayi olabilir (negatif dahil), islecler: + - * /.\n   Cikti: ifadenin tam sayi sonucu (tam sayi bolme, sifira dogru kirpar).\n   Ornek: \"3 4 +\" -> 7 ; \"5 1 2 + 4 * + 3 -\" -> 14 ; \"10 2 /\" -> 5 */\n\n#define STACK_CAP 256\n\nstatic long stack[STACK_CAP];\nstatic int sp = 0;\n\nstatic void push(long v) {\n    if (sp < STACK_CAP) stack[sp++] = v;\n}\n\nstatic long pop(void) {\n    if (sp == 0) return 0;\n    return stack[--sp];\n}\n\nstatic int is_operator(const char *tok) {\n    return (strcmp(tok, \"+\") == 0 || strcmp(tok, \"-\") == 0 ||\n            strcmp(tok, \"*\") == 0 || strcmp(tok, \"/\") == 0);\n}\n\nstatic int is_number(const char *tok) {\n    int i = 0;\n    if (tok[0] == '-' || tok[0] == '+') i = 1;\n    if (tok[i] == '\\0') return 0;\n    for (; tok[i] != '\\0'; i++) {\n        if (tok[i] < '0' || tok[i] > '9') return 0;\n    }\n    return 1;\n}\n\nstatic long apply_op(const char *op, long a, long b) {\n    if (strcmp(op, \"+\") == 0) return a + b;\n    if (strcmp(op, \"-\") == 0) return a - b;\n    if (strcmp(op, \"*\") == 0) return a * b;\n    if (strcmp(op, \"/\") == 0) {\n        if (b == 0) return 0;\n        return a / b;\n    }\n    return 0;\n}\n\nint main(void) {\n    char line[4096];\n    if (fgets(line, sizeof(line), stdin) == NULL) return 0;\n\n    char *tok = strtok(line, \" \\t\\n\");\n    while (tok != NULL) {\n        if (is_number(tok)) {\n            push(atol(tok));\n        } else if (is_operator(tok)) {\n            long b = pop();\n            long a = pop();\n            push(apply_op(tok, a, b));\n        }\n        tok = strtok(NULL, \" \\t\\n\");\n    }\n\n    long result = pop();\n    printf(\"%ld\\n\", result);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 592,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 903,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 903
+          }
+        ],
+        "thoughts_token_count": 4974,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 6469,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s27_csv_stats",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 22.766420381s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '22s'}]}}"
+    "timestamp_utc": "2026-07-23T08:20:45.778571+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n/* Girdi: ilk satir M (satir sayisi), sonraki M satirin her biri virgulle\n   ayrilmis tam sayi degerler icerir (satir basina degisken sayida sutun,\n   en fazla MAX_COLS). Cikti: tum degerlerin toplami, ortalamasi (%g),\n   min ve maks degeri, ardindan her satirin kendi toplami. */\n\n#define MAX_COLS 32\n#define MAX_LINE 1024\n\nstatic int parse_line(char *line, long values[MAX_COLS]) {\n    int count = 0;\n    char *tok = strtok(line, \",\\n\\r\");\n    while (tok != NULL && count < MAX_COLS) {\n        values[count++] = atol(tok);\n        tok = strtok(NULL, \",\\n\\r\");\n    }\n    return count;\n}\n\nint main(void) {\n    int m;\n    char buf[MAX_LINE];\n\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    m = atoi(buf);\n\n    long total = 0;\n    long count_all = 0;\n    int have_min = 0;\n    long mn = 0, mx = 0;\n    long row_sums[256];\n    int row_count = 0;\n\n    for (int i = 0; i < m; i++) {\n        if (fgets(buf, sizeof(buf), stdin) == NULL) break;\n        long values[MAX_COLS];\n        int n = parse_line(buf, values);\n\n        long row_sum = 0;\n        for (int j = 0; j < n; j++) {\n            row_sum += values[j];\n            total += values[j];\n            count_all++;\n            if (!have_min) {\n                mn = values[j];\n                mx = values[j];\n                have_min = 1;\n            } else {\n                if (values[j] < mn) mn = values[j];\n                if (values[j] > mx) mx = values[j];\n            }\n        }\n        if (row_count < 256) row_sums[row_count++] = row_sum;\n    }\n\n    double avg = count_all > 0 ? (double)total / (double)count_all : 0.0;\n\n    printf(\"total=%ld\\n\", total);\n    printf(\"avg=%g\\n\", avg);\n    if (have_min) {\n        printf(\"min=%ld max=%ld\\n\", mn, mx);\n    } else {\n        printf(\"min=0 max=0\\n\");\n    }\n    for (int i = 0; i < row_count; i++) {\n        printf(\"row%d=%ld\\n\", i, row_sums[i]);\n    }\n\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 1378,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 927,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 927
+          }
+        ],
+        "thoughts_token_count": 9050,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 11355,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s28_bst_traversal",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 22.565818679s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '22s'}]}}"
+    "timestamp_utc": "2026-07-23T08:23:29.006631+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n\n/* Girdi: ilk satir N, sonraki satirda N adet tam sayi (tekrar olabilir).\n   Degerlerden bir ikili arama agaci (BST) kurar; sirali (in-order) dolasimi,\n   dugum sayisini ve agac yuksekligini yazdirir. Esit degerler sag alt agaca\n   eklenir (kararli, tekrarlari sayar). */\n\nstruct Node {\n    int value;\n    struct Node *left;\n    struct Node *right;\n};\n\nstatic struct Node *make_node(int v) {\n    struct Node *n = (struct Node *)malloc(sizeof(struct Node));\n    n->value = v;\n    n->left = NULL;\n    n->right = NULL;\n    return n;\n}\n\nstatic struct Node *insert(struct Node *root, int v) {\n    if (root == NULL) return make_node(v);\n    if (v < root->value) {\n        root->left = insert(root->left, v);\n    } else {\n        root->right = insert(root->right, v);\n    }\n    return root;\n}\n\nstatic int count_nodes(struct Node *root) {\n    if (root == NULL) return 0;\n    return 1 + count_nodes(root->left) + count_nodes(root->right);\n}\n\nstatic int height(struct Node *root) {\n    if (root == NULL) return 0;\n    int lh = height(root->left);\n    int rh = height(root->right);\n    return 1 + (lh > rh ? lh : rh);\n}\n\nstatic int first_print = 1;\n\nstatic void inorder(struct Node *root) {\n    if (root == NULL) return;\n    inorder(root->left);\n    if (!first_print) printf(\" \");\n    printf(\"%d\", root->value);\n    first_print = 0;\n    inorder(root->right);\n}\n\nstatic void free_tree(struct Node *root) {\n    if (root == NULL) return;\n    free_tree(root->left);\n    free_tree(root->right);\n    free(root);\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    struct Node *root = NULL;\n    for (int i = 0; i < n; i++) {\n        int v;\n        scanf(\"%d\", &v);\n        root = insert(root, v);\n    }\n\n    inorder(root);\n    printf(\"\\n\");\n    printf(\"count=%d height=%d\\n\", count_nodes(root), height(root));\n\n    free_tree(root);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 650,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 877,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 877
+          }
+        ],
+        "thoughts_token_count": 2426,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3953,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s29_hashtable_cmds",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 22.399547775s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '22s'}]}}"
+    "timestamp_utc": "2026-07-23T08:26:28.377329+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n/* Girdi: ilk satir K (komut sayisi), ardindan K satir komut.\n   Komutlar:\n     INSERT <key> <value>   -> tabloya ekler/gunceller, \"OK\" yazdirir\n     GET <key>               -> deger varsa yazdirir, yoksa \"NOT_FOUND\"\n     DEL <key>                -> silerse \"OK\", yoksa \"NOT_FOUND\"\n   Zincirleme (chaining) ile basit bir hash tablosu (djb2 tabanli). */\n\n#define TABLE_SIZE 64\n#define MAX_KEY 64\n#define MAX_LINE 256\n\nstruct Entry {\n    char key[MAX_KEY];\n    long value;\n    struct Entry *next;\n};\n\nstatic struct Entry *table[TABLE_SIZE];\n\nstatic unsigned long hash_key(const char *key) {\n    unsigned long h = 5381;\n    int c;\n    while ((c = (unsigned char)*key++)) {\n        h = ((h << 5) + h) + (unsigned long)c;\n    }\n    return h;\n}\n\nstatic struct Entry *find_entry(const char *key) {\n    unsigned long idx = hash_key(key) % TABLE_SIZE;\n    struct Entry *cur = table[idx];\n    while (cur != NULL) {\n        if (strcmp(cur->key, key) == 0) return cur;\n        cur = cur->next;\n    }\n    return NULL;\n}\n\nstatic void insert_entry(const char *key, long value) {\n    struct Entry *existing = find_entry(key);\n    if (existing != NULL) {\n        existing->value = value;\n        return;\n    }\n    unsigned long idx = hash_key(key) % TABLE_SIZE;\n    struct Entry *n = (struct Entry *)malloc(sizeof(struct Entry));\n    strncpy(n->key, key, MAX_KEY - 1);\n    n->key[MAX_KEY - 1] = '\\0';\n    n->value = value;\n    n->next = table[idx];\n    table[idx] = n;\n}\n\nstatic int delete_entry(const char *key) {\n    unsigned long idx = hash_key(key) % TABLE_SIZE;\n    struct Entry *cur = table[idx];\n    struct Entry *prev = NULL;\n    while (cur != NULL) {\n        if (strcmp(cur->key, key) == 0) {\n            if (prev == NULL) {\n                table[idx] = cur->next;\n            } else {\n                prev->next = cur->next;\n            }\n            free(cur);\n            return 1;\n        }\n        prev = cur;\n        cur = cur->next;\n    }\n    return 0;\n}\n\nstatic void free_table(void) {\n    for (int i = 0; i < TABLE_SIZE; i++) {\n        struct Entry *cur = table[i];\n        while (cur != NULL) {\n            struct Entry *next = cur->next;\n            free(cur);\n            cur = next;\n        }\n        table[i] = NULL;\n    }\n}\n\nstatic void trim_newline(char *s) {\n    size_t len = strlen(s);\n    while (len > 0 && (s[len - 1] == '\\n' || s[len - 1] == '\\r')) {\n        s[len - 1] = '\\0';\n        len--;\n    }\n}\n\nint main(void) {\n    for (int i = 0; i < TABLE_SIZE; i++) table[i] = NULL;\n\n    char line[MAX_LINE];\n    if (fgets(line, sizeof(line), stdin) == NULL) return 0;\n    int k = atoi(line);\n\n    for (int i = 0; i < k; i++) {\n        if (fgets(line, sizeof(line), stdin) == NULL) break;\n        trim_newline(line);\n\n        char cmd[16];\n        char key[MAX_KEY];\n        char rest[MAX_LINE];\n        cmd[0] = '\\0';\n        key[0] = '\\0';\n        rest[0] = '\\0';\n\n        int matched = sscanf(line, \"%15s %63s %[^\\n]\", cmd, key, rest);\n\n        if (strcmp(cmd, \"INSERT\") == 0 && matched >= 2) {\n            long value = 0;\n            if (matched >= 3) value = atol(rest);\n            insert_entry(key, value);\n            printf(\"OK\\n\");\n        } else if (strcmp(cmd, \"GET\") == 0 && matched >= 2) {\n            struct Entry *e = find_entry(key);\n            if (e != NULL) {\n                printf(\"%ld\\n\", e->value);\n            } else {\n                printf(\"NOT_FOUND\\n\");\n            }\n        } else if (strcmp(cmd, \"DEL\") == 0 && matched >= 2) {\n            if (delete_entry(key)) {\n                printf(\"OK\\n\");\n            } else {\n                printf(\"NOT_FOUND\\n\");\n            }\n        }\n    }\n\n    free_table();\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 780,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1479,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1479
+          }
+        ],
+        "thoughts_token_count": 5395,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 7654,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s30_luhn_check",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 22.28349988s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '22s'}]}}"
+    "timestamp_utc": "2026-07-23T08:29:18.408848+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <string.h>\n#include <stdio.h>\n\n/* KAYNAK: Rosetta Code, \"Luhn test of credit card numbers\", C cozumu.\n   https://rosettacode.org/wiki/Luhn_test_of_credit_card_numbers\n   (GFDL 1.2 / CC-BY-SA lisansli, atifla yeniden kullanima acik).\n   Algoritma fonksiyonu (luhn) KAYNAKTAN DEGISTIRILMEDEN alinmistir;\n   yalnizca main() bu deney ortaminin stdin/stdout sozlesmesine uyacak\n   sekilde YENIDEN YAZILMISTIR (orijinalde sabit kodlanmis bir liste vardi). */\n\nint luhn(const char* cc)\n{\n   const int m[] = {0,2,4,6,8,1,3,5,7,9}; // mapping for rule 3\n   int i, odd = 1, sum = 0;\n\n   for (i = strlen(cc); i--; odd = !odd) {\n      int digit = cc[i] - '0';\n      sum += odd ? digit : m[digit];\n   }\n\n   return sum % 10 == 0;\n}\n\nint main(void)\n{\n   char buf[64];\n   if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n   size_t len = strlen(buf);\n   while (len > 0 && (buf[len-1] == '\\n' || buf[len-1] == '\\r')) {\n      buf[--len] = '\\0';\n   }\n   printf(\"%s\\n\", luhn(buf) ? \"ok\" : \"not ok\");\n   return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 453,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 626,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 626
+          }
+        ],
+        "thoughts_token_count": 4240,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 5319,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s31_soundex",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 22.119490648s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '22s'}]}}"
+    "timestamp_utc": "2026-07-23T08:32:38.005501+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <ctype.h>\n\n/* KAYNAK: Rosetta Code, \"Soundex\", C cozumu.\n   https://rosettacode.org/wiki/Soundex\n   (GFDL 1.2 / CC-BY-SA lisansli, atifla yeniden kullanima acik).\n   add_code/init/soundex fonksiyonlari KAYNAKTAN DEGISTIRILMEDEN alinmistir;\n   yalnizca main() bu deney ortaminin stdin/stdout sozlesmesine uyacak\n   sekilde YENIDEN YAZILMISTIR (orijinalde sabit kodlanmis bir isim listesi\n   ve karsilastirma vardi). */\n\n/* for ASCII only */\nstatic char code[128] = { 0 };\nvoid add_code(const char *s, int c)\n{\n\twhile (*s) {\n\t\tcode[(int)*s] = code[0x20 ^ (int)*s] = c;\n\t\ts++;\n\t}\n}\n\nvoid init(void)\n{\n\tstatic const char *cls[] =\n\t\t{ \"AEIOU\", \"\", \"BFPV\", \"CGJKQSXZ\", \"DT\", \"L\", \"MN\", \"R\", 0};\n\tint i;\n\tfor (i = 0; cls[i]; i++)\n\t\tadd_code(cls[i], i - 1);\n}\n\n/* returns a static buffer; user must copy if want to save\n   result across calls */\nconst char* soundex(const char *s)\n{\n\tstatic char out[5];\n\tint c, prev, i;\n\n\tout[0] = out[4] = 0;\n\tif (!s || !*s) return out;\n\n\tout[0] = *s++;\n\n\t/* first letter, though not coded, can still affect next letter: Pfister */\n\tprev = code[(int)out[0]];\n\tfor (i = 1; *s && i < 4; s++) {\n\t\tif ((c = code[(int)*s]) == prev) continue;\n\n\t\tif (c == -1) prev = 0;\t/* vowel as separator */\n\t\telse if (c > 0) {\n\t\t\tout[i++] = c + '0';\n\t\t\tprev = c;\n\t\t}\n\t}\n\twhile (i < 4) out[i++] = '0';\n\treturn out;\n}\n\nint main(void)\n{\n\tchar buf[128];\n\tif (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n\tsize_t len = strlen(buf);\n\twhile (len > 0 && (buf[len-1] == '\\n' || buf[len-1] == '\\r')) {\n\t\tbuf[--len] = '\\0';\n\t}\n\tinit();\n\tprintf(\"%s\\n\", soundex(buf));\n\treturn 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 730,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 914,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 914
+          }
+        ],
+        "thoughts_token_count": 8223,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 9867,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s32_levenshtein",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 21.981071055s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '21s'}]}}"
+    "timestamp_utc": "2026-07-23T08:35:31.653669+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* KAYNAK: Rosetta Code, \"Levenshtein distance\", C cozumu.\n   https://rosettacode.org/wiki/Levenshtein_distance\n   (GFDL 1.2 / CC-BY-SA lisansli, atifla yeniden kullanima acik).\n   levenshtein() fonksiyonu KAYNAKTAN DEGISTIRILMEDEN alinmistir (ozyinelemeli,\n   memoizasyonsuz hali); yalnizca main() bu deney ortaminin stdin/stdout\n   sozlesmesine uyacak sekilde YENIDEN YAZILMISTIR (orijinalde sabit kodlanmis\n   iki sabit dize vardi). NOT: Ozyinelemeli/memoizasyonsuz oldugundan girdi\n   uzunlugu kisa tutulmalidir (buyuk girdilerde katlanarak yavaslar). */\n\nint levenshtein(const char *s, int ls, const char *t, int lt)\n{\n        int a, b, c;\n\n        if (!ls) return lt;\n        if (!lt) return ls;\n\n        if (s[ls - 1] == t[lt - 1])\n                return levenshtein(s, ls - 1, t, lt - 1);\n\n        a = levenshtein(s, ls - 1, t, lt - 1);\n        b = levenshtein(s, ls,     t, lt - 1);\n        c = levenshtein(s, ls - 1, t, lt    );\n\n        if (a > b) a = b;\n        if (a > c) a = c;\n\n        return a + 1;\n}\n\nstatic void trim_newline(char *s) {\n    size_t len = strlen(s);\n    while (len > 0 && (s[len-1] == '\\n' || s[len-1] == '\\r')) {\n        s[--len] = '\\0';\n    }\n}\n\nint main(void)\n{\n    char s1[64], s2[64];\n    if (fgets(s1, sizeof(s1), stdin) == NULL) return 0;\n    if (fgets(s2, sizeof(s2), stdin) == NULL) return 0;\n    trim_newline(s1);\n    trim_newline(s2);\n\n    printf(\"%d\\n\", levenshtein(s1, (int)strlen(s1), s2, (int)strlen(s2)));\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 583,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 808,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 808
+          }
+        ],
+        "thoughts_token_count": 4579,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 5970,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s33_knapsack",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 21.836878256s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '21s'}]}}"
+    "timestamp_utc": "2026-07-23T08:38:24.712210+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n\n/* KAYNAK: Rosetta Code, \"Knapsack problem/0-1\", C cozumu.\n   https://rosettacode.org/wiki/Knapsack_problem/0-1\n   (GFDL 1.2 / CC-BY-SA lisansli, atifla yeniden kullanima acik).\n   item_t yapisi ve knapsack() (dinamik programlama) fonksiyonu KAYNAKTAN\n   DEGISTIRILMEDEN alinmistir (yalnizca item_t'den kullanilmayan \"name\" alani\n   cikarilmistir); main() bu deney ortaminin stdin/stdout sozlesmesine uyacak\n   sekilde YENIDEN YAZILMISTIR (orijinalde sabit kodlanmis 22 esyalik bir\n   liste ve 400 birimlik sabit kapasite vardi). */\n\ntypedef struct {\n    int weight;\n    int value;\n} item_t;\n\nint *knapsack (item_t *items, int n, int w) {\n    int i, j, a, b, *mm, **m, *s;\n    mm = calloc((n + 1) * (w + 1), sizeof (int));\n    m = malloc((n + 1) * sizeof (int *));\n    m[0] = mm;\n    for (i = 1; i <= n; i++) {\n        m[i] = &mm[i * (w + 1)];\n        for (j = 0; j <= w; j++) {\n            if (items[i - 1].weight > j) {\n                m[i][j] = m[i - 1][j];\n            }\n            else {\n                a = m[i - 1][j];\n                b = m[i - 1][j - items[i - 1].weight] + items[i - 1].value;\n                m[i][j] = a > b ? a : b;\n            }\n        }\n    }\n    s = calloc(n, sizeof (int));\n    for (i = n, j = w; i > 0; i--) {\n        if (m[i][j] > m[i - 1][j]) {\n            s[i - 1] = 1;\n            j -= items[i - 1].weight;\n        }\n    }\n    free(mm);\n    free(m);\n    return s;\n}\n\nint main(void) {\n    int n, cap;\n    if (scanf(\"%d %d\", &n, &cap) != 2) return 0;\n\n    item_t *items = malloc(n * sizeof(item_t));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &items[i].weight, &items[i].value);\n    }\n\n    int *s = knapsack(items, n, cap);\n\n    int tw = 0, tv = 0;\n    for (int i = 0; i < n; i++) {\n        if (s[i]) {\n            tw += items[i].weight;\n            tv += items[i].value;\n        }\n    }\n    printf(\"weight=%d value=%d\\n\", tw, tv);\n\n    free(s);\n    free(items);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 822,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1015,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1015
+          }
+        ],
+        "thoughts_token_count": 4934,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 6771,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s34_hanoi",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 21.701452596s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '21s'}]}}"
+    "timestamp_utc": "2026-07-23T08:41:02.084588+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* KAYNAK: Rosetta Code, \"Towers of Hanoi\", C cozumu.\n   https://rosettacode.org/wiki/Towers_of_Hanoi\n   (GFDL 1.2 / CC-BY-SA lisansli, atifla yeniden kullanima acik).\n   move() fonksiyonu KAYNAKTAN DEGISTIRILMEDEN alinmistir; yalnizca main()\n   bu deney ortaminin stdin/stdout sozlesmesine uyacak sekilde YENIDEN\n   YAZILMISTIR (orijinalde sabit kodlanmis n=4 vardi). */\n\nvoid move(int n, int from, int via, int to)\n{\n  if (n > 1) {\n    move(n - 1, from, to, via);\n    printf(\"Move disk from pole %d to pole %d\\n\", from, to);\n    move(n - 1, via, from, to);\n  } else {\n    printf(\"Move disk from pole %d to pole %d\\n\", from, to);\n  }\n}\n\nint main(void)\n{\n  int n;\n  if (scanf(\"%d\", &n) != 1) return 0;\n  if (n > 0) move(n, 1, 2, 3);\n  return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 235,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 533,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 533
+          }
+        ],
+        "thoughts_token_count": 1319,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 2087,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s35_lcs",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 21.552130126s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '21s'}]}}"
+    "timestamp_utc": "2026-07-23T08:43:57.864420+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n/* KAYNAK: Rosetta Code, \"Longest common subsequence\", C cozumu.\n   https://rosettacode.org/wiki/Longest_common_subsequence\n   (GFDL 1.2 / CC-BY-SA lisansli, atifla yeniden kullanima acik).\n   lcs() (dinamik programlama) fonksiyonu KAYNAKTAN DEGISTIRILMEDEN\n   alinmistir; main() bu deney ortaminin stdin/stdout sozlesmesine uyacak\n   sekilde EKLENMISTIR (orijinal kaynakta main() yoktu, yalnizca lcs()\n   fonksiyonu tanimliydi). */\n\n#define MAX(a, b) (a > b ? a : b)\n\nint lcs (char *a, int n, char *b, int m, char **s) {\n    int i, j, k, t;\n    int *z = calloc((n + 1) * (m + 1), sizeof (int));\n    int **c = calloc((n + 1), sizeof (int *));\n    for (i = 0; i <= n; i++) {\n        c[i] = &z[i * (m + 1)];\n    }\n    for (i = 1; i <= n; i++) {\n        for (j = 1; j <= m; j++) {\n            if (a[i - 1] == b[j - 1]) {\n                c[i][j] = c[i - 1][j - 1] + 1;\n            }\n            else {\n                c[i][j] = MAX(c[i - 1][j], c[i][j - 1]);\n            }\n        }\n    }\n    t = c[n][m];\n    *s = malloc(t + 1);\n    (*s)[t] = '\\0';\n    for (i = n, j = m, k = t - 1; k >= 0;) {\n        if (a[i - 1] == b[j - 1])\n            (*s)[k] = a[i - 1], i--, j--, k--;\n        else if (c[i][j - 1] > c[i - 1][j])\n            j--;\n        else\n            i--;\n    }\n    free(c);\n    free(z);\n    return t;\n}\n\nstatic void trim_newline(char *s) {\n    size_t len = strlen(s);\n    while (len > 0 && (s[len-1] == '\\n' || s[len-1] == '\\r')) {\n        s[--len] = '\\0';\n    }\n}\n\nint main(void) {\n    char a[256], b[256];\n    if (fgets(a, sizeof(a), stdin) == NULL) return 0;\n    if (fgets(b, sizeof(b), stdin) == NULL) return 0;\n    trim_newline(a);\n    trim_newline(b);\n\n    char *s = NULL;\n    int len = lcs(a, (int)strlen(a), b, (int)strlen(b), &s);\n    printf(\"len=%d lcs=%s\\n\", len, s);\n    free(s);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 841,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1019,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1019
+          }
+        ],
+        "thoughts_token_count": 5335,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 7195,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s36_crc32",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 21.427461842s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '21s'}]}}"
+    "timestamp_utc": "2026-07-23T08:46:47.192039+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <inttypes.h>\n#include <stdio.h>\n#include <string.h>\n\n/* KAYNAK: Rosetta Code, \"CRC-32\", C cozumu (zlib'siz, tablo tabanli varyant).\n   https://rosettacode.org/wiki/CRC-32\n   (GFDL 1.2 / CC-BY-SA lisansli, atifla yeniden kullanima acik).\n   rc_crc32() fonksiyonu KAYNAKTAN DEGISTIRILMEDEN alinmistir; yalnizca\n   main() bu deney ortaminin stdin/stdout sozlesmesine uyacak sekilde\n   YENIDEN YAZILMISTIR (orijinalde sabit kodlanmis bir dize vardi). */\n\nuint32_t\nrc_crc32(uint32_t crc, const char *buf, size_t len)\n{\n\tstatic uint32_t table[256];\n\tstatic int have_table = 0;\n\tuint32_t rem;\n\tuint8_t octet;\n\tint i, j;\n\tconst char *p, *q;\n\n\tif (have_table == 0) {\n\t\tfor (i = 0; i < 256; i++) {\n\t\t\trem = i;\n\t\t\tfor (j = 0; j < 8; j++) {\n\t\t\t\tif (rem & 1) {\n\t\t\t\t\trem >>= 1;\n\t\t\t\t\trem ^= 0xedb88320;\n\t\t\t\t} else\n\t\t\t\t\trem >>= 1;\n\t\t\t}\n\t\t\ttable[i] = rem;\n\t\t}\n\t\thave_table = 1;\n\t}\n\n\tcrc = ~crc;\n\tq = buf + len;\n\tfor (p = buf; p < q; p++) {\n\t\toctet = *p;\n\t\tcrc = (crc >> 8) ^ table[(crc & 0xff) ^ octet];\n\t}\n\treturn ~crc;\n}\n\nstatic void trim_newline(char *s) {\n    size_t len = strlen(s);\n    while (len > 0 && (s[len-1] == '\\n' || s[len-1] == '\\r')) {\n        s[--len] = '\\0';\n    }\n}\n\nint\nmain(void)\n{\n\tchar buf[1024];\n\tif (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n\ttrim_newline(buf);\n\tprintf(\"%\" PRIX32 \"\\n\", rc_crc32(0, buf, strlen(buf)));\n\treturn 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 419,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 831,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 831
+          }
+        ],
+        "thoughts_token_count": 3622,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4872,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s37_bsd_getopt",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 21.168808201s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '21s'}]}}"
+    "timestamp_utc": "2026-07-23T08:50:30.409539+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/*\n * Kaynak: OpenBSD/FreeBSD libc getopt.c (BSD-3-Clause)\n * https://raw.githubusercontent.com/freebsd/freebsd-src/main/lib/libc/stdlib/getopt.c\n * Copyright (c) 1987, 1993, 1994 The Regents of the University of California.\n * Orijinal, 1987'den kalma, gerçek işletim sistemi (libc) kodudur (~39 yıllık).\n *\n * DEĞİŞİKLİK: Yalnızca aşağıdakiler değiştirildi/eklendi; getopt() fonksiyonunun\n * KENDİSİ kaynaktan HİÇBİR DEĞİŞİKLİK YAPILMADAN alınmıştır:\n *   - _getprogname() BSD'ye özgü olduğundan basit bir sabit döndürecek şekilde\n *     yeniden tanımlandı (uyarı mesajı biçimini etkiler, çekirdek mantığı değil).\n *   - main() bu deney ortamının stdin/stdout sözleşmesine uyacak şekilde\n *     tarafımızca yazıldı (orijinal dosyada main() yoktur, bu bir kütüphane\n *     fonksiyonudur).\n * Bu program, bilinçli olarak \"global mutable state\" (optarg/optind/optopt/\n * opterr) temasını gerçek, üretim (production) legacy kodunda test eder — bu,\n * veri setindeki s19_global_counter ile aynı semantik boşluğun sentetik değil\n * gerçek bir örneğidir.\n */\n#include <stdio.h>\n#include <string.h>\n\nstatic const char *_getprogname(void) { return \"prog\"; }\n\nint\topterr = 1,\t\t/* if error message should be printed */\n\toptind = 1,\t\t/* index into parent argv vector */\n\toptopt,\t\t\t/* character checked for validity */\n\toptreset;\t\t/* reset getopt */\nchar\t*optarg;\t\t/* argument associated with option */\n\n#define\tBADCH\t(int)'?'\n#define\tBADARG\t(int)':'\nstatic char EMSG[] = \"\";\n/*\n * getopt --\n *\tParse argc/argv argument vector.\n */\nint\ngetopt(int nargc, char * const nargv[], const char *ostr)\n{\n\tstatic char *place = EMSG;\t\t/* option letter processing */\n\tchar *oli;\t\t\t\t/* option letter list index */\n\n\tif (optreset || *place == 0) {\t\t/* update scanning pointer */\n\t\toptreset = 0;\n\t\tplace = nargv[optind];\n\t\tif (optind >= nargc || *place++ != '-') {\n\t\t\t/* Argument is absent or is not an option */\n\t\t\tplace = EMSG;\n\t\t\treturn (-1);\n\t\t}\n\t\toptopt = *place++;\n\t\tif (optopt == '-' && *place == 0) {\n\t\t\t/* \"--\" => end of options */\n\t\t\t++optind;\n\t\t\tplace = EMSG;\n\t\t\treturn (-1);\n\t\t}\n\t\tif (optopt == 0) {\n\t\t\t/* Solitary '-', treat as a '-' option\n\t\t\t   if the program (eg su) is looking for it. */\n\t\t\tplace = EMSG;\n\t\t\tif (strchr(ostr, '-') == NULL)\n\t\t\t\treturn (-1);\n\t\t\toptopt = '-';\n\t\t}\n\t} else\n\t\toptopt = *place++;\n\n\t/* See if option letter is one the caller wanted... */\n\tif (optopt == ':' || (oli = strchr(ostr, optopt)) == NULL) {\n\t\tif (*place == 0)\n\t\t\t++optind;\n\t\tif (opterr && *ostr != ':')\n\t\t\t(void)fprintf(stderr,\n\t\t\t    \"%s: illegal option -- %c\\n\", _getprogname(),\n\t\t\t    optopt);\n\t\treturn (BADCH);\n\t}\n\n\t/* Does this option need an argument? */\n\tif (oli[1] != ':') {\n\t\t/* don't need argument */\n\t\toptarg = NULL;\n\t\tif (*place == 0)\n\t\t\t++optind;\n\t} else {\n\t\t/* Option-argument is either the rest of this argument or the\n\t\t   entire next argument. */\n\t\tif (*place)\n\t\t\toptarg = place;\n\t\telse if (oli[2] == ':')\n\t\t\t/*\n\t\t\t * GNU Extension, for optional arguments if the rest of\n\t\t\t * the argument is empty, we return NULL\n\t\t\t */\n\t\t\toptarg = NULL;\n\t\telse if (nargc > ++optind)\n\t\t\toptarg = nargv[optind];\n\t\telse {\n\t\t\t/* option-argument absent */\n\t\t\tplace = EMSG;\n\t\t\tif (*ostr == ':')\n\t\t\t\treturn (BADARG);\n\t\t\tif (opterr)\n\t\t\t\t(void)fprintf(stderr,\n\t\t\t\t    \"%s: option requires an argument -- %c\\n\",\n\t\t\t\t    _getprogname(), optopt);\n\t\t\treturn (BADCH);\n\t\t}\n\t\tplace = EMSG;\n\t\t++optind;\n\t}\n\treturn (optopt);\t\t\t/* return option letter */\n}\n\n/* --- main(): deney ortami stdin/stdout sozlesmesi (tarafimizca yazildi) --- */\nint main(void) {\n\tchar ostr[256];\n\tint n;\n\tif (!fgets(ostr, sizeof(ostr), stdin)) return 0;\n\tostr[strcspn(ostr, \"\\r\\n\")] = 0;\n\tif (scanf(\"%d\", &n) != 1) return 0;\n\tgetchar(); /* newline'i tuket */\n\n\tchar buf[64][256];\n\tchar *argv_[65];\n\targv_[0] = \"prog\";\n\tfor (int i = 0; i < n; i++) {\n\t\tif (!fgets(buf[i], sizeof(buf[i]), stdin)) { buf[i][0] = 0; }\n\t\tbuf[i][strcspn(buf[i], \"\\r\\n\")] = 0;\n\t\targv_[i + 1] = buf[i];\n\t}\n\tint argc_ = n + 1;\n\n\tint c;\n\twhile ((c = getopt(argc_, argv_, ostr)) != -1) {\n\t\tif (c == '?')\n\t\t\tprintf(\"opt=? arg=(null)\\n\");\n\t\telse if (c == ':')\n\t\t\tprintf(\"opt=: arg=(null)\\n\");\n\t\telse\n\t\t\tprintf(\"opt=%c arg=%s\\n\", c, optarg ? optarg : \"(null)\");\n\t}\n\tfor (int i = optind; i < argc_; i++) {\n\t\tprintf(\"REST:%s\\n\", argv_[i]);\n\t}\n\treturn 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 1653,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1763,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1763
+          }
+        ],
+        "thoughts_token_count": 16911,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 20327,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s38_bsd_strtol",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 21.05744133s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '21s'}]}}"
+    "timestamp_utc": "2026-07-23T08:54:15.212443+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/*\n * Kaynak: OpenBSD libc strtol.c (BSD-3-Clause)\n * https://raw.githubusercontent.com/openbsd/src/master/lib/libc/stdlib/strtol.c\n * Copyright (c) 1990 The Regents of the University of California.\n * Orijinal, 1990'dan kalma gerçek işletim sistemi (libc) kodudur (~36 yıllık).\n *\n * DEĞİŞİKLİK: strtol() fonksiyonunun KENDİSİ kaynaktan HİÇBİR DEĞİŞİKLİK\n * YAPILMADAN alınmıştır (yalnızca OpenBSD'ye özgü son satır \"DEF_STRONG(strtol);\"\n * kaldırıldı, bu bir sembol-görünürlük makrosu olup mantığın parçası değildir).\n * main() bu deney ortamının stdin/stdout sözleşmesine uyacak şekilde tarafımızca\n * yazılmıştır (orijinal dosya bir kütüphane fonksiyonudur, main() içermez).\n *\n * ÖNEMLİ PLATFORM NOTU: Bu derleyicide (MSYS2/UCRT64 gcc, Windows LLP64 veri\n * modeli) `long` 32 bittir (sizeof(long)==4), Linux/LP64'teki 64 bitlik\n * `long`dan FARKLIDIR. Taşma eşiği testleri (aşağıda) bu platforma göre\n * seçilmiştir; başka bir platformda farklı eşik gerekebilir (bkz. makale §3.7).\n * Bu, aynı zamanda C↔Rust arasında bir ek semantik boşluğu (tamsayı GENİŞLİĞİ\n * platforma bağlıdır, Rust'ta ise i32/i64 açıkça seçilir) gözlemlemek için\n * bilinçli olarak korunmuştur.\n */\n#include <ctype.h>\n#include <errno.h>\n#include <limits.h>\n#include <stdlib.h>\n#include <stdio.h>\n#include <string.h>\n\nlong\nstrtol(const char *nptr, char **endptr, int base)\n{\n\tconst char *s;\n\tlong acc, cutoff;\n\tint c;\n\tint neg, any, cutlim;\n\n\t/*\n\t * Ensure that base is between 2 and 36 inclusive, or the special\n\t * value of 0.\n\t */\n\tif (base < 0 || base == 1 || base > 36) {\n\t\tif (endptr != 0)\n\t\t\t*endptr = (char *)nptr;\n\t\terrno = EINVAL;\n\t\treturn 0;\n\t}\n\n\t/*\n\t * Skip white space and pick up leading +/- sign if any.\n\t * If base is 0, allow 0x for hex and 0 for octal, else\n\t * assume decimal; if base is already 16, allow 0x.\n\t */\n\ts = nptr;\n\tdo {\n\t\tc = (unsigned char) *s++;\n\t} while (isspace(c));\n\tif (c == '-') {\n\t\tneg = 1;\n\t\tc = *s++;\n\t} else {\n\t\tneg = 0;\n\t\tif (c == '+')\n\t\t\tc = *s++;\n\t}\n\tif ((base == 0 || base == 16) && c == '0' &&\n\t    (*s == 'x' || *s == 'X') && isxdigit((unsigned char)s[1])) {\n\t\tc = s[1];\n\t\ts += 2;\n\t\tbase = 16;\n\t}\n\tif (base == 0)\n\t\tbase = c == '0' ? 8 : 10;\n\n\t/*\n\t * Compute the cutoff value between legal numbers and illegal\n\t * numbers.  That is the largest legal value, divided by the\n\t * base.  An input number that is greater than this value, if\n\t * followed by a legal input character, is too big.  One that\n\t * is equal to this value may be valid or not; the limit\n\t * between valid and invalid numbers is then based on the last\n\t * digit.  For instance, if the range for longs is\n\t * [-2147483648..2147483647] and the input base is 10,\n\t * cutoff will be set to 214748364 and cutlim to either\n\t * 7 (neg==0) or 8 (neg==1), meaning that if we have accumulated\n\t * a value > 214748364, or equal but the next digit is > 7 (or 8),\n\t * the number is too big, and we will return a range error.\n\t *\n\t * Set any if any `digits' consumed; make it negative to indicate\n\t * overflow.\n\t */\n\tcutoff = neg ? LONG_MIN : LONG_MAX;\n\tcutlim = cutoff % base;\n\tcutoff /= base;\n\tif (neg) {\n\t\tif (cutlim > 0) {\n\t\t\tcutlim -= base;\n\t\t\tcutoff += 1;\n\t\t}\n\t\tcutlim = -cutlim;\n\t}\n\tfor (acc = 0, any = 0;; c = (unsigned char) *s++) {\n\t\tif (isdigit(c))\n\t\t\tc -= '0';\n\t\telse if (isalpha(c))\n\t\t\tc -= isupper(c) ? 'A' - 10 : 'a' - 10;\n\t\telse\n\t\t\tbreak;\n\t\tif (c >= base)\n\t\t\tbreak;\n\t\tif (any < 0)\n\t\t\tcontinue;\n\t\tif (neg) {\n\t\t\tif (acc < cutoff || (acc == cutoff && c > cutlim)) {\n\t\t\t\tany = -1;\n\t\t\t\tacc = LONG_MIN;\n\t\t\t\terrno = ERANGE;\n\t\t\t} else {\n\t\t\t\tany = 1;\n\t\t\t\tacc *= base;\n\t\t\t\tacc -= c;\n\t\t\t}\n\t\t} else {\n\t\t\tif (acc > cutoff || (acc == cutoff && c > cutlim)) {\n\t\t\t\tany = -1;\n\t\t\t\tacc = LONG_MAX;\n\t\t\t\terrno = ERANGE;\n\t\t\t} else {\n\t\t\t\tany = 1;\n\t\t\t\tacc *= base;\n\t\t\t\tacc += c;\n\t\t\t}\n\t\t}\n\t}\n\tif (endptr != 0)\n\t\t*endptr = (char *) (any ? s - 1 : nptr);\n\treturn (acc);\n}\n\n/* --- main(): deney ortami stdin/stdout sozlesmesi (tarafimizca yazildi) --- */\nint main(void) {\n\tchar line[512];\n\tint base;\n\twhile (fgets(line, sizeof(line), stdin)) {\n\t\tchar numstr[400];\n\t\tif (sscanf(line, \"%399s %d\", numstr, &base) != 2) continue;\n\t\terrno = 0;\n\t\tchar *endptr;\n\t\tlong result = strtol(numstr, &endptr, base);\n\t\tint consumed = (int)(endptr - numstr);\n\t\tconst char *errname = (errno == ERANGE) ? \"ERANGE\" :\n\t\t                       (errno == EINVAL) ? \"EINVAL\" : \"OK\";\n\t\tprintf(\"result=%ld errno=%s consumed=%d\\n\", result, errname, consumed);\n\t}\n\treturn 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 1549,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1930,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1930
+          }
+        ],
+        "thoughts_token_count": 17417,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 20896,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s39_bsd_heapsort",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 20.878844402s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '20s'}]}}"
+    "timestamp_utc": "2026-07-23T08:57:30.010307+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/*\n * Kaynak: OpenBSD libc heapsort.c (BSD-3-Clause)\n * https://raw.githubusercontent.com/openbsd/src/master/lib/libc/stdlib/heapsort.c\n * Copyright (c) 1991, 1993 The Regents of the University of California.\n * Orijinal, 1991'den kalma gerçek işletim sistemi (libc) kodudur (~35 yıllık).\n *\n * DEĞİŞİKLİK: heapsort() fonksiyonunun KENDİSİ (ve SWAP/COPY/CREATE/SELECT\n * makroları) kaynaktan HİÇBİR DEĞİŞİKLİK YAPILMADAN alınmıştır (yalnızca\n * OpenBSD'ye özgü son satır \"DEF_WEAK(heapsort);\" kaldırıldı). Bu fonksiyon,\n * qsort(3) ailesinin klasik generic (void*, fonksiyon-işaretçili karşılaştırıcı,\n * bayt-düzeyinde SWAP/COPY) tasarımını kullanır — veri setindeki diğer örneklerin\n * aksine, bu programın çekirdek algoritması BAYT DÜZEYİNDE HAM İŞARETÇİ\n * ARİTMETİĞİNE (void* + size_t offset) yapısal olarak bağımlıdır. int_cmp()\n * karşılaştırıcısı ve main(), Rosetta Code örneklerindeki gibi, bu deney\n * ortamının stdin/stdout sözleşmesine uyacak şekilde tarafımızca yazılmıştır\n * (orijinal dosya bir kütüphane fonksiyonudur, main() içermez; qsort(3) tarzı\n * bir çağıran her zaman kendi karşılaştırıcısını yazmak zorundadır).\n *\n * Bu örnek özellikle şu amaçla eklenmiştir: veri setindeki diğer tüm dinamik\n * veri yapıları (s25, s28, s29) Rust çevirilerinde `unsafe` gerektirmeden\n * (Option<Box<T>> ile) ifade edilebilmişti (§4.8); bu programın void*\n * genericliği ve bayt-düzeyinde SWAP/COPY makroları, LLM'in aynı \"hiç unsafe\n * kullanmama\" örüntüsünü GERÇEKTEN ham işaretçi aritmetiği gerektiren bir\n * fonksiyonla karşılaştığında da sürdürüp sürdürmediğini test eder.\n */\n#include <sys/types.h>\n#include <errno.h>\n#include <stdlib.h>\n#include <stdio.h>\n\n#define\tSWAP(a, b, count, size, tmp) { \\\n\tcount = size; \\\n\tdo { \\\n\t\ttmp = *a; \\\n\t\t*a++ = *b; \\\n\t\t*b++ = tmp; \\\n\t} while (--count); \\\n}\n\n#define COPY(a, b, count, size, tmp1, tmp2) { \\\n\tcount = size; \\\n\ttmp1 = a; \\\n\ttmp2 = b; \\\n\tdo { \\\n\t\t*tmp1++ = *tmp2++; \\\n\t} while (--count); \\\n}\n\n#define CREATE(initval, nmemb, par_i, child_i, par, child, size, count, tmp) { \\\n\tfor (par_i = initval; (child_i = par_i * 2) <= nmemb; \\\n\t    par_i = child_i) { \\\n\t\tchild = base + child_i * size; \\\n\t\tif (child_i < nmemb && compar(child, child + size) < 0) { \\\n\t\t\tchild += size; \\\n\t\t\t++child_i; \\\n\t\t} \\\n\t\tpar = base + par_i * size; \\\n\t\tif (compar(child, par) <= 0) \\\n\t\t\tbreak; \\\n\t\tSWAP(par, child, count, size, tmp); \\\n\t} \\\n}\n\n#define SELECT(par_i, child_i, nmemb, par, child, size, k, count, tmp1, tmp2) { \\\n\tfor (par_i = 1; (child_i = par_i * 2) <= nmemb; par_i = child_i) { \\\n\t\tchild = base + child_i * size; \\\n\t\tif (child_i < nmemb && compar(child, child + size) < 0) { \\\n\t\t\tchild += size; \\\n\t\t\t++child_i; \\\n\t\t} \\\n\t\tpar = base + par_i * size; \\\n\t\tCOPY(par, child, count, size, tmp1, tmp2); \\\n\t} \\\n\tfor (;;) { \\\n\t\tchild_i = par_i; \\\n\t\tpar_i = child_i / 2; \\\n\t\tchild = base + child_i * size; \\\n\t\tpar = base + par_i * size; \\\n\t\tif (child_i == 1 || compar(k, par) < 0) { \\\n\t\t\tCOPY(child, k, count, size, tmp1, tmp2); \\\n\t\t\tbreak; \\\n\t\t} \\\n\t\tCOPY(child, par, count, size, tmp1, tmp2); \\\n\t} \\\n}\n\nint\nheapsort(void *vbase, size_t nmemb, size_t size,\n    int (*compar)(const void *, const void *))\n{\n\tsize_t cnt, i, j, l;\n\tchar tmp, *tmp1, *tmp2;\n\tchar *base, *k, *p, *t;\n\n\tif (nmemb <= 1)\n\t\treturn (0);\n\n\tif (!size) {\n\t\terrno = EINVAL;\n\t\treturn (-1);\n\t}\n\n\tif ((k = malloc(size)) == NULL)\n\t\treturn (-1);\n\n\tbase = (char *)vbase - size;\n\n\tfor (l = nmemb / 2 + 1; --l;)\n\t\tCREATE(l, nmemb, i, j, t, p, size, cnt, tmp);\n\n\twhile (nmemb > 1) {\n\t\tCOPY(k, base + nmemb * size, cnt, size, tmp1, tmp2);\n\t\tCOPY(base + nmemb * size, base + size, cnt, size, tmp1, tmp2);\n\t\t--nmemb;\n\t\tSELECT(i, j, nmemb, t, p, size, k, cnt, tmp1, tmp2);\n\t}\n\tfree(k);\n\treturn (0);\n}\n\n/* --- int_cmp() ve main(): tarafimizca yazildi (qsort(3) tarzi caginin\n * gerektirdigi karsilastirici + deney ortami stdin/stdout sozlesmesi) --- */\nstatic int int_cmp(const void *a, const void *b) {\n\tint ia = *(const int *)a;\n\tint ib = *(const int *)b;\n\treturn (ia > ib) - (ia < ib);\n}\n\nint main(void) {\n\tint n;\n\tif (scanf(\"%d\", &n) != 1) return 0;\n\tint *arr = malloc(sizeof(int) * (n > 0 ? n : 1));\n\tfor (int i = 0; i < n; i++) {\n\t\tscanf(\"%d\", &arr[i]);\n\t}\n\theapsort(arr, (size_t)n, sizeof(int), int_cmp);\n\tfor (int i = 0; i < n; i++) {\n\t\tprintf(\"%d%s\", arr[i], (i + 1 < n) ? \" \" : \"\\n\");\n\t}\n\tif (n == 0) printf(\"\\n\");\n\tfree(arr);\n\treturn 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 1346,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1996,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1996
+          }
+        ],
+        "thoughts_token_count": 9979,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 13321,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s40_diff_sum",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 20.762417796s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '20s'}]}}"
+    "timestamp_utc": "2026-07-23T09:00:17.568407+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/*\n * Ozgun program (bu calisma icin yazilmistir).\n * Hedef: C'de dizi boyutu 'int' (isaretli) tutuldugunda n==0 durumu\n * \"for (i=0; i<n-1; i++)\" dongusunde GUVENLE (0 < -1 yanlis, dongu hic\n * calismaz) atlatilir. Ancak bir LLM, \"dizi boyutu\" kavramini Rust'a\n * cevirirken dogal olarak 'usize' secebilir (idiyomatik Rust'ta boyutlar\n * usize'dir); bu durumda n==0 iken 'n - 1' usize altinda TASAR (underflow)\n * ve debug modda panik verir - kaynak C kodunda hicbir zaman var olmayan,\n * yalnizca Rust'a cevirirken secilen tip nedeniyle ortaya cikan YENI bir\n * hata sinifidir.\n */\n#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    int arr[1000];\n    for (int i = 0; i < n; i++) {\n        if (scanf(\"%d\", &arr[i]) != 1) return 0;\n    }\n    int diffsum = 0;\n    for (int i = 0; i < n - 1; i++) {\n        diffsum += arr[i + 1] - arr[i];\n    }\n    printf(\"%d\\n\", diffsum);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 341,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 582,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 582
+          }
+        ],
+        "thoughts_token_count": 3566,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4489,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s41_float_bits",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 20.60468204s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '20s'}]}}"
+    "timestamp_utc": "2026-07-23T09:02:56.614399+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/*\n * Ozgun program (bu calisma icin yazilmistir).\n * Hedef: C union'i ile IEEE-754 float bit-duzeyinde yeniden yorumlama\n * (type punning). Rust'ta union yerine dogrudan f32::to_bits() gibi guvenli\n * bir karsilik var; bu ornek LLM'in bu deyimi bilip bilmedigini test eder.\n */\n#include <stdio.h>\n\nunion FloatBits {\n    float f;\n    unsigned int u;\n};\n\nint main(void) {\n    float x;\n    if (scanf(\"%f\", &x) != 1) return 0;\n    union FloatBits fb;\n    fb.f = x;\n    printf(\"%u\\n\", fb.u);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 102,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 404,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 404
+          }
+        ],
+        "thoughts_token_count": 1711,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 2217,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s42_bitfields",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 20.48792812s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '20s'}]}}"
+    "timestamp_utc": "2026-07-23T09:05:42.319631+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/*\n * Ozgun program (bu calisma icin yazilmistir).\n * Hedef: C bit-alanlari (bit-fields). Unsigned bit-alanina deger atandiginda\n * deger alanin genisligine gore KIRPILIR (mod 2^genislik) - C standardinca\n * tanimli bir davranistir. Rust'ta yerlesik bit-alani yoktur; LLM bunu elle\n * maskeleme ile taklit etmek zorundadir.\n */\n#include <stdio.h>\n\nstruct Flags {\n    unsigned int a : 1;\n    unsigned int b : 3;\n    unsigned int c : 4;\n};\n\nint main(void) {\n    unsigned int raw;\n    if (scanf(\"%u\", &raw) != 1) return 0;\n    struct Flags f;\n    f.a = raw;\n    f.b = raw;\n    f.c = raw;\n    printf(\"%u %u %u\\n\", f.a, f.b, f.c);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 224,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 458,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 458
+          }
+        ],
+        "thoughts_token_count": 2829,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3511,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s43_switch_fallthrough",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 20.318698217s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '20s'}]}}"
+    "timestamp_utc": "2026-07-23T09:08:21.103038+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/*\n * Ozgun program (bu calisma icin yazilmistir).\n * Hedef: C'nin switch/case fallthrough (dusme) davranisi - bilincli olarak\n * 'break' konulmadan bir sonraki case'e devam etmek, kumulatif deger\n * hesaplamak icin klasik bir legacy deyimidir. Rust'in match'i VARSAYILAN\n * OLARAK dusmez; LLM bu davranisi acikca yeniden uretmezse (ornegin sadece\n * eslesen kolu calistirirsa) sonuc yanlis olur.\n */\n#include <stdio.h>\n\nint main(void) {\n    int level;\n    if (scanf(\"%d\", &level) != 1) return 0;\n    int bonus = 0;\n    switch (level) {\n        case 4: bonus += 8; /* fallthrough */\n        case 3: bonus += 4; /* fallthrough */\n        case 2: bonus += 2; /* fallthrough */\n        case 1: bonus += 1;\n                break;\n        default: bonus = 0;\n    }\n    printf(\"%d\\n\", bonus);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 181,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 486,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 486
+          }
+        ],
+        "thoughts_token_count": 1642,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 2309,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s44_fib_memo_static",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 20.210180781s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '20s'}]}}"
+    "timestamp_utc": "2026-07-23T09:11:06.111175+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/*\n * Ozgun program (bu calisma icin yazilmistir).\n * Hedef: Fonksiyon-lokal 'static' diziler (kapsamli, ama fonksiyon\n * cagrilari arasinda durumu koruyan bellek) ile ozyinelemeli memoizasyon.\n * C'de yaygin bir legacy deyimidir. Rust'ta boyle bir \"fonksiyona ozel,\n * cagrilar arasi kalici durum\" dogrudan karsilanmaz - LLM ya 'static mut'\n * (unsafe) kullanmali ya da durumu acikca parametre/global yapiya\n * tasiyarak yeniden yapilandirmalidir (bkz. s19/s37 ile ayni tema, ama\n * global degil fonksiyon-kapsamli static).\n */\n#include <stdio.h>\n\nlong fib_cached(int n) {\n    static long cache[50];\n    static int have[50];\n    if (n < 2) return n;\n    if (have[n]) return cache[n];\n    long r = fib_cached(n - 1) + fib_cached(n - 2);\n    cache[n] = r;\n    have[n] = 1;\n    return r;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    printf(\"%ld\\n\", fib_cached(n));\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 281,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 560,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 560
+          }
+        ],
+        "thoughts_token_count": 2690,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3531,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s45_goto_cleanup",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 20.041017722s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '20s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 25.800991762s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
   },
   {
     "sample_id": "s46_musl_qsort",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 19.919159348s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '19s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 25.660032923s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
   },
   {
     "sample_id": "s47_redis_sds",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 19.65985206s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '19s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 25.466255616s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
   },
   {
     "sample_id": "s48_cjson_number",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 19.483958051s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '19s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 25.32698057s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
   },
   {
     "sample_id": "s49_negative_byte_count",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 19.332269075s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '19s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 25.181333198s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
   },
   {
     "sample_id": "s50_id_generator",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 19.207199701s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '19s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 25.03820763s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
   },
   {
     "sample_id": "s51_long_clamp",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 19.059755151s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '19s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 24.887980354s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   },
   {
     "sample_id": "s52_window_sum",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 18.902107195s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '18s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 24.735837884s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   },
   {
     "sample_id": "s53_tax_bracket",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 18.751723289s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '18s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 24.617440706s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   },
   {
     "sample_id": "s54_stack_module",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 18.60108388s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '18s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 24.500889199s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   },
   {
     "sample_id": "s55_config_parser",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 18.14250426s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '18s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 24.321659046s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   },
   {
     "sample_id": "s56_macro_table",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 17.973028125s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '17s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 24.194109681s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   },
   {
     "sample_id": "s57_shared_counter_threads",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 17.826052018s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '17s'}]}}"
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 24.033316178s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   }
 ]

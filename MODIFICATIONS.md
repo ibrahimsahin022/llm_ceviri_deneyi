@@ -575,3 +575,41 @@ fallthrough), s56 (makro çoklu-değerlendirme) — hepsinde başarısız girdi
 taşımıyordu.
 
 ---
+
+## Gemini Çevirilerinin Devamı — 22/57 → 44/57 (gerçek ölçüm)
+
+Kullanıcı talimatıyla, kalan 35 Gemini çevirisi için `generate_translations.py`
+istekler arasına 150 saniyelik bekleme konularak (`--sleep 150`) yeniden
+çalıştırıldı. 35 örnekten 22'si başarıyla çevrildi (22/57 → 44/57), ardından
+aynı kota duvarına (`429 RESOURCE_EXHAUSTED`, günlük kota) tekrar çarpıldı;
+kalan 13 örnek (s45-s57) hâlâ bekliyor. Sonuçlar `harness/run_experiment.py
+--rust-dir translations_rust__gemini --label gemini_partial44 --skip-missing`
+ile gerçekten derlenip çalıştırılarak ölçüldü.
+
+### Gerçekten ölçülen sayılar
+- **Gemini EA (n=44, kısmi kapsam): 41/44 = %93.18** (önceki 21/22 = %95.45'in
+  yerine geçer)
+- 3 başarısızlık:
+  - `s15_float_avg` (FE) — Claude'da da aynı kök nedenden (Kategori D, %g
+    biçimlendirme) başarısız; bağımsız model doğrulaması.
+  - `s26_rpn_calculator` (CE) — Rust ödünç denetleyicisi hatası (E0499): aynı
+    `sp` değişkenini iki ayrı `FnMut` kapanışının (`push`/`pop`) eşzamanlı
+    ödünç almaya çalışması. Claude'un çevirisinde görülmeyen, Gemini'ye özgü
+    bir hata sınıfı.
+  - `s27_csv_stats` (CE) — geçersiz biçim dizesi söz dizimi (`format!("{}e{:+=03}", ...)`
+    — Rust'ta böyle bir biçimlendirme belirteci yok). Gemini'ye özgü bir
+    hallüsinasyon örneği.
+- `results/manifest_gemini.json`, `results/results_gemini_partial44.json/csv`
+  güncellendi/eklendi.
+
+### Makaleye yansıtılan değişiklik
+`build_makale.py`'deki §4.9 ve §6 paragrafları 22/57=%95.45 yerine
+44/57=%93.18 ve üç başarısızlığın (biri ortak kök neden, ikisi Gemini'ye özgü
+yeni hata sınıfı) gerçek dökümünü yansıtacak şekilde güncellendi;
+`makale_v11.docx` yeniden üretildi.
+
+### Sonraki adım
+Kalan 13 örnek (s45_goto_cleanup - s57_shared_counter_threads), Gemini günlük
+kotası sıfırlandıktan sonra aynı yöntemle tamamlanabilir.
+
+---
