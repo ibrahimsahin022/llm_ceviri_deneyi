@@ -33,7 +33,7 @@ yapan model, derleyiciler, değerlendirme yöntemi ve her örnek programın algo
 
 ## 2. Veri Seti: "C→Rust Legacy Çeviri Benchmark'ı" (özgün)
 
-- **Boyut:** 48 program, 185 test girdisi, kaynak kod uzunluğu 10–522 satır (C).
+- **Boyut:** 57 program, 229 test girdisi, kaynak kod uzunluğu 10–522 satır (C).
   (İlk sürüm 24 program / 10–88 satırdı; kod uzunluğu ile başarı ilişkisini daha
   güçlü test etmek için 69–141 satır arasında 5 yeni program eklendi: s25–s29;
   ardından veri setinin tamamen kendi yazdığımız kodlardan oluşmadığını göstermek
@@ -41,10 +41,14 @@ yapan model, derleyiciler, değerlendirme yöntemi ve her örnek programın algo
   "Rosetta Code çok temiz/eğitici" eleştirisini gidermek için OpenBSD/FreeBSD
   libc'sinden gerçek ÜRETİM (production) kodu 3 program eklendi: s37–s39; sonra
   hedeflenmemiş C↔Rust boşluklarını sınamak için 6 özgün program eklendi:
-  s40–s45; son olarak "gerçek kod ama hâlâ kısa" eleştirisini gidermek için
+  s40–s45; ardından "gerçek kod ama hâlâ kısa" eleştirisini gidermek için
   musl libc, Redis ve cJSON gibi çok yaygın kullanılan gerçek açık kaynak
   projelerinden, önceki tüm örneklerden belirgin biçimde daha uzun/karmaşık
-  3 program eklendi: s46–s48, 262–522 satır.)
+  3 program eklendi: s46–s48, 262–522 satır; hakem geri bildirimi doğrultusunda
+  istatistiksel gücü artırmak için tek örnekle temsil edilen dört kök-neden
+  kategorisini ikinci birer örnekle güçlendiren 5 program eklendi: s49–s53;
+  son olarak çok dosyalı kod (s54, s55), karmaşık makro (s56) ve gerçek
+  paylaşılan bellek eşzamanlılığı (s57) için 4 program daha eklendi.)
 - **Kaynak (s01-s29, 29 program):** Tarafımızca yazıldı; klasik algoritma ve
   eski-kod (legacy) desenlerinden (hash fonksiyonları, matris işlemleri, string
   işleme, ayrıştırıcı, sayısal algoritmalar, dinamik veri yapıları) türetildi.
@@ -174,6 +178,15 @@ yapan model, derleyiciler, değerlendirme yöntemi ve her örnek programın algo
 | 46 | s46_musl_qsort | Smoothsort, adaptif heapsort (gerçek üretim kodu, musl libc) | 262 | 5 | Gerçek üretim kodu, bit-düzeyi işaretçi aritmetiği (unsafe) |
 | 47 | s47_redis_sds | SDS dinamik string kütüphanesi (gerçek üretim kodu, Redis) | 522 | 5 | **En uzun program (veri setinde)**, gizli başlık/pointer düzeni |
 | 48 | s48_cjson_number | Sayı ayrıştırma/yazdırma, round-trip garantili `%g` (gerçek üretim kodu, cJSON) | 389 | 5 | **Çıktı biçimlendirme (%g), 3. örnek (FE)** |
+| 49 | s49_negative_byte_count | Bayt değerleri toplamı, 2. desen (özgün) | 27 | 5 | **char işaretliliği, 2. örnek (FE)** |
+| 50 | s50_id_generator | Ardışık kimlik üretici, global durum (özgün) | 30 | 4 | Güvensiz global durum, 2. örnek (PASS) |
+| 51 | s51_long_clamp | `long` aralık sınırlama (özgün) | 33 | 5 | **Tamsayı genişliği, 2. örnek (FE)** |
+| 52 | s52_window_sum | Kayan pencere toplamı (özgün) | 33 | 5 | **usize altında taşma, 2. örnek (RE)** |
+| 53 | s53_tax_bracket | Kademeli vergi dilimi hesabı (özgün) | 31 | 5 | **Switch fallthrough, 2. örnek (FE)** |
+| 54 | s54_stack_module | Yığın (stack) modülü — başlık+uygulama+kullanım (özgün, çok dosyalı) | 125 | 5 | Çok dosyalı derleme, paylaşılan başlık (PASS) |
+| 55 | s55_config_parser | Paylaşılan struct + 2 derleme birimi (özgün, çok dosyalı) | 139 | 5 | Çok dosyalı derleme, paylaşılan veri yapısı (PASS) |
+| 56 | s56_macro_table | X-Macro token-pasting + makro çoklu-değerlendirme (özgün) | 97 | 5 | **Makro çoklu-değerlendirme yan etkisi (FE)** |
+| 57 | s57_shared_counter_threads | N pthread + mutex korumalı paylaşılan sayaç (özgün, çok dosyalı) | 71 | 5 | Gerçek paylaşılan bellek eşzamanlılığı (PASS) |
 
 Not: s40-s45, madde 1 (küçük örneklem) zayıflığını gidermek için eklenen 6 yeni
 özgün programdır; ikisi (s40, s43) daha önce hiç öngörülmemiş, gerçekten yeni
@@ -182,7 +195,11 @@ s46-s48 ise "gerçek kod ama hâlâ kısa" eleştirisini gidermek için eklenen,
 GitHub'da yaygın kullanılan gerçek açık kaynak projelerden (musl libc, Redis,
 cJSON) alınmış, önceki tüm örneklerden belirgin biçimde daha uzun/karmaşık 3
 programdır (262-522 satır); ayrıntı için yukarıdaki "Kaynak (s46-s48)" alt
-bölümüne bakınız.
+bölümüne bakınız. s49-s53, o ana kadar yalnızca birer örnekle temsil edilen
+dört kök-neden kategorisini (C, F, G, H) ikinci, bağımsız birer örnekle
+güçlendirir (istatistiksel güç için). s54/s55/s57 çok dosyalı derlemeyi
+(`manifest.json` ile birden fazla `.c` kaynağı) test eder; s56 karmaşık
+önişlemci (preprocessor) kullanımını sınar.
 
 ## 3. Deneyin Kendi Algoritması (Yöntem)
 
