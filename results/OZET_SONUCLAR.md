@@ -2,7 +2,7 @@
 
 > Tüm sayılar `harness/run_experiment.py` çalıştırılarak üretilmiştir; deney
 > deterministiktir, kendi bilgisayarında aynı sonuçları alırsın. Veri seti 24
-> programdan başlayıp beş aşamada genişletilmiştir: (1) kod uzunluğu ile başarı
+> programdan başlayıp yedi aşamada genişletilmiştir: (1) kod uzunluğu ile başarı
 > ilişkisini test etmek için 69-141 satır arasında 5 program (s25-s29) eklendi;
 > (2) veri setinin tamamen "kendi yazdığımız" kodlardan oluşmadığını göstermek
 > için Rosetta Code'dan alınmış 7 eğitim amaçlı bağımsız algoritma (s30-s36)
@@ -16,8 +16,13 @@
 > yaygın kullanılan gerçek açık kaynak projelerinden, önceki tüm örneklerden
 > belirgin biçimde daha uzun/karmaşık 3 program (s46-s48: smoothsort, SDS
 > dinamik string kütüphanesi, cJSON sayı yazdırma — 262-522 satır, MIT/BSD-3)
+> eklendi; (6) yalnızca birer örnekle temsil edilen kök-neden kategorilerini
+> (C, E, F, G, H) güçlendirmek için 5 yeni özgün program (s49-s53) eklendi;
+> (7) çok dosyalı/gerçekçi C proje yapılarını (paylaşılan başlık dosyası,
+> birden fazla derleme birimi, pthread tabanlı paylaşılan bellek eşzamanlılığı)
+> ve karmaşık makro genişletmesini test etmek için 4 yeni program (s54-s57)
 > eklendi.
-> Güncel veri seti: **48 program, 185 test girdisi**. Çeviriyi yapan model:
+> Güncel veri seti: **57 program, 229 test girdisi**. Çeviriyi yapan model:
 > **Claude Sonnet 5** (model kimliği: claude-sonnet-5) — tekrarlanabilirlik için
 > sürüm bilgisi kasıtlı olarak belirtilmiştir; bulgular bu modele özgüdür.
 
@@ -70,33 +75,41 @@ ve gelen geçerli eleştiriler doğrultusunda düzeltilmiştir:
 ## 🆕 Round 2 Geri Bildirim Seviyeleri Deneyi ("100% çok kolay" eleştirisine karşı yeni ölçüm)
 
 "Round 2'nin oracle geri bildirimi gerçekçi değil, %100 bu yüzden çok kolay elde
-edildi" eleştirisine somut, ölçülmüş bir kanıtla yanıt vermek için, aynı 8
-başarısız örnek üzerinde **iki ek geri bildirim seviyesi** ayrı ayrı denendi ve
-gerçek derleme/çalıştırma sonuçları alındı (varsayım değil, ölçüm):
+edildi" eleştirisine somut, ölçülmüş bir kanıtla yanıt vermek için, **güncel
+veri setinin (n=57) tamamındaki 17 başarısız örnek** üzerinde **iki ek geri
+bildirim seviyesi** ayrı ayrı denendi ve gerçek derleme/çalıştırma sonuçları
+alındı (varsayım değil, ölçüm — önceki sürümde bu deney yalnızca eski, n=36
+aşamasındaki 8 başarısızlıkla sınırlıydı, şimdi tüm veri setini kapsayacak
+şekilde tekrarlandı):
 
 | Seviye | İçerik | EA (örnek) | EA % |
 |---|---|---|---|
-| A — Oracle (mevcut Round 2) | Tam derleyici hatası + panik metni + beklenen/alınan farkı | 36/36 | %100.00 |
-| B — Orta (CI-benzeri) | Derleyici/panik metni tam; FE için yalnızca girdi, fark yok | 34/36 | %94.44 |
-| C — Minimal | Yalnızca "N test başarısız" (CE hariç, o her zaman görünür) | 29/36 | %80.56 |
+| A — Oracle (mevcut Round 2) | Tam derleyici hatası + panik metni + beklenen/alınan farkı | 57/57 | %100.00 |
+| B — Orta (CI-benzeri) | Derleyici/panik metni tam; FE için yalnızca girdi, fark yok | 49/57 | %85.96 |
+| C — Minimal | Yalnızca "N test başarısız" (CE hariç, o her zaman görünür) | 41/57 | %71.93 |
 
 **Yöntem:** `translations_rust_levelB/` ve `translations_rust_levelC/` klasörleri
-oluşturuldu (Round 1'in kopyaları); yalnızca izin verilen bilgiyle düzeltme
-denendi:
-- **Seviye B'de** düzeltilen 6 örnek: s19 (CE — derleyici hatası zaten
-  yeterliydi), s09/s14 (RE — panik metni "attempt to multiply with overflow"
-  wrapping'e işaret etti), s06/s13/s20 (FE — başarısız girdinin çok baytlı
-  Türkçe karakterler içerdiği görülebiliyordu, bu bayt/karakter veya
-  işaretlilik boşluğunu düşündürdü). **Düzeltilemeyen 2 örnek:** s15, s27 (%g
-  biçimlendirme hatası) — girdi yalnızca sayılardan oluştuğu ve fark
-  gösterilmediği için hatanın biçimlendirmeden kaynaklandığına dair hiçbir
-  ipucu yoktu.
+57 örneğin tamamını kapsayacak şekilde tamamlandı (Round 1'in kopyaları);
+yalnızca izin verilen bilgiyle düzeltme denendi:
+- **Seviye B'de** düzeltilen 9 örnek: s19 (CE — derleyici hatası zaten
+  yeterliydi), s09/s14/s40/s52 (RE — panik metni "attempt to
+  multiply/subtract with overflow" doğrudan tasma türüne işaret etti),
+  s06/s13/s20/s49 (FE — başarısız girdinin çok baytlı Türkçe karakterler
+  içerdiği görülebiliyordu, bu bayt/karakter veya işaretlilik boşluğunu
+  düşündürdü). **Düzeltilemeyen 8 örnek:** s15/s27/s48 (%g biçimlendirme —
+  girdi yalnızca sayılardan oluştuğu ve fark gösterilmediği için hatanın
+  biçimlendirmeden kaynaklandığına dair hiçbir ipucu yoktu), s38/s51
+  (platform tamsayı genişliği — büyük sayılar görülse de beklenen kırpma
+  davranışı görülmeden doğru genişlik tahmin edilemedi), s43/s53 (switch
+  fallthrough — girdi yalnızca tek bir tamsayı olduğundan kontrol-akışı
+  hatasına dair ipucu yoktu), s56 (makro çoklu-değerlendirme — girdi bir
+  komut adı ve sayılardan oluştuğu için makro yan etkisine dair ipucu yoktu).
 - **Seviye C'de** yalnızca CE (s19) düzeltilebildi; hiçbir ayrıntı olmadan
   RE/FE örneklerinin hiçbiri düzeltilemedi.
 
 **Sonuç:** Bu, Round 2'nin %100'ünün gerçekten bir **üst sınır** olduğunu ve
 geri bildirim ayrıntısı azaldıkça iyileştirme döngüsünün etkinliğinin ciddi
-biçimde düştüğünü (%100 → %94.44 → %80.56) varsayımsal değil, doğrudan
+biçimde düştüğünü (%100 → %85.96 → %71.93) varsayımsal değil, doğrudan
 ölçülmüş biçimde göstermektedir. Çalıştırma komutları:
 ```
 python harness/run_experiment.py --rust-dir translations_rust_levelB --label round2_levelB
@@ -108,10 +121,10 @@ python harness/run_experiment.py --rust-dir translations_rust_levelC --label rou
 Deneyde **üç ayrı koşul** var. Aralarındaki fark, "%100"ün nereden geldiğini açıklar:
 
 - **Round 1 (doğrudan / zero-shot):** LLM'in kodu tek seferde, hiç düzeltme almadan
-  çevirdiği HAM sonuç. **EA = %75.00.** Makalenin asıl "LLM ne kadar doğru çeviriyor?"
+  çevirdiği HAM sonuç. **EA = %70.18.** Makalenin asıl "LLM ne kadar doğru çeviriyor?"
   sorusuna cevabı budur.
 - **Round 1 (release modu):** Aynı ham çeviriler, ama Rust release modunda derlenir
-  (tamsayı taşma kontrolü kapalı). **EA = %79.17.** Yalnızca taşma kaynaklı RE
+  (tamsayı taşma kontrolü kapalı). **EA = %73.68.** Yalnızca taşma kaynaklı RE
   örnekleri PASS'e dönüşür (CE ve FE değişmez) — bu bir düzeltme değil, çevirideki
   gerçek bir kusurun (checked yerine wrapping_mul kullanılmaması) yalnızca belirli bir
   derleme modunda görünür olmasıdır. Not: C'de unsigned taşma tanımsız davranış (UB)
@@ -127,9 +140,9 @@ verip düzelttirince hepsi geçti" demektir. Makalede bu ayrımı net vurgula.
 
 | Koşul | Derleme modu | EA (örnek) | EA % | CE | RE | FE | NT |
 |---|---|---|---|---|---|---|---|
-| Round 1 — doğrudan çeviri | Debug | 36/48 | **%75.00** | 1 | 3 | 8 | 0 |
-| Round 1 — doğrudan çeviri | Release | 38/48 | **%79.17** | 1 | 1 | 8 | 0 |
-| Round 2 — iyileştirilmiş | Debug | 48/48 | **%100.00** | 0 | 0 | 0 | 0 |
+| Round 1 — doğrudan çeviri | Debug | 40/57 | **%70.18** | 1 | 4 | 12 | 0 |
+| Round 1 — doğrudan çeviri | Release | 42/57 | **%73.68** | 1 | 2 | 12 | 0 |
+| Round 2 — iyileştirilmiş | Debug | 57/57 | **%100.00** | 0 | 0 | 0 | 0 |
 
 Test-girdisi bazında (Round 1, debug, toplam 182): 162 PASS / 7 RE / 13 FE.
 (s19 derleme hatası olduğu için 3 test girdisi çalıştırılamadı, paydaya dahil
@@ -245,9 +258,9 @@ Mann-Whitney p=0.27 — anlamlı değil).
 
 ## Kök Neden Analizi (makalenin can alıcı kısmı)
 
-Round 1'de 12 örnek başarısız oldu (48 örneğin tamamı arasında — 13 gerçek dünya
-programından yalnızca ikisi başarısız oldu). Kök nedenler **sekiz** başlıkta
-(A-H), **dört** taksonomi türüne yayılıyor. **En kritik gözlem: 11 başarısızlık
+Round 1'de 17 örnek başarısız oldu (57 örneğin tamamı arasında — 13 gerçek dünya
+programından yalnızca ikisi başarısız oldu). Kök nedenler **dokuz** başlıkta
+(A-I), **dört** taksonomi türüne yayılıyor. **En kritik gözlem: 16 başarısızlık
 sorunsuz derlendi** (yalnızca s19 derleme hatası verdi). Yani tehlike
 sözdiziminde değil.
 
@@ -277,11 +290,15 @@ sözdiziminde değil.
   `s13` `çğ merhaba dünya` → C **20 bayt**, Rust **17 karakter** → "3 20" vs "3 17".
 - **Düzeltme (Round 2):** bayt düzeyinde işleme → PASS. (Hiçbir derleme modunda kendiliğinden düzelmez.)
 
-### C) char işaretliliği (signedness) → Fonksiyonel Hata (s20_char_sum)
+### C) char işaretliliği (signedness) → Fonksiyonel Hata (s20_char_sum, s49_negative_byte_count)
 - **Neden olur:** C'de `char` çoğu platformda **işaretlidir**; 127'den büyük baytlar
-  NEGATİF sayılır. LLM baytları Rust'ta `u8` (0..255, hep pozitif) olarak topladı.
-- **Kanıt:** `çğ` girdisi → C **−307**, Rust **717**.
-- **Düzeltme (Round 2):** her baytı `i8`'e çevirerek topla → PASS.
+  negatif sayılır. LLM baytları Rust'ta `u8` (0..255, hep pozitif) olarak topladı.
+- **Kanıt:** `çğ` girdisi → C **−307**, Rust **717**. Bağımsız bir ikinci örnekte
+  (s49_negative_byte_count, negatif bayt sayımı) aynı kök neden tekrarlandı:
+  Türkçe metinde C negatif bayt sayısını doğru sayarken, Rust'ın `u8→i32`
+  sıfır-genişletmeli çevirisi hep 0 üretti.
+- **Düzeltme (Round 2):** her baytı `i8`'e çevirerek topla → PASS (her iki
+  örnekte de).
 
 ### D) Çıktı biçimlendirme semantiği (%g) → Fonksiyonel Hata (s15_float_avg, s27_csv_stats, s48_cjson_number)
 - **Neden olur:** C'nin `%g`'si anlamlı basamak sayısına göre biçimlenir, sondaki
@@ -313,13 +330,16 @@ sözdiziminde değil.
 - **Kanıt:** `error[E0133]: use of mutable static is unsafe...`.
 - **Düzeltme (Round 2):** sayacı global değil, `&mut` parametre olarak geçir → PASS.
 
-### F) Platforma bağlı tamsayı genişliğinin sabit varsayılması → Fonksiyonel Hata (s38_bsd_strtol) — YENİ, gerçek üretim kodundan
+### F) Platforma bağlı tamsayı genişliğinin sabit varsayılması → Fonksiyonel Hata (s38_bsd_strtol, s51_long_clamp) — YENİ, gerçek üretim kodundan
 - **Neden olur:** C'nin `long` tipinin genişliği platforma bağlıdır (Linux/LP64'te
   64 bit, ancak bu derleme ortamında — Windows/LLP64, MSYS2 gcc — 32 bit). LLM,
   `long`ı yaygın bir varsayımla 64-bit `i64` olarak çevirdi.
 - **Kanıt:** `99999999999` girdisinde C, 32-bit sınırını aşınca `ERANGE` ile
   `2147483647`'e sabitliyor; `i64` tabanlı Rust çevirisi hiç taşmıyor ve
-  `99999999999`'u olduğu gibi döndürüyor.
+  `99999999999`'u olduğu gibi döndürüyor. Bağımsız bir ikinci örnekte
+  (s51_long_clamp, özgün) aynı kök neden tekrarlandı: `2000000000+2000000000`
+  toplamı C'de 32-bit sınırında kırpılırken, Rust'ın `i64` çevirisi kırpma
+  yapmadı.
 - **Neden diğerlerinden farklı:** Bu kategori, veri setinin bilinçli/hedefli
   tasarımından değil, gerçek üretim kodu (BSD libc) genişletmesinden ortaya
   çıktı — önceden hiç öngörülmemişti. Ayrıca Rust kodu burada sözdizimsel ve
@@ -327,26 +347,47 @@ sözdiziminde değil.
   platformun gerçek genişliğiyle örtüşmemesinden kaynaklanır (kategori A'daki
   gibi bir panik de yok).
 - **Düzeltme (Round 2):** `i64` yerine bu platformun gerçek `long` genişliğini
-  yansıtan `i32` kullanıldı → PASS.
+  yansıtan `i32` kullanıldı → PASS (her iki örnekte de).
 
-### G) İşaretsiz (usize) tip seçiminin yarattığı yeni taşma → Çalışma Zamanı Hatası (s40_diff_sum) — YENİ
+### G) İşaretsiz (usize) tip seçiminin yarattığı yeni taşma → Çalışma Zamanı Hatası (s40_diff_sum, s52_window_sum) — YENİ
 - **Neden olur:** C referansı dizi boyutunu işaretli `int` tutar; `n==0` iken
   `i < n-1` (yani `0 < -1`) güvenle yanlış olur, döngü hiç çalışmaz. LLM,
   "dizi boyutu" için idiyomatik Rust tercihi olan `usize` seçti; `n==0` iken
-  `n - 1` usize altında TAŞTI ve debug modda panik verdi.
-- **İlginç:** Bu panik release modunda da KAYBOLMADI — çünkü taşma sessizce
-  sarsa bile hemen ardından `arr[i+1]` erişimi Rust'ın HER ZAMAN uyguladığı
+  `n - 1` usize altında taştı ve debug modda panik verdi.
+- **İlginç:** Bu panik release modunda da kaybolmadı — çünkü taşma sessizce
+  sarsa bile hemen ardından `arr[i+1]` erişimi Rust'ın her zaman uyguladığı
   dizi sınır kontrolüne takılıp yine panik verdi. Kategori A'nın aksine, bu tür
-  bir çökme derleme yapılandırmasıyla maskelenemiyor.
-- **Düzeltme (Round 2):** `n - 1` yerine `n.saturating_sub(1)` → PASS.
+  bir çökme derleme yapılandırmasıyla maskelenemiyor. Bağımsız bir ikinci
+  örnekte (s52_window_sum, kayan pencere toplamı) aynı kök neden farklı bir
+  desende (`n - k` çıkarması) tekrarlandı.
+- **Düzeltme (Round 2):** `n - 1` / `n - k` yerine `saturating_sub` → PASS
+  (her iki örnekte de).
 
-### H) switch/case fallthrough'ın kaybolması → Fonksiyonel Hata (s43_switch_fallthrough) — YENİ
+### H) switch/case fallthrough'ın kaybolması → Fonksiyonel Hata (s43_switch_fallthrough, s53_tax_bracket) — YENİ
 - **Neden olur:** C'nin `switch`'i `break` konulmadığında bilinçli olarak bir
   sonraki case'e düşer (level=4 için 8+4+2+1=15 bonus birikir). Rust'ın
   `match`'i varsayılan olarak düşmez. LLM her seviyeyi yalnızca kendi
   (kümülatif olmayan) katkısıyla eşleştirdi (level=4 için yanlışlıkla 8 döndü).
+  Bağımsız bir ikinci örnekte (s53_tax_bracket, kümülatif vergi dilimi) aynı
+  kök neden farklı bir sayısal senaryoda tekrarlandı.
 - **Düzeltme (Round 2):** her `match` kolu, karşılık geldiği case zincirinin
-  toplam katkısını açıkça içerecek şekilde yeniden yazıldı → PASS.
+  toplam katkısını açıkça içerecek şekilde yeniden yazıldı → PASS (her iki
+  örnekte de).
+
+### I) Makro çoklu-değerlendirme yan etkisi → Fonksiyonel Hata (s56_macro_table) — YENİ
+- **Neden olur:** C önişlemci makroları saf metinsel ikamedir; bir parametre
+  makro gövdesinde birden fazla kez geçiyorsa, yan etkili bir argüman
+  (`x++`) o kadar kez değerlendirilir. `#define MAX(a,b) ((a)>(b)?(a):(b))`
+  makrosunda `a` iki kez geçer; `MAX(x++, 10)` çağrısında koşul doğru
+  çıktığında `x++` gerçekten iki kez çalışır. LLM'in doğal çevirisi
+  (`fn max(a, b)`) argümanı yalnızca bir kez değerlendirir.
+- **Kanıt:** `x=20` girdisinde C `m=21, x=22` üretirken, Rust çevirisi
+  `m=20, x=21` üretti (5 testin 2'sinde, koşulun doğru çıktığı durumlarda).
+- **İlginç:** Aynı örnekteki X-Macro/token-pasting deseni (enum + isim
+  tablosu üretimi) hiç soruna yol açmadı — yalnızca yan-etkili argümanın
+  çoklu genişletilmesi çeviri hatasına neden oldu.
+- **Düzeltme (Round 2):** C'nin metinsel ikame semantiğini kasıtlı olarak
+  yeniden üreten bir Rust `macro_rules!` tanımı yazıldı → PASS.
 
 ### Neden hiç "Sonlanmama (NT)" görülmedi?
 Bu veri setinde sonsuz döngüye yol açan bir çeviri hatası oluşmadı (NT=0). Not:
@@ -360,15 +401,15 @@ daha büyük/karmaşık kodlarda görülme olasılığı artar (gelecek çalış
 
 ## Bulgulardan Çıkan Ana Gözlemler (Tartışma için)
 
-1. **Claude Sonnet 5 için bile ham çeviri kusursuz değil (%75.00)** — ama
+1. **Claude Sonnet 5 için bile ham çeviri kusursuz değil (%70.18)** — ama
    başarısızlıklar sözdizimsel değil, **semantik**. (Tek model test edilmiştir;
    bulgu bu modele özgüdür.)
 2. **Tehlike sessiz semantik hatalardadır:** 12 başarısızlığın 11'i sorunsuz derlendi;
    asıl risk fark edilmesi zor RE ve FE'lerdir (Şekil 3, Şekil 5).
 3. **Kod uzunluğu ile anlamlı bir ilişki gözlenmedi (istatistiksel test edildi):**
    Mann-Whitney U testi, PASS/FAIL gruplarının LoC dağılımları arasında anlamlı
-   fark bulamadı (U=169.5, **p=0.273**, α=0.05'te anlamlı değil). Veri seti
-   36→39→45→48'e büyütüldükçe p-değeri 0.076→0.187→0.169→0.273 biçiminde
+   fark bulamadı (U=287.0, **p=0.359**, α=0.05'te anlamlı değil). Veri seti
+   36→39→45→48→53→57'ye büyütüldükçe p-değeri 0.076→0.187→0.169→0.273→0.337→0.359 biçiminde
    dalgalandı — bu dalgalanmanın kendisi, küçük örneklemlerde p-değerinin ne
    kadar kırılgan olduğuna dair veriye dayalı bir kanıttır. Aynı süreçte "en
    uzun program hep geçer" gözlemi bir kez geçersizleşti (154 satırlık s38
@@ -392,11 +433,11 @@ daha büyük/karmaşık kodlarda görülme olasılığı artar (gelecek çalış
    örnek) temiz/izole eğitim kodudur; BSD libc/musl/Redis/cJSON alt kümesi (6
    örnek) gerçek üretim kodu olsa da göreli olarak küçük bir örneklemdir.
 5. **İyileştirme döngüsü işe yarıyor (üst sınır olarak) — artık ölçülmüş kanıtla:**
-   hata geri bildirimi EA'yı %75.00 → %100 taşıdı; ancak bu, modele zengin bir
+   hata geri bildirimi EA'yı %70.18 → %100 taşıdı; ancak bu, modele zengin bir
    hata-oracle'ı verildiğinde elde edilen bir üst sınır performansıdır. Bunu
    varsayım olmaktan çıkarmak için iki kısıtlı geri bildirim seviyesi de ayrıca
-   ölçüldü: orta ayrıntıda (Seviye B) %94.44, minimal ayrıntıda (Seviye C)
-   %80.56 — geri bildirim zenginliği azaldıkça doğruluk doğrudan düşüyor (bkz.
+   ölçüldü: orta ayrıntıda (Seviye B) %85.96, minimal ayrıntıda (Seviye C)
+   %71.93 — geri bildirim zenginliği azaldıkça doğruluk doğrudan düşüyor (bkz.
    yukarıdaki "Round 2 Geri Bildirim Seviyeleri Deneyi"). Literatürdeki
    feedback-based yaklaşımları (Gandhi vd. 2024, Eniser vd. 2024/FLUORINE)
    deneysel olarak destekler.
@@ -408,28 +449,35 @@ daha büyük/karmaşık kodlarda görülme olasılığı artar (gelecek çalış
    kez daha (3. kez) tekrarlandı; tamsayı genişliği yalnızca gerçek üretim
    kodunda ortaya çıktı.
 7. **Derleme yapılandırması gizli değişkendir (yalnızca RE için):** aynı çeviri
-   debug'da %75.00, release'de %79.17; ancak bu fark yalnızca taşma kaynaklı RE
+   debug'da %70.18, release'de %73.68; ancak bu fark yalnızca taşma kaynaklı RE
    örneklerinden kaynaklanır (CE ve FE değişmez). Doğruluk raporlanırken derleme
    modu belirtilmelidir.
-8. **Derleme başarı oranı yanıltıcı olabilir:** veri setindeki tüm
-   programlar tek dosyalı, harici bağımlılığı olmayan yapılardır; çok dosyalı
-   gerçek projelerde derleme hataları çok daha sık görülebilir.
-9. **Bellek güvenliği/`unsafe` bulgusu nüanslandı:** 96 dosyanın (48 örnek × 2
+8. **Derleme başarı oranı yanıltıcı olabilir (kısmen düzeltildi):** veri
+   setindeki programların büyük çoğunluğu tek dosyalı, harici bağımlılığı
+   olmayan yapılardır; ancak 3 çok dosyalı/gerçekçi örnek (s54, s55, s57 —
+   paylaşılan başlık dosyası, birden fazla derleme birimi, pthread tabanlı
+   paylaşılan bellek eşzamanlılığı) eklenmiş ve hiçbirinde derleme hatası
+   gözlenmemiştir; yine de çok daha derin modül hiyerarşilerine sahip gerçek
+   projelerde derleme hataları daha sık görülebilir.
+9. **Bellek güvenliği/`unsafe` bulgusu nüanslandı:** 114 dosyanın (57 örnek × 2
    tur) yalnızca 6'sında (s37_bsd_getopt, s44_fib_memo_static, s46_musl_qsort —
    her biri hem Round 1 hem Round 2'de) gerçek `unsafe` kullanıldı — tam olarak
    C'nin dışa açık global durum, fonksiyon-lokal kalıcı durum veya ham
    byte-pointer aritmetiği sözleşmesinin bunu yapısal olarak gerektirdiği
-   yerlerde. Buna karşılık ham işaretçi aritmetiğine yapısal olarak bağımlı
-   iki başka gerçek fonksiyon — **s39_bsd_heapsort** (generic void* sıralama)
-   ve özellikle **s47_redis_sds** (pointer-öncesi gizli başlık düzeni kullanan,
-   veri setindeki EN KARMAŞIK bellek-düzeni örneği) — hiç `unsafe` kullanmadan,
-   güvenli/deyimsel bir yeniden yazımla (String tabanlı) çevrildi. Bu, LLM'in
+   yerlerde. Buna karşılık ham işaretçi aritmetiğine/paylaşılan belleğe
+   yapısal olarak bağımlı üç başka gerçek örnek — **s39_bsd_heapsort**
+   (generic void* sıralama), **s47_redis_sds** (pointer-öncesi gizli başlık
+   düzeni kullanan, veri setindeki en karmaşık bellek-düzeni örneği) ve
+   **s57_shared_counter_threads** (pthread + mutex ile gerçek paylaşılan
+   bellek eşzamanlılığı, `Arc<Mutex<>>` deseniyle çevrildi) — hiç `unsafe`
+   kullanmadan, güvenli/deyimsel bir yeniden yazımla çevrildi. Bu, LLM'in
    unsafe kullanımının kodun ham karmaşıklığından değil, C'nin dışa açık
    sözleşmesinin (harici mutable durum, fonksiyon ömrü boyunca kalıcı durum)
    doğasından etkilendiğini düşündürür.
 
 ## Figürler (results/figures/)
-- `fig2_execution_accuracy.png` — Şekil 2: Üç koşulda EA (%75.00 → %79.17 → %100).
+- `fig2_execution_accuracy.png` — Şekil 2: Üç koşulda EA (%70.18 → %73.68 → %100).
 - `fig3_error_distribution.png` — Şekil 3: Koşullara göre yığılmış sonuç dağılımı.
 - `fig4_loc_vs_success.png` — Şekil 4: Kod uzunluğu ile başarı ilişkisi (10-522 satır).
-- `fig5_rootcause.png` — Şekil 5: Başarısızlıkların kök-neden dağılımı (8 kategori).
+- `fig5_rootcause.png` — Şekil 5: Başarısızlıkların kök-neden dağılımı (9 kategori).
+- `fig4b_bootstrap_ci.png` — Şekil 4b: Üç koşulda EA + bootstrap %95 güven aralığı.

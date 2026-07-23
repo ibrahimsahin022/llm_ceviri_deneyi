@@ -534,3 +534,44 @@ karşılığı):**
   denenmedi.
 
 ---
+
+## Düzeltme — Tablo 5'in Güncel Veri Setiyle (n=57) Yeniden Ölçülmesi
+
+Kullanıcı, makaledeki Tablo 5'in (Round 2 geri bildirim seviyeleri) hâlâ
+"36/36" gibi eski bir alt-küme boyutu gösterdiğini fark etti — bu, veri
+setinin çok önceki bir aşamasındaki (n=36) 8 başarısızlık üzerinde yapılmış
+tarihsel bir ölçümdü ve güncel n=57 veri setini yansıtmıyordu. Deney,
+**tüm 17 güncel başarısızlık üzerinde gerçekten tekrarlandı**.
+
+### Değişen/eklenen dosyalar
+- `translations_rust_levelB/`, `translations_rust_levelC/`: 21 yeni örnek
+  (s37-s57) eklenerek n=57'ye tamamlandı. 9 yeni başarısızlıktan 3'ü için
+  (s40, s52, s49) gerçek "kör" (yalnızca izin verilen bilgiyle) düzeltme
+  denemesi yazıldı; kalan 6'sı (s38, s43, s48, s51, s53, s56) için orijinal
+  (düzeltilmemiş) kod korundu — bu, "bu bilgiyle düzeltilemez" bulgusunun
+  dürüst temsilidir.
+- `results/OZET_SONUCLAR.md`: Tablo 5 bölümü, Kök Neden Analizi (yeni
+  Kategori I eklendi, F/G/H'nin 2. örnekleri eklendi), Ana Gözlemler ve
+  dataset açıklaması n=57'ye güncellendi (önceden bu dosya hâlâ n=48
+  aşamasındaydı — Faz 2/3/3-devamı hiç yansıtılmamıştı, bu da ayrıca
+  düzeltildi).
+- `makale_v11.docx`: Tablo 5 gerçek n=57 sayılarıyla güncellendi; §4.2'deki
+  eski/stale "9 örnek, 8 başarısızlık" sayıları da (daha önceki bir
+  güncelleme turunda gözden kaçmış) düzeltildi.
+
+### Gerçekten ölçülen sayılar
+| Seviye | İçerik | EA (n=57) |
+|---|---|---|
+| A — Oracle | Tam derleyici hatası + panik metni + fark | 57/57 = %100.00 |
+| B — Orta | Derleyici/panik metni tam; FE'de yalnızca girdi | 49/57 = %85.96 |
+| C — Minimal | Yalnızca "N test başarısız" (CE hariç) | 41/57 = %71.93 |
+
+Seviye B'de düzeltilen 9 örnek: s19 (CE), s09/s14/s40/s52 (RE — panik metni
+tasma türünü belirtti), s06/s13/s20/s49 (FE — girdideki çok baytlı Türkçe
+karakterler ipucu verdi). Düzeltilemeyen 8 örnek: s15/s27/s48 (%g
+biçimlendirme), s38/s51 (platform tamsayı genişliği), s43/s53 (switch
+fallthrough), s56 (makro çoklu-değerlendirme) — hepsinde başarısız girdi
+(sade sayılar/komutlar) ilgili kök nedene dair gözlemlenebilir bir ipucu
+taşımıyordu.
+
+---

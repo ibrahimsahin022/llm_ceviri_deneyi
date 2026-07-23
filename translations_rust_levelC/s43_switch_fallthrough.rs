@@ -1,0 +1,15 @@
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let level: i32 = input.trim().parse().unwrap();
+    let bonus = match level {
+        4 => 8,
+        3 => 4,
+        2 => 2,
+        1 => 1,
+        _ => 0,
+    };
+    println!("{}", bonus);
+}
