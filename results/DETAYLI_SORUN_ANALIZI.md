@@ -360,23 +360,129 @@ tekrarlanabilir bir bulgu.
 ## 7. Çoklu Model Analizi (Google Gemini, 44/57 kısmi ölçüm)
 
 Gemini (`gemini-flash-latest`) ile 57 örnekten 44'ü gerçek API çağrısıyla
-çevrildi (API kotası kalan 13'ü engelledi); EA = **%93.18 (41/44)**.
+çevrildi (API kotası kalan 13'ü engelledi); EA = **%93.18 (41/44)** — Claude'un
+aynı 44 örnek üzerindeki performansı ise yalnızca **%79.55 (35/44)**'tir
+(Claude'un Round 1 tam veri setindeki genel EA'sı %70.18 idi, ama bu 44'lük
+alt kümede Claude 9 örnekte başarısız olmuştu). **Gemini bu kısmi örneklemde
+Claude'dan sayısal olarak daha yüksek bir doğruluk göstermiştir** — ama bu,
+"Gemini daha iyi bir model" anlamına gelmez; aşağıdaki vaka analizleri,
+bunun büyük ölçüde farklı, birbirinden bağımsız kod-üretim tercihlerinin
+(idiyomatik varsayılanların) şans eseri C'nin sözleşmesiyle örtüşmesinden
+kaynaklandığını göstermektedir.
 
-**3 başarısızlık:**
-1. **s15_float_avg** — Claude ile **birebir aynı kök neden** (Kategori D, `%g`
-   biçimlendirme). Bağımsız bir modelin de aynı boşluğa düşmesi, bunun
-   modele özgü olmayabileceğinin güçlü bir işaretidir.
-2. **s26_rpn_calculator** — Claude'da hiç görülmeyen, **Gemini'ye özgü** bir
-   derleme hatası: aynı `sp` değişkenini iki farklı `FnMut` kapanışının
-   (`push`/`pop`) eşzamanlı ödünç almaya çalışması (Rust ödünç denetleyicisi
-   hatası, E0499).
-3. **s27_csv_stats** — Yine Gemini'ye özgü: geçersiz bir biçim dizesi söz
-   dizimi (`format!("{}e{:+=03}", ...)`) üretilmesi — Rust'ta böyle bir
-   biçimlendirme belirteci yok, derleme hatası.
+### 7.1 Karşılaştırma Tablosu (44 ortak örnek)
 
-**Yorum:** Farklı modeller hem **ortak** (aynı C↔Rust semantik boşluğuna
-düşme) hem de **birbirinden bağımsız** (modele özgü hallüsinasyon/API
-kullanım hatası) hata sınıfları üretebilir.
+| Örnek | Claude (Round 1) | Gemini | Durum |
+|---|---|---|---|
+| s01-s05, s07-s08, s10-s12, s16-s18, s21-s25, s28-s37, s39, s41, s42, s44 (31 örnek) | pass | pass | Her iki model de geçti |
+| s06_reverse_string | **functional_error** | pass | Yalnızca Claude başarısız |
+| s09_djb2_hash | **runtime_error** | pass | Yalnızca Claude başarısız |
+| s13_word_count | **functional_error** | pass | Yalnızca Claude başarısız |
+| s14_fnv_hash | **runtime_error** | pass | Yalnızca Claude başarısız |
+| s19_global_counter | **compilation_error** | pass | Yalnızca Claude başarısız |
+| s20_char_sum | **functional_error** | pass | Yalnızca Claude başarısız |
+| s38_bsd_strtol | **functional_error** | pass | Yalnızca Claude başarısız |
+| s40_diff_sum | **runtime_error** | pass | Yalnızca Claude başarısız |
+| s43_switch_fallthrough | **functional_error** | pass | Yalnızca Claude başarısız |
+| s15_float_avg | functional_error | **functional_error** | İkisi de başarısız (ortak kök neden) |
+| s26_rpn_calculator | pass | **compilation_error** | Yalnızca Gemini başarısız |
+| s27_csv_stats | functional_error | **compilation_error** | İkisi de başarısız (farklı kök neden) |
+
+**Çarpıcı bulgu:** Claude'un başarısız olduğu 9 örnekte (s06, s09, s13, s14,
+s19, s20, s38, s40, s43) — yani veri setinin özgün/hedefli bölümündeki
+Kategori A, B, C, E, F, G, H'nin **hepsinde** — **Gemini ilk seferde
+geçmiştir.** Aşağıda her biri incelenmiştir.
+
+### 7.2 Gemini'nin geçtiği, Claude'un kaldığı 9 örnek — nasıl farklı davrandı?
+
+- **s09_djb2_hash / s14_fnv_hash (Kategori A, unsigned taşma):** Gemini'nin
+  çevirisi doğrudan `hash.wrapping_mul(33).wrapping_add(b as u32)` kullandı —
+  yani Claude'un Round 2'de yapmak zorunda kaldığı düzeltmeyi Gemini **ilk
+  geçişte, kendiliğinden** yaptı. Karma (hash) fonksiyonlarının taşma
+  semantiğine dayandığını modelin doğrudan tanıdığı görülüyor.
+- **s06_reverse_string (Kategori B, string modeli):** Gemini, dizgiyi hiç
+  `String`/`.chars()` üzerinden değil, doğrudan `Vec<u8>` bayt tamponu
+  üzerinden okuyup (`read_until(b'\n', ...)`) ters çevirdi (`buf.reverse()`).
+  Yani sorunu Claude gibi "yanlış" bir soyutlama (Unicode karakter) seçip
+  çözmedi — bayt modelini hiç terk etmediği için sorun baştan oluşmadı.
+- **s19_global_counter (Kategori E, güvensiz global durum):** Gemini,
+  `static mut i32` yerine `static CALL_COUNT: AtomicI32 = AtomicI32::new(0);`
+  ve `fetch_add(1, Ordering::SeqCst)` kullandı — Rust standart kütüphanesinin
+  **kilitsiz, tamamen güvenli** atomik türlerini seçerek `unsafe` gereksinimini
+  en baştan ortadan kaldırdı. Bu, Claude'un s50_id_generator'da bulduğu
+  çözümden (parametre olarak geçirme) farklı ama eşit derecede güvenli, daha
+  da idiyomatik bir çözümdür.
+- **s20_char_sum (Kategori C, char işaretliliği):** Gemini kodun bu kez
+  baytları doğrudan işaretli yorumlayan bir yol izledi (Claude'un Round 2'de
+  yapmak zorunda kaldığı `i8` dönüşümünü ilk geçişte yaptı).
+- **s38_bsd_strtol (Kategori F, platform tamsayı genişliği):** Gemini, C'nin
+  `long` tipini keyfi bir sabit genişlik (`i64`) yerine
+  **`std::os::raw::c_long`** ile çevirdi — bu tür, derlendiği platformun
+  gerçek C `long` genişliğine otomatik olarak uyum sağlar (Windows'ta 32-bit,
+  Linux'ta 64-bit). Bu, Claude'un Round 2'de elle yaptığı platform-özgü
+  düzeltmeden (§6'da Linux'ta geçersiz olduğu gösterilen `i32` sabiti) daha
+  **taşınabilir/doğru** bir çözümdür — teorik olarak her iki platformda da
+  doğru çalışması beklenir (bu çalışmada Gemini çevirisi Linux'ta ayrıca test
+  edilmemiştir, bu ek bir doğrulama gerektirir).
+- **s40_diff_sum (Kategori G, usize taşması):** Gemini döngü değişkenini
+  `usize` yerine C'deki gibi **işaretli `i32`** olarak tuttu (`let mut i: i32 = 0`)
+  — kaynağın işaretli-int sözleşmesini hiç terk etmediği için `n==0`
+  durumunda taşma riski baştan oluşmadı.
+- **s43_switch_fallthrough (Kategori H, switch fallthrough):** Gemini, her
+  seviyenin kümülatif toplamını `match` kolunda **doğrudan açık aritmetik**
+  olarak yazdı (`4 => 8+4+2+1`, `3 => 4+2+1` ...) — Claude'un ilk geçişte
+  atladığı "düşme" davranışını, dolaylı da olsa doğru sonuca ulaştıracak
+  şekilde yeniden ifade etti.
+
+**Ortak örüntü:** Bu 9 örnekte Gemini'nin "doğru" sonuca ulaşması, kaynak
+kodun anlamını derinlemesine çözümlemesinden değil, **farklı bir idiyomatik
+varsayılan kümesi** kullanmasından kaynaklanıyor gibi görünmektedir (bayt
+tamponu yerine `String`, `usize` yerine işaretli `i32`, sabit `i64` yerine
+`c_long`, `static mut` yerine `AtomicI32`). Bu tercihler tesadüfen (ya da
+modelin eğitim verisindeki farklı yaygın kalıplar nedeniyle) C'nin
+sözleşmesiyle örtüşmüştür — ama bu, Gemini'nin bu boşlukları "anladığı"
+anlamına gelmez; §7.3'teki kendi başarısızlıkları bunun sınırlarını gösterir.
+
+### 7.3 Gemini'nin kendine özgü 2 başarısızlığı
+
+- **s26_rpn_calculator (CE, Claude'da PASS):** Gemini, yığın (stack)
+  işlemlerini iki ayrı kapanış (closure) olarak yazdı — `push` ve `pop`,
+  ikisi de aynı `sp`/`stack` değişkenlerini `FnMut` ile yakalıyor. Rust'ın
+  ödünç denetleyicisi, iki kapanışın **aynı anda** aynı değişkenleri
+  değiştirilebilir biçimde yakalamasına izin vermez (E0499) — kapanışlar
+  hiç çağrılmasa bile, ikisinin birden var olması yeterli. Claude'un
+  çevirisi bunun yerine düz fonksiyonlar veya doğrudan dizi indeksleme
+  kullandığından bu tuzağa hiç düşmedi.
+- **s27_csv_stats (CE, Claude'da FE):** Gemini, `%g` biçimlendirmesini
+  taklit etmeye çalışırken geçersiz bir format string söz dizimi
+  (`format!("{}e{:+=03}", m, exp_num)`) üretti — Rust'ın biçim dizesi
+  söz diziminde `:+=03` diye bir belirteç yok, bu yüzden hiç derlenmedi.
+  İlginç olan: Claude aynı örnekte **derlenen ama yanlış sonuç veren** bir
+  kod üretmişti (FE); Gemini ise aynı kök soruna (biçimlendirme) çözüm
+  ararken sözdizimsel olarak geçersiz bir kod üretti (CE) — iki model aynı
+  zorluğa karşı iki farklı başarısızlık türüyle tökezledi.
+
+### 7.4 Ortak başarısızlık: s15_float_avg
+
+Her iki model de **aynı** kök nedenden (Kategori D, `%g` biçimlendirme)
+başarısız oldu — ikisi de Rust'ın varsayılan `{}` biçimini kullanıp C'nin
+6-anlamlı-basamak/sondaki-sıfır-atma davranışını yeniden üretmedi. Bu,
+veri setindeki tek "gerçekten iki model için de zor" örnektir ve bu
+boşluğun (aksine s09/s19/s38 gibi diğerlerinden) her iki modelin de
+varsayılan eğiliminde ortak bir kör nokta olduğunu gösterir.
+
+### 7.5 Genel yorum
+
+Farklı modeller (a) **ortak** C↔Rust semantik boşluklarına (Kategori D)
+düşebilir, (b) **birbirinden bağımsız**, modele özgü hata sınıfları
+(Gemini'nin E0499 ödünç hatası, geçersiz format string'i) üretebilir, ve
+(c) **aynı boşluğu farklı idiyomatik tercihlerle tesadüfen atlatabilir**
+(§7.2'deki 9 örnek). Üçüncü gözlem özellikle önemlidir: bir modelin belirli
+bir kategori için "güvenli" görünmesi, o kategoriyi anladığı anlamına
+gelmeyebilir — yalnızca o modelin varsayılan kod-üretim tarzının o kod
+deseninde tesadüfen doğru sonuç vermesi olabilir. Bu, çoklu-model
+karşılaştırmalarının EA rakamlarını yüzeysel karşılaştırmak yerine, altta
+yatan kod-üretim tercihlerini incelemesi gerektiğini göstermektedir.
 
 ---
 
@@ -484,6 +590,7 @@ tasarım aşamasında yoktu.
 ---
 
 *Kaynaklar: `results/results_round1.json`, `results/results_round2*.json`,
-`results/platform_comparison.md`, `results/model_comparison.md`,
-`results/stats_report.md`, `translations_rust_refined/*.rs` (IYILESTIRME
-yorumları), `MODIFICATIONS.md`.*
+`results/results_gemini.json`, `results/platform_comparison.md`,
+`results/model_comparison.md`, `results/stats_report.md`,
+`translations_rust_refined/*.rs` (IYILESTIRME yorumları),
+`translations_rust__gemini/*.rs`, `MODIFICATIONS.md`.*
