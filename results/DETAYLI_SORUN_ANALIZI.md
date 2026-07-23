@@ -1,11 +1,13 @@
 # Detaylı Sorun Analizi: C→Rust Çevirisinde Yaşanan Tüm Hatalar
 
 Bu belge, makaleden **bağımsız**, yalnızca deneyde karşılaşılan sorunları
-derinlemesine incelemek için hazırlanmıştır. 57 örneğin tamamı, Round 1'de
-başarısız olan 17 örneğin her biri (ne yapılmaya çalışıldı → ne oldu → neden
-oldu → nasıl çözüldü), sonrasında yapılan tüm ek deneyler (release/debug,
-çoklu platform, çoklu model, kısıtlı geri bildirim, bellek güvenliği) ve
-bunlardan çıkan genel örüntüler ele alınmaktadır. Tüm sayılar gerçek harness
+derinlemesine incelemek için hazırlanmıştır. **57 örneğin tamamı** ele
+alınmıştır: Round 1'de başarısız olan 17 örneğin her biri (ne yapılmaya
+çalışıldı → ne oldu → neden oldu → nasıl çözüldü) ve ilk seferde geçen 40
+örneğin her biri (ne test ediliyordu → neden sorunsuz geçti → dikkat çekici
+yönü varsa), sonrasında yapılan tüm ek deneyler (release/debug, çoklu
+platform, çoklu model, kısıtlı geri bildirim, bellek güvenliği) ve bunlardan
+çıkan genel örüntüler ele alınmaktadır. Tüm sayılar gerçek harness
 çalıştırmalarından (`results/*.json`) alınmıştır; hiçbir rakam uydurulmamıştır.
 
 ---
@@ -23,7 +25,7 @@ girdilerde çalıştırılır, çıktılar karşılaştırılır.
 Accuracy). 17 örnek başarısız: 1 CE (derleme hatası), 4 RE (çalışma zamanı
 hatası/panik), 12 FE (fonksiyonel hata — derlenip çalışıyor ama çıktı yanlış).
 
-Bu 17 başarısızlığın **her biri** aşağıda tek tek ele alınmıştır.
+Bu 17 başarısızlığın **her biri** §2'de, geri kalan 40 PASS örneğin **her biri** §3'te tek tek ele alınmıştır.
 
 ---
 
@@ -178,7 +180,103 @@ Her vaka dört soruya yanıt verir: **Ne yapılıyordu? → Ne oldu? → Neden o
 
 ---
 
-## 3. Dokuz Kök Neden — Özet Tablo
+## 3. Başarılı Örneklerin Analizi (40/57)
+
+Yalnızca başarısızlıklar değil, ilk seferde geçen 40 örneğin her biri de
+analiz edilmiştir: ne test ediliyordu, neden sorunsuz geçti (hangi risk
+gerçekleşmedi ya da hangi tasarım tercihi C'nin sözleşmesiyle zaten
+örtüşüyordu) ve varsa dikkat çekici yönü.
+
+### 3.1 Temel algoritmalar — düşük semantik risk (13 örnek)
+
+Bu grup, C↔Rust arasında bilinen bir boşluğu kasıtlı hedeflemeyen, sayısal/
+dizi tabanlı klasik algoritmalardır; PASS olmalarının nedeni basittir: girdi/
+çıktı sözleşmeleri zaten tip-güvenli, taşma riski düşük veya test aralığının
+dışında.
+
+- **s01_sum** (dizi toplama, 16 satır): Temel doğrulama; taşma riski yok (küçük değerler).
+- **s02_gcd** (Öklid EBOB, 19 satır): Negatif/modulo davranışı kasıtlı hedeflendi, ama C ve Rust'ın `%` operatörü işaretli sayılarda aynı işareti üretir — davranış zaten örtüşüyor.
+- **s03_factorial** (faktöriyel, u64, 14 satır): Tamsayı sınırı test edildi; seçilen girdiler u64 sınırını aşmıyor.
+- **s04_fibonacci** (iteratif Fibonacci, u64, 16 satır): Büyük değer testi; u64 yeterli genişlikte.
+- **s05_count_primes** (deneme bölmesiyle asallık, 22 satır): Döngü/koşul çevirisi dümdüz, taşma/işaretlilik riski yok.
+- **s07_bubble_sort** (kabarcık sıralama, 26 satır): Dizi/takas mantığı bire bir çevrilebilir, semantik boşluk yok.
+- **s08_binary_search** (ikili arama, 22 satır): İndeks aritmetiği (`(low+high)/2`) küçük dizilerde taşma riski taşımaz.
+- **s10_caesar_cipher** (Caesar şifreleme, 23 satır): Karakter aritmetiği yalnızca ASCII harfler üzerinde, bayt/karakter ayrımı devreye girmiyor.
+- **s11_collatz** (Collatz adım sayımı, 17 satır): Döngü + büyük ara değer, u64 ile taşma yok.
+- **s12_matrix_mult** (matris çarpımı, 36 satır): İç içe döngü, küçük matrisler — taşma/performans riski yok.
+- **s16_rle_encode** (çalışma-uzunluğu kodlama, 22 satır): String tarama bayt bazlı yapılabiliyor, ASCII test girdileriyle bayt/karakter farkı tetiklenmedi.
+- **s17_determinant** (Laplace açılımı, özyinelemeli, 35 satır): Orta boy özyineleme, taşma riski yok.
+- **s18_expr_eval** (özyinelemeli inişli ifade ayrıştırıcı, 88 satır): Veri setindeki ilk "uzun" program; özyinelemeli ayrıştırma mantığı doğrudan çevrilebiliyor, semantik boşluk hedeflenmiyor.
+
+### 3.2 Bilinçli tuzak, ama tetiklenmedi (4 örnek)
+
+- **s21_matrix_transpose** (matris transpozu, 20 satır) ve **s23_histogram** (harf frekansı, 18 satır), **s24_roman** (Roma rakamı, açgözlü, 19 satır): İndeksleme/sayaç dizisi/string kurma — hepsi C ve Rust'ta aynı davranan (taşma riski taşımayan) işlemler.
+- **s22_gray_code** (Gray kodu, `n ^ n>>1`, 10 satır): Bit işlemleri — XOR/kaydırma, C ve Rust'ta bit-bit özdeş davranır (taşma riski taşıyan çarpma/toplama yok); bu, s36_crc32'nin de PASS olma nedeniyle aynıdır (bkz. §3.4).
+
+### 3.3 Uzun özgün programlar — dinamik bellek/pointer, ama güvenli çevrildi (4 örnek)
+
+Bu programlar kasıtlı olarak kod uzunluğu-başarı ilişkisini test etmek için
+eklendi (69-141 satır); hepsi C'de `malloc`/ham işaretçilerle kurulan dinamik
+veri yapıları kullanır.
+
+- **s25_linked_list_ops** (bağlı liste kurma/ters çevirme, 87 satır, 4 test): Model, `struct Node*` zincirini `Option<Box<Node>>` desenine sadakatle çevirdi — hiç `unsafe` kullanmadan, ilk seferde PASS.
+- **s26_rpn_calculator** (RPN hesap makinesi, 69 satır, 5 test): String tokenizasyonu + yığın (stack) — Rust'ın `Vec` tabanlı yığını C'nin dizi-tabanlı yığınıyla davranışsal olarak özdeş.
+- **s28_bst_traversal** (BST kurma/dolaşma, 80 satır, 4 test): Özyineleme + dinamik bellek; `Option<Box<T>>` deseni burada da sorunsuz.
+- **s29_hashtable_cmds** (zincirlemeli hash tablosu + komutlar, 141 satır, 3 test): Aynı djb2-tarzı karma fonksiyonunu kullanır (bkz. s09/s14, Kategori A) ama test edilen anahtarlar kısa olduğundan (1-3 karakter) taşma eşiğine hiç ulaşılmadı — **taşma hatasının yalnızca yeterince büyük girdilerle tetiklenen, kısmen "gizli" bir risk olduğunun kanıtı.**
+
+### 3.4 Rosetta Code — bağımsız gerçek dünya algoritmaları (7/7 PASS)
+
+AS7'yi yanıtlamak için eklenen, tarafımızca yazılmamış 7 eğitim-amaçlı
+algoritmanın **tamamı** ilk seferde geçti (18/18 test girdisi):
+
+- **s30_luhn_check** (Luhn sağlama toplamı, 34 satır): Rakam bazlı aritmetik, taşma riski yok.
+- **s31_soundex** (Soundex fonetik kodlama, 71 satır): Karakter dizisi işleme, yalnızca ASCII harfler üzerinde.
+- **s32_levenshtein** (Levenshtein mesafesi, özyinelemeli, 50 satır): Üstel özyineleme — test girdileri (≤7 karakter) üstel patlamayı tetikleyecek kadar büyük değildi (zaman aşımı riski gerçekleşmedi).
+- **s33_knapsack** (0/1 sırt çantası, DP, 71 satır): Dinamik programlama tablosu, taşma riski yok.
+- **s34_hanoi** (Hanoi kuleleri, 27 satır): Klasik özyineleme, semantik boşluk hedeflenmiyor.
+- **s35_lcs** (en uzun ortak alt dizi, DP, 67 satır): s33 ile aynı aile, taşma riski yok.
+- **s36_crc32** (tablo tabanlı CRC-32, 61 satır): Bit/unsigned işlemler — yalnızca XOR/kaydırma kullanır, **taşma tetikleyen çarpma/toplama içermez** (bu yüzden Kategori A'daki djb2/FNV'nin aksine PASS oldu — aynı "unsigned aritmetik" yüzeyi, farklı operatör seti).
+
+**Yorum:** Bu 7/7 sonucu, LLM'in genel olarak klasik algoritmaları çevirmede sistematik bir zayıflığı olmadığını destekler — başarısızlıklar veri setinin kasıtlı olarak hedeflediği belirli semantik boşluklara özgüdür, rastgele bir genel yetersizlik değildir.
+
+### 3.5 Gerçek üretim (production) kodu — çoğu PASS (6/9 arası ilgili alt gruplar)
+
+- **s37_bsd_getopt** (getopt(), 148 satır, 5 test): OpenBSD/FreeBSD'nin gerçek, ~39 yıllık komut satırı ayrıştırıcısı. Dışa açık değiştirilebilir global durum (`optarg`/`optind`/`optopt`/`opterr`) gerektirir — model bunu Rust'ta `static mut` + `unsafe fn` ile **sadakatle** yansıttı (bu veri setindeki 6 gerçek-`unsafe`-kullanımından biri) çünkü C kodunun kendisi bu sözleşmeyi yapısal olarak dayatıyor. İlk seferde PASS.
+- **s39_bsd_heapsort** (heapsort(), 143 satır, 4 test): Generic `void*` yığın sıralaması — model, çağıran kodun (`main()`) yalnızca tamsayı sıralaması ihtiyacını tanıyarak genel `void*` imzasını taklit etmek yerine güvenli, deyimsel bir Rust dizi/dilim (slice) tabanlı sıralama yazdı — **hiç `unsafe` kullanmadan**. İlk seferde PASS.
+- **s46_musl_qsort** (musl libc'nin smoothsort'u, 262 satır, 5 test): Bit-düzeyinde Leonardo-sayı kodlamasıyla çalışan, veri setindeki en karmaşık tek algoritma; genel-amaçlı `void*` imzasına gerçekten bağımlı olduğundan model burada `unsafe` kullandı (yapısal gereklilik). PASS.
+- **s47_redis_sds** (Redis'in SDS dinamik string kütüphanesi, 522 satır, 5 test): Veri setindeki **en uzun program**; başlık bilgisini (uzunluk/kapasite/tür bayrağı) pointer'ın hemen öncesinde gizli tutan, C'ye özgü bir bellek düzeni kullanır. Model bu düzeni ham pointer aritmetiğiyle yeniden üretmeyi denemek yerine tamamen güvenli bir `String` tabanlı iç temsille yeniden yapılandırdı ve gözlemlenebilir API davranışını (uzunluk/kırpma/aralık/karşılaştırma) hiç `unsafe` kullanmadan birebir korudu. İlk seferde PASS — **ama bkz. §6, bu örnek Linux/Docker'da bir CRLF/stdio bulgusuyla farklı sonuç vermiştir (C referansının kendisi platforma bağlı davranıyor, Rust çevirisi değil).**
+
+### 3.6 Hedeflenmemiş boşluklar grubundan PASS olanlar (4 örnek)
+
+- **s41_float_bits** (float→bit örüntüsü, union/type punning, 21 satır): C'nin `union` ile IEEE-754 bit-düzeyinde yeniden yorumlaması, model tarafından Rust'ın güvenli `to_bits()`/`from_bits()` fonksiyonlarıyla birebir doğru eşlendi — `unsafe` transmute'a hiç gerek kalmadı.
+- **s42_bitfields** (bit-alanı kırpma, 25 satır): C bit-alanlarının (bit-fields) atamada kırpma davranışı, model tarafından maskeleme/kaydırma operasyonlarıyla doğru yeniden üretildi.
+- **s44_fib_memo_static** (fonksiyon-lokal static memoizasyon, 29 satır): Çağrılar arasında kalıcı, değiştirilebilir durum gerektiren bir C deseni (`static int cache[]`); model bunu Rust'ta `static mut` + `unsafe fn` ile **doğru ve gerekçeli** biçimde yansıttı (veri setindeki 6 gerçek-`unsafe`-kullanımından biri — s19'un aksine burada durum gerçekten fonksiyon-lokal ve tek-thread varsayımına uygun tasarlandığından model haklı olarak `unsafe`'i seçti).
+- **s45_goto_cleanup** (goto ile kaynak temizleme, 43 satır): C'nin `goto cleanup;` deseni (RAII benzeri kaynak serbest bırakma), model tarafından Rust'ın doğal kapsam-tabanlı (scope-based) temizlik mantığına (veya erken `return` + düzenli serbest bırakma) doğru biçimde yeniden yapılandırıldı — kontrol akışı farklı ama gözlemlenebilir davranış özdeş.
+
+### 3.7 İkinci-örnek kök neden testlerinden PASS olan (1/5)
+
+- **s50_id_generator** (ardışık kimlik üretici, global durum, 30 satır): s19_global_counter ile **aynı kök nedeni** (güvensiz global durum) ikinci, bağımsız bir desenle sınamak için eklendi — ama bu kez model global sayacı baştan `&mut` parametre olarak tasarladı (s19'daki gibi `static mut`'a düşmedi), bu yüzden derleme hatası hiç oluşmadı. **Bu, aynı kök nedenin farklı kod kalıplarında farklı sonuç verebileceğinin, yani modelin davranışının deterministik/tutarlı olmadığının bir kanıtıdır** — diğer 4 ikinci-örnek (s49, s51, s52, s53) hepsi ilk örnekleriyle (s20, s38, s40, s43) aynı şekilde başarısız olurken, s50 farklı davranmıştır.
+
+### 3.8 Çok dosyalı kod ve eşzamanlılık (3/3 PASS)
+
+- **s54_stack_module** (yığın modülü, başlık+uygulama+kullanım, 125 satır, çok dosyalı): Model, fonksiyon imzalarını dosyalar arasında tutarlı tuttu ve `stack.h`/`stack.c` ayrımını Rust'ın `mod` sistemiyle doğru eşledi. İlk seferde PASS.
+- **s55_config_parser** (paylaşılan struct + 2 derleme birimi, 139 satır, çok dosyalı): Paylaşılan bir struct tanımının iki ayrı derleme birimi tarafından kullanıldığı desen, sorunsuz çevrildi.
+- **s57_shared_counter_threads** (N pthread + mutex korumalı paylaşılan sayaç, 71 satır, çok dosyalı): Model bunu ilk seferde `Arc<Mutex<i64>>` + `thread::spawn` + `join` desenine doğru çevirdi — ne derleme hatası ne veri yarışı oluştu. Bu, "Rust'ın tip sistemi paylaşılan-durum çevirisini imkânsız kılar mı" sorusuna, en azından bu tek örnekte, "LLM zaten doğru soyutlamayı biliyor" yanıtını verir.
+
+### 3.9 Genel gözlem: 40 PASS'ın ortak noktası
+
+Başarılı örneklerin hiçbirinde dinamik veri yapısı (bağlı liste, ağaç, hash
+tablosu — s25, s28, s29) veya karmaşık bellek düzeni (s39, s46, s47) tek
+başına başarısızlık nedeni olmamıştır; PASS/FAIL ayrımı kod karmaşıklığından
+değil, **belirli bir semantik boşluğun o örnekte tetiklenip
+tetiklenmediğinden** kaynaklanır (bkz. §4, §10). Bu, §4'teki dokuz kök neden
+listesinin veri setinin geri kalanına genellenebilir bir tehdit olmadığını,
+yalnızca belirli, tanımlanabilir kod kalıplarında ortaya çıktığını
+doğrulamaktadır.
+
+---
+
+## 4. Dokuz Kök Neden — Özet Tablo
 
 | # | Kategori | Örnekler | Tür | C sözleşmesi → LLM'in seçimi |
 |---|---|---|---|---|
@@ -201,7 +299,7 @@ güvenliği tarafından derleme aşamasında yakalanmıştır.
 
 ---
 
-## 4. Kısıtlı Geri Bildirim Deneyi (Tablo 5'in arkasındaki tam veri)
+## 5. Kısıtlı Geri Bildirim Deneyi (Tablo 5'in arkasındaki tam veri)
 
 Aynı 17 başarısızlığa üç farklı ayrıntı seviyesinde geri bildirim verildi:
 
@@ -225,7 +323,7 @@ bilginin kategoriyi ayırt edici hiçbir iz taşımamasıdır.
 
 ---
 
-## 5. Çoklu Platform Analizi (Windows LLP64 vs Linux/Docker LP64)
+## 6. Çoklu Platform Analizi (Windows LLP64 vs Linux/Docker LP64)
 
 Windows: MSYS2/UCRT64 gcc 16.1.0 + rustc 1.97.1, `long`=32-bit.
 Linux: Docker ubuntu:24.04, gcc 13.3.0 + rustc 1.97.1 (**birebir aynı rustc
@@ -259,7 +357,7 @@ tekrarlanabilir bir bulgu.
 
 ---
 
-## 6. Çoklu Model Analizi (Google Gemini, 44/57 kısmi ölçüm)
+## 7. Çoklu Model Analizi (Google Gemini, 44/57 kısmi ölçüm)
 
 Gemini (`gemini-flash-latest`) ile 57 örnekten 44'ü gerçek API çağrısıyla
 çevrildi (API kotası kalan 13'ü engelledi); EA = **%93.18 (41/44)**.
@@ -282,7 +380,7 @@ kullanım hatası) hata sınıfları üretebilir.
 
 ---
 
-## 7. Bellek Güvenliği ve `unsafe` Kullanımı
+## 8. Bellek Güvenliği ve `unsafe` Kullanımı
 
 114 çeviri dosyasının (57 örnek × Round 1/Round 2) tamamı `unsafe`/ham
 işaretçi kullanımı için tarandı: yalnızca **6 dosyada** (s37_bsd_getopt,
@@ -312,7 +410,7 @@ boyunca kalıcı durum, generic `void*` imzası) etkileniyor.
 
 ---
 
-## 8. İstatistiksel Bulgular
+## 9. İstatistiksel Bulgular
 
 - **Kod uzunluğu ile başarı ilişkisi:** Mann-Whitney U testi, PASS (n=40) ve
   FAIL (n=17) gruplarının LoC dağılımları arasında istatistiksel olarak
@@ -336,7 +434,7 @@ boyunca kalıcı durum, generic `void*` imzası) etkileniyor.
 
 ---
 
-## 9. Ekstra Analiz: Zaman İçinde Bulguların Evrimi
+## 10. Ekstra Analiz: Zaman İçinde Bulguların Evrimi
 
 Veri seti kademeli olarak genişletildikçe (24→29→36→39→45→48→53→57 örnek),
 kök neden kategorilerinin **4'ü (F, G, H, I) başlangıçta hiç öngörülmemiş,
@@ -360,7 +458,7 @@ tasarım aşamasında yoktu.
 
 ---
 
-## 10. Genel Çıkarımlar
+## 11. Genel Çıkarımlar
 
 1. **Sessiz hata oranı çok yüksek:** 17 başarısızlığın 16'sı (%94.1)
    derleyiciden hiçbir uyarı almadan geçti — yalnızca derleme başarısına
