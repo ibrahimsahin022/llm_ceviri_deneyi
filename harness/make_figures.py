@@ -104,6 +104,7 @@ fig.savefig(FIG / "fig3_error_distribution.png", bbox_inches="tight")
 plt.close(fig)
 
 # ============ FIGUR 4: Kod uzunlugu (LoC) vs sonuc ============
+import random
 d = load("round1")
 xs, ys, cs, names2 = [], [], [], []
 for r in d["results"]:
@@ -114,21 +115,47 @@ for r in d["results"]:
     names2.append(r["id"])
 
 max_loc = max(xs)
-fig, ax = plt.subplots(figsize=(8.4, 5.4))
-ax.scatter(xs, ys, c=cs, s=100, zorder=3, edgecolors="white", linewidths=1.2)
+rng = random.Random(42)
+# hafif dusey jitter: ust uste binen noktalari bir "swarm" gibi ayirir
+yj = [y + (0.10 if y == 0 else -0.10) * (i % 5) / 4 + rng.uniform(-0.02, 0.02)
+      for i, y in enumerate(ys)]
+
+fig, ax = plt.subplots(figsize=(8.6, 4.8))
+# arka plan bantlari: basarili/basarisiz alanlarini gorsel olarak ayirir
+ax.axhspan(-0.42, 0.42, color=COL["runtime_error"], alpha=0.06, zorder=0)
+ax.axhspan(0.58, 1.42, color=COL["pass"], alpha=0.06, zorder=0)
+ax.axhline(0, color="#999", lw=0.6, ls=":", zorder=1)
+ax.axhline(1, color="#999", lw=0.6, ls=":", zorder=1)
+
+ax.scatter(xs, yj, c=cs, s=95, zorder=3, edgecolors="white", linewidths=1.3, alpha=0.92)
+
 ax.set_yticks([0, 1])
-ax.set_yticklabels(["Başarısız", "Başarılı"])
+ax.set_yticklabels(["Başarısız", "Başarılı"], fontsize=11, fontweight="bold")
+ax.set_ylim(-0.55, 1.55)
 ax.set_xlabel("Kaynak kod uzunluğu (C, satır sayısı)")
 ax.set_title("Şekil 4. Kod uzunluğu ile başarı ilişkisi (Round 1)", pad=12)
-fails = sorted([(x, n) for x, y, n in zip(xs, ys, names2) if y == 0])
-for idx, (x, n) in enumerate(fails):
-    ty = -0.18 - idx * 0.14
-    ax.annotate(n, (x, 0), textcoords="data", xytext=(x + 9, ty), fontsize=8.5,
-                arrowprops=dict(arrowstyle="->", color="#e76f51", lw=0.8, alpha=0.6),
-                va="center")
-ax.set_ylim(-0.18 - len(fails) * 0.14 - 0.15, 1.35)
-ax.set_xlim(0, max_loc + 15)
+
+# yalnizca metinde tartisilan, bilgilendirici noktalar etiketlenir (tumu degil)
+highlight = {
+    "s47_redis_sds": "en uzun (522 satır) — PASS",
+    "s48_cjson_number": "389 satır — FAIL (%g)",
+    "s38_bsd_strtol": "154 satır — FAIL (tamsayı genişliği)",
+}
+for x, y, n in zip(xs, yj, names2):
+    if n in highlight:
+        ax.annotate(highlight[n], (x, y), textcoords="offset points",
+                    xytext=(0, 14 if y >= 0.5 else -18), fontsize=8.5, ha="center",
+                    color="#333", fontweight="bold")
+
+ax.set_xlim(-10, max_loc + 20)
 ax.grid(axis="y", alpha=0)
+ax.grid(axis="x", alpha=0.15)
+legend_handles = [
+    Patch(facecolor=COL["pass"], label="Başarılı (PASS)"),
+    Patch(facecolor=COL["runtime_error"], label="Başarısız (CE/RE/FE)"),
+]
+ax.legend(handles=legend_handles, loc="upper center", bbox_to_anchor=(0.5, -0.16),
+          ncol=2, frameon=False, fontsize=9.5)
 fig.tight_layout()
 fig.savefig(FIG / "fig4_loc_vs_success.png", bbox_inches="tight")
 plt.close(fig)
