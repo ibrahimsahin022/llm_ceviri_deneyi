@@ -82,7 +82,7 @@ Her vaka dört soruya yanıt verir: **Ne yapılıyordu? → Ne oldu? → Neden o
 - **Neden oldu:** C'nin `%g` biçimlendiricisi **6 anlamlı basamağa** göre biçimlenir, sondaki sıfırları atar ve belirli eşiklerin dışında bilimsel gösterime geçer. LLM, Rust'ın varsayılan `{}` biçimini kullandı — bu tam kayan-nokta hassasiyetini (17 basamağa kadar) olduğu gibi yazdırır, hiçbir zaman kırpmaz.
 - **Nasıl çözüldü:** `%g` davranışını taklit eden özel bir `format_g` fonksiyonu yazıldı. Round 2: 4/4 PASS. **Önemli ayrıntı:** İlk yazılan düzeltici yalnızca ≥1 değerler için doğru basamak sayısı hesaplıyordu; aynı kök nedenin tekrarlandığı s27'nin ortalaması 1'in altında olduğunda bu "düzeltilmiş" kod da yanlış sonuç verdi ve genelleştirilmesi gerekti (dar test girdileriyle doğrulanan bir düzeltmenin bile eksik kalabileceğinin kanıtı).
 - **Kısıtlı geri bildirim:** Seviye B ve C'de düzeltilemedi — başarısız girdi yalnızca sayılardan oluştuğu için biçimlendirme hatasına dair gözlemlenebilir hiçbir ipucu yok.
-- **Bağımsız model doğrulaması:** Gemini de aynı örnekte, aynı kök nedenden başarısız oldu (44/57 kısmi ölçümde tek ortak başarısızlık) — bu boşluğun modele özgü olmadığının kanıtı.
+- **Bağımsız model doğrulaması:** Gemini de aynı örnekte, aynı kök nedenden başarısız oldu (57/57 tam ölçümde, Kategori D'nin üç bağımsız kod tabanının hepsinde iki modelin de ortak düştüğü kör nokta — bkz. §7.4) — bu boşluğun modele özgü olmadığının kanıtı.
 
 ### 2.7 s27_csv_stats — Fonksiyonel Hata (FE)
 
@@ -241,7 +241,7 @@ algoritmanın **tamamı** ilk seferde geçti (18/18 test girdisi):
 
 ### 3.5 Gerçek üretim (production) kodu — çoğu PASS (6/9 arası ilgili alt gruplar)
 
-- **s37_bsd_getopt** (getopt(), 148 satır, 5 test): OpenBSD/FreeBSD'nin gerçek, ~39 yıllık komut satırı ayrıştırıcısı. Dışa açık değiştirilebilir global durum (`optarg`/`optind`/`optopt`/`opterr`) gerektirir — model bunu Rust'ta `static mut` + `unsafe fn` ile **sadakatle** yansıttı (bu veri setindeki 6 gerçek-`unsafe`-kullanımından biri) çünkü C kodunun kendisi bu sözleşmeyi yapısal olarak dayatıyor. İlk seferde PASS.
+- **s37_bsd_getopt** (getopt(), 148 satır, 5 test): OpenBSD/FreeBSD'nin gerçek, ~39 yıllık komut satırı ayrıştırıcısı. Dışa açık değiştirilebilir global durum (`optarg`/`optind`/`optopt`/`opterr`) gerektirir — model bunu Rust'ta `static mut` + `unsafe fn` ile **sadakatle** yansıttı (bu veri setindeki 8 gerçek-`unsafe`-kullanımından biri) çünkü C kodunun kendisi bu sözleşmeyi yapısal olarak dayatıyor. İlk seferde PASS.
 - **s39_bsd_heapsort** (heapsort(), 143 satır, 4 test): Generic `void*` yığın sıralaması — model, çağıran kodun (`main()`) yalnızca tamsayı sıralaması ihtiyacını tanıyarak genel `void*` imzasını taklit etmek yerine güvenli, deyimsel bir Rust dizi/dilim (slice) tabanlı sıralama yazdı — **hiç `unsafe` kullanmadan**. İlk seferde PASS.
 - **s46_musl_qsort** (musl libc'nin smoothsort'u, 262 satır, 5 test): Bit-düzeyinde Leonardo-sayı kodlamasıyla çalışan, veri setindeki en karmaşık tek algoritma; genel-amaçlı `void*` imzasına gerçekten bağımlı olduğundan model burada `unsafe` kullandı (yapısal gereklilik). PASS.
 - **s47_redis_sds** (Redis'in SDS dinamik string kütüphanesi, 522 satır, 5 test): Veri setindeki **en uzun program**; başlık bilgisini (uzunluk/kapasite/tür bayrağı) pointer'ın hemen öncesinde gizli tutan, C'ye özgü bir bellek düzeni kullanır. Model bu düzeni ham pointer aritmetiğiyle yeniden üretmeyi denemek yerine tamamen güvenli bir `String` tabanlı iç temsille yeniden yapılandırdı ve gözlemlenebilir API davranışını (uzunluk/kırpma/aralık/karşılaştırma) hiç `unsafe` kullanmadan birebir korudu. İlk seferde PASS — **ama bkz. §6, bu örnek Linux/Docker'da bir CRLF/stdio bulgusuyla farklı sonuç vermiştir (C referansının kendisi platforma bağlı davranıyor, Rust çevirisi değil).**
@@ -250,12 +250,12 @@ algoritmanın **tamamı** ilk seferde geçti (18/18 test girdisi):
 
 - **s41_float_bits** (float→bit örüntüsü, union/type punning, 21 satır): C'nin `union` ile IEEE-754 bit-düzeyinde yeniden yorumlaması, model tarafından Rust'ın güvenli `to_bits()`/`from_bits()` fonksiyonlarıyla birebir doğru eşlendi — `unsafe` transmute'a hiç gerek kalmadı.
 - **s42_bitfields** (bit-alanı kırpma, 25 satır): C bit-alanlarının (bit-fields) atamada kırpma davranışı, model tarafından maskeleme/kaydırma operasyonlarıyla doğru yeniden üretildi.
-- **s44_fib_memo_static** (fonksiyon-lokal static memoizasyon, 29 satır): Çağrılar arasında kalıcı, değiştirilebilir durum gerektiren bir C deseni (`static int cache[]`); model bunu Rust'ta `static mut` + `unsafe fn` ile **doğru ve gerekçeli** biçimde yansıttı (veri setindeki 6 gerçek-`unsafe`-kullanımından biri — s19'un aksine burada durum gerçekten fonksiyon-lokal ve tek-thread varsayımına uygun tasarlandığından model haklı olarak `unsafe`'i seçti).
+- **s44_fib_memo_static** (fonksiyon-lokal static memoizasyon, 29 satır): Çağrılar arasında kalıcı, değiştirilebilir durum gerektiren bir C deseni (`static int cache[]`); model bunu Rust'ta `static mut` + `unsafe fn` ile **doğru ve gerekçeli** biçimde yansıttı (veri setindeki 8 gerçek-`unsafe`-kullanımından biri — s19'un aksine burada durum gerçekten fonksiyon-lokal ve tek-thread varsayımına uygun tasarlandığından model haklı olarak `unsafe`'i seçti).
 - **s45_goto_cleanup** (goto ile kaynak temizleme, 43 satır): C'nin `goto cleanup;` deseni (RAII benzeri kaynak serbest bırakma), model tarafından Rust'ın doğal kapsam-tabanlı (scope-based) temizlik mantığına (veya erken `return` + düzenli serbest bırakma) doğru biçimde yeniden yapılandırıldı — kontrol akışı farklı ama gözlemlenebilir davranış özdeş.
 
 ### 3.7 İkinci-örnek kök neden testlerinden PASS olan (1/5)
 
-- **s50_id_generator** (ardışık kimlik üretici, global durum, 30 satır): s19_global_counter ile **aynı kök nedeni** (güvensiz global durum) ikinci, bağımsız bir desenle sınamak için eklendi — ama bu kez model global sayacı baştan `&mut` parametre olarak tasarladı (s19'daki gibi `static mut`'a düşmedi), bu yüzden derleme hatası hiç oluşmadı. **Bu, aynı kök nedenin farklı kod kalıplarında farklı sonuç verebileceğinin, yani modelin davranışının deterministik/tutarlı olmadığının bir kanıtıdır** — diğer 4 ikinci-örnek (s49, s51, s52, s53) hepsi ilk örnekleriyle (s20, s38, s40, s43) aynı şekilde başarısız olurken, s50 farklı davranmıştır.
+- **s50_id_generator** (ardışık kimlik üretici, global durum, 30 satır): s19_global_counter ile **aynı kök nedeni** (güvensiz global durum) ikinci, bağımsız bir desenle sınamak için eklendi — model bu kez de aynı yapıyı (`static mut COUNTER: i32`) seçti, ama s19'un aksine erişimi doğru biçimde `unsafe { ... }` bloğuna sararak yazdı, bu yüzden derleme hatası hiç oluşmadı (kod: `translations_rust/s50_id_generator.rs`). **Bu, aynı kök nedenin ve aynı yapısal kalıbın (static mut) farklı çağrılarda farklı sonuç verebileceğinin, yani modelin `unsafe` blok ekleme davranışının deterministik/tutarlı olmadığının bir kanıtıdır** — diğer 4 ikinci-örnek (s49, s51, s52, s53) hepsi ilk örnekleriyle (s20, s38, s40, s43) aynı şekilde başarısız olurken, s50 farklı davranmıştır.
 
 ### 3.8 Çok dosyalı kod ve eşzamanlılık (3/3 PASS)
 
@@ -357,24 +357,31 @@ tekrarlanabilir bir bulgu.
 
 ---
 
-## 7. Çoklu Model Analizi (Google Gemini, 44/57 kısmi ölçüm)
+## 7. Çoklu Model Analizi (Google Gemini, 57/57 TAM ölçüm)
 
-Gemini (`gemini-flash-latest`) ile 57 örnekten 44'ü gerçek API çağrısıyla
-çevrildi (API kotası kalan 13'ü engelledi); EA = **%93.18 (41/44)** — Claude'un
-aynı 44 örnek üzerindeki performansı ise yalnızca **%79.55 (35/44)**'tir
-(Claude'un Round 1 tam veri setindeki genel EA'sı %70.18 idi, ama bu 44'lük
-alt kümede Claude 9 örnekte başarısız olmuştu). **Gemini bu kısmi örneklemde
-Claude'dan sayısal olarak daha yüksek bir doğruluk göstermiştir** — ama bu,
-"Gemini daha iyi bir model" anlamına gelmez; aşağıdaki vaka analizleri,
-bunun büyük ölçüde farklı, birbirinden bağımsız kod-üretim tercihlerinin
-(idiyomatik varsayılanların) şans eseri C'nin sözleşmesiyle örtüşmesinden
-kaynaklandığını göstermektedir.
+Gemini (`gemini-flash-latest`) ile 57 örneğin **tamamı** gerçek API
+çağrısıyla çevrildi (ücretsiz katmanın günlük kota sınırı nedeniyle ölçüm
+birden fazla gün boyunca kademeli olarak tamamlanmıştır, 2026-07-22 ile
+2026-07-26 arasında — kota her sıfırlandığında bir sonraki grup
+çevrilerek; son 3 örnek — s55, s56, s57 — kota sıfırlandıktan sonraki bir
+oturumda tamamlanmıştır); nihai EA = **%89.47 (51/57)**, Claude'un tam
+veri setindeki EA'sı ise **%70.18 (40/57)**'dir. **Gemini ham sayı olarak
+Claude'dan yüksek bir doğruluk göstermiştir** ve bu fark, iki model AYNI
+57 program üzerinde ölçüldüğü için eşleştirilmiş (paired) bir tasarıma
+uygun **McNemar testiyle** sınandığında istatistiksel olarak anlamlıdır
+(yalnızca Claude'un başarısız olduğu 14 örnek vs. yalnızca Gemini'nin
+başarısız olduğu 3 örnek; McNemar kesin iki-yönlü **p=0.013**,
+`harness/stats_report.py` ile hesaplanmıştır) — ama aşağıdaki kategori
+kırılımı ve vaka analizleri, bu genel anlamlılığın "Gemini genel olarak
+daha iyi bir model" anlamına gelmediğini, aksine model×kod-kategorisi
+etkileşiminin belirleyici olduğunu ve genel farkın yönünü kategoriye göre
+değiştirdiğini göstermektedir.
 
-### 7.1 Karşılaştırma Tablosu (44 ortak örnek)
+### 7.1 Karşılaştırma Tablosu (57 örneğin tamamı)
 
 | Örnek | Claude (Round 1) | Gemini | Durum |
 |---|---|---|---|
-| s01-s05, s07-s08, s10-s12, s16-s18, s21-s25, s28-s37, s39, s41, s42, s44 (31 örnek) | pass | pass | Her iki model de geçti |
+| Kalan 37 örnek (s01-s05,s07-s08,s10-s12,s16-s18,s21-s25,s28-s37,s39,s41,s42,s44,s45,s50,s54,s55,s57) | pass | pass | Her iki model de geçti |
 | s06_reverse_string | **functional_error** | pass | Yalnızca Claude başarısız |
 | s09_djb2_hash | **runtime_error** | pass | Yalnızca Claude başarısız |
 | s13_word_count | **functional_error** | pass | Yalnızca Claude başarısız |
@@ -384,16 +391,39 @@ kaynaklandığını göstermektedir.
 | s38_bsd_strtol | **functional_error** | pass | Yalnızca Claude başarısız |
 | s40_diff_sum | **runtime_error** | pass | Yalnızca Claude başarısız |
 | s43_switch_fallthrough | **functional_error** | pass | Yalnızca Claude başarısız |
+| s49_negative_byte_count | **functional_error** | pass | Yalnızca Claude başarısız (kategori C, 2. örnek) |
+| s51_long_clamp | **functional_error** | pass | Yalnızca Claude başarısız (kategori F, 2. örnek) |
+| s52_window_sum | **runtime_error** | pass | Yalnızca Claude başarısız (kategori G, 2. örnek) |
+| s53_tax_bracket | **functional_error** | pass | Yalnızca Claude başarısız (kategori H, 2. örnek) |
+| s56_macro_table | **functional_error** | pass | Yalnızca Claude başarısız (kategori I) |
 | s15_float_avg | functional_error | **functional_error** | İkisi de başarısız (ortak kök neden) |
-| s26_rpn_calculator | pass | **compilation_error** | Yalnızca Gemini başarısız |
 | s27_csv_stats | functional_error | **compilation_error** | İkisi de başarısız (farklı kök neden) |
+| s26_rpn_calculator | pass | **compilation_error** | Yalnızca Gemini başarısız |
+| s46_musl_qsort | pass | **compilation_error** | Yalnızca Gemini başarısız |
+| s47_redis_sds | pass | **functional_error** | Yalnızca Gemini başarısız |
+| s48_cjson_number | functional_error | **compilation_error** | İkisi de başarısız (farklı kök neden) |
 
-**Çarpıcı bulgu:** Claude'un başarısız olduğu 9 örnekte (s06, s09, s13, s14,
-s19, s20, s38, s40, s43) — yani veri setinin özgün/hedefli bölümündeki
-Kategori A, B, C, E, F, G, H'nin **hepsinde** — **Gemini ilk seferde
-geçmiştir.** Aşağıda her biri incelenmiştir.
+**Çarpıcı bulgu #1 (veri setinin özgün/hedefli bölümü):** Claude'un
+başarısız olduğu 14 örnekte (s06, s09, s13, s14, s19, s20, s38, s40, s43,
+s49, s51, s52, s53, s56) — yani Kategori A, B, C, E, F, G, H, I'nin
+**hepsinde**, hem ilk örneklerinde hem de hakem geri bildirimiyle eklenen
+bağımsız ikinci örneklerinde (s49, s51, s52, s53) — **Gemini ilk seferde
+geçmiştir.** Bu, ilk turda gözlenen Claude başarısızlıklarının tesadüfi
+olmadığının, s49-s53 ile bağımsız olarak yeniden test edildiğinde de aynı
+kök nedenin tekrarlandığının (§4, Tablo IV) doğrudan kanıtıdır: Claude bu
+5 kategoriden 4'ünü ikinci örnekte de tekrar kaçırmıştır (yalnızca s50,
+kategori E'nin 2. örneği, PASS olmuştur).
 
-### 7.2 Gemini'nin geçtiği, Claude'un kaldığı 9 örnek — nasıl farklı davrandı?
+**Çarpıcı bulgu #2 (gerçek üretim kodu, musl/Redis/cJSON):** Tam tersi
+yönde, en uzun/karmaşık üç gerçek üretim kodu örneğinde (s46, s47, s48 —
+262-522 satır) **Claude 2/3 geçerken Gemini 0/3 geçmiştir.** Bu, "Gemini
+genel olarak daha iyi" okumasını doğrudan çürütür: Gemini'nin üstünlüğü
+yalnızca kısa, iyi tanımlanmış sızıntı kategorilerinde gözlenmekte, uzun ve
+karmaşık gerçek üretim kodunda tersine dönmektedir (bkz. §7.2b).
+
+Aşağıda her iki yönün vakaları ayrı ayrı incelenmiştir.
+
+### 7.2 Gemini'nin geçtiği, Claude'un kaldığı 14 örnek — nasıl farklı davrandı?
 
 - **s09_djb2_hash / s14_fnv_hash (Kategori A, unsigned taşma):** Gemini'nin
   çevirisi doğrudan `hash.wrapping_mul(33).wrapping_add(b as u32)` kullandı —
@@ -434,16 +464,78 @@ geçmiştir.** Aşağıda her biri incelenmiştir.
   atladığı "düşme" davranışını, dolaylı da olsa doğru sonuca ulaştıracak
   şekilde yeniden ifade etti.
 
-**Ortak örüntü:** Bu 9 örnekte Gemini'nin "doğru" sonuca ulaşması, kaynak
-kodun anlamını derinlemesine çözümlemesinden değil, **farklı bir idiyomatik
-varsayılan kümesi** kullanmasından kaynaklanıyor gibi görünmektedir (bayt
-tamponu yerine `String`, `usize` yerine işaretli `i32`, sabit `i64` yerine
-`c_long`, `static mut` yerine `AtomicI32`). Bu tercihler tesadüfen (ya da
-modelin eğitim verisindeki farklı yaygın kalıplar nedeniyle) C'nin
-sözleşmesiyle örtüşmüştür — ama bu, Gemini'nin bu boşlukları "anladığı"
-anlamına gelmez; §7.3'teki kendi başarısızlıkları bunun sınırlarını gösterir.
+Hakem geri bildirimiyle eklenen ve her kategoriyi bağımsız bir ikinci
+örnekle güçlendiren s49-s53, s56'da da **aynı örüntü aynen tekrarlandı** —
+bu, §7.2'nin ilk 6 maddesinin tesadüf olmadığını, modelin gerçekten
+tutarlı bir idiyomatik tercih kümesi kullandığını doğrular:
 
-### 7.3 Gemini'nin kendine özgü 2 başarısızlığı
+- **s49_negative_byte_count (Kategori C, char işaretliliği, 2. örnek):**
+  Gemini yine baytı `byte as i8` ile doğrudan işaretli yorumladı — s20 ile
+  birebir aynı çözüm deseni, farklı bir kod üzerinde.
+- **s51_long_clamp (Kategori F, platform tamsayı genişliği, 2. örnek):**
+  Gemini yine `std::os::raw::c_long` kullandı (`use std::os::raw::c_long;`
+  ve tüm fonksiyon imzaları bu türle) — s38 ile birebir aynı çözüm.
+- **s52_window_sum (Kategori G, usize taşması, 2. örnek):** Gemini pencere
+  başlangıcını `let mut start = n - k;` biçiminde **işaretli `i32`**
+  üzerinde hesaplayıp negatifse sıfırladı, yalnızca dizi indekslerken
+  `arr[i as usize]` ile `usize`'a geçti — taşma riskini oluşturacak
+  çıkarmayı hiç `usize` alanında yapmadı.
+- **s53_tax_bracket (Kategori H, switch fallthrough, 2. örnek):** Gemini
+  yine her dilimin kümülatif toplamını `match` kolunda açık aritmetikle
+  yazdı (`4 => 800+400+200+100` ...) — s43 ile birebir aynı desen.
+- **s56_macro_table (Kategori I, makro çoklu-değerlendirme):** Gemini,
+  C'nin yan-etkili `INC_AND_GET` makrosunu **gerçek bir fonksiyona**
+  (`fn post_inc(x: &mut i32) -> i32`) çevirdi — Tablo IV'te önerilen tam
+  düzeltmeyi (fn ile tek-değerlendirme) kendiliğinden, ilk geçişte
+  uyguladı. İlginç bir ayrıntı: zararsız `MAX(a,b)` makrosunu ise yine bir
+  Rust makrosu (`macro_rules! max`) olarak bıraktı — yani model, "makroyu
+  fonksiyona çevir" genel bir kuralı değil, yalnızca yan etkili çağrıyı
+  ayırt edip düzeltmiştir.
+
+**Ortak örüntü:** Bu 14 örnekte Gemini'nin "doğru" sonuca ulaşması, kaynak
+kodun anlamını derinlemesine çözümlemesinden değil, **farklı ve tutarlı
+bir idiyomatik varsayılan kümesi** kullanmasından kaynaklanıyor gibi
+görünmektedir (bayt tamponu yerine `String`, `usize` yerine işaretli
+`i32`, sabit `i64` yerine `c_long`, `static mut` yerine `AtomicI32`). Bu
+tercihler tesadüfen (ya da modelin eğitim verisindeki farklı yaygın
+kalıplar nedeniyle) C'nin sözleşmesiyle örtüşmüştür — ama bu, Gemini'nin
+bu boşlukları "anladığı" anlamına gelmez; §7.2b ve §7.3'teki kendi
+başarısızlıkları bunun sınırlarını gösterir.
+
+### 7.2b Claude'un geçtiği, Gemini'nin kaldığı 2 örnek — tersine dönen desen
+
+Yön tersine döndüğünde (Claude PASS, Gemini FAIL) örüntü de tersine
+döner — bu kez Claude'un daha dayanıklı çıktığı örnekler, veri setinin en
+uzun/karmaşık **gerçek üretim kodu** üyeleridir:
+
+- **s46_musl_qsort (CE, Claude'da PASS):** Gemini'nin çevirisi
+  `let mut ar = [*mut u8::null(); AR_LEN];` gibi geçersiz bir Rust söz
+  dizimi içeriyor (`*mut u8::null()` şeklinde bir ifade Rust'ta yok —
+  muhtemelen `std::ptr::null_mut::<u8>()` kastedilmiş ama yanlış
+  yazılmış); smoothsort'un ham işaretçi aritmetiğini Rust'a aktarırken
+  birden fazla söz dizimi hatası üretti. Claude'un çevirisi ise aynı
+  algoritmayı dilim/slice tabanlı indekslemeyle, hiç `unsafe` gerekmeden
+  ilk seferde doğru çevirmiştir (§8).
+- **s47_redis_sds (FE, Claude'da PASS):** Gemini'nin çevirisi, `sdscatlen`
+  benzeri bir ekleme işleminde büyüme mantığını yanlış uygulamış; test
+  girdisi 05'te beklenen `LEN=5 STR=start / LEN=45 ... / LEN=295 ...`
+  yerine `LEN=0 STR=` (boş) döndürmüştür — SDS'in gizli başlık/pointer
+  düzenini (§Genel Çerçeve) yeniden üretirken bir yerde string tamponu
+  sıfırlanmış veya yanlış referanslanmıştır. Claude'un çevirisi bu
+  karmaşık bellek düzenini `String` tabanlı güvenli bir iç temsile
+  başarıyla dönüştürmüştür.
+
+Bu iki vaka, §7.2'de gözlenen "Gemini daha dayanıklı" örüntüsünün
+kategoriye özgü olduğunu, uzun/karmaşık gerçek üretim kodunda tersine
+döndüğünü doğrudan kanıtlar (bkz. §7.5 sentezi).
+
+### 7.3 Gemini'nin kendine özgü başarısızlıkları (3 örnek)
+
+Gemini'nin Claude'da hiç görülmeyen (yani Claude'un PASS olduğu) toplam 3
+başarısızlığı vardır: s46 ve s47 (yukarıda §7.2b'de, gerçek üretim kodu
+bağlamında incelendi) ve aşağıdaki s26 — kısa, özgün bir program olduğundan
+kod uzunluğu/karmaşıklığıyla değil, tamamen farklı bir hata sınıfıyla
+ilgilidir:
 
 - **s26_rpn_calculator (CE, Claude'da PASS):** Gemini, yığın (stack)
   işlemlerini iki ayrı kapanış (closure) olarak yazdı — `push` ve `pop`,
@@ -453,45 +545,72 @@ anlamına gelmez; §7.3'teki kendi başarısızlıkları bunun sınırlarını g
   hiç çağrılmasa bile, ikisinin birden var olması yeterli. Claude'un
   çevirisi bunun yerine düz fonksiyonlar veya doğrudan dizi indeksleme
   kullandığından bu tuzağa hiç düşmedi.
-- **s27_csv_stats (CE, Claude'da FE):** Gemini, `%g` biçimlendirmesini
-  taklit etmeye çalışırken geçersiz bir format string söz dizimi
-  (`format!("{}e{:+=03}", m, exp_num)`) üretti — Rust'ın biçim dizesi
-  söz diziminde `:+=03` diye bir belirteç yok, bu yüzden hiç derlenmedi.
-  İlginç olan: Claude aynı örnekte **derlenen ama yanlış sonuç veren** bir
-  kod üretmişti (FE); Gemini ise aynı kök soruna (biçimlendirme) çözüm
-  ararken sözdizimsel olarak geçersiz bir kod üretti (CE) — iki model aynı
-  zorluğa karşı iki farklı başarısızlık türüyle tökezledi.
 
-### 7.4 Ortak başarısızlık: s15_float_avg
+Not: s27_csv_stats, Gemini'de de başarısız olsa da (CE), Claude'da da
+başarısızdır (FE) — bu yüzden Gemini'ye özgü değil, §7.4'te ele alınan
+**ortak** başarısızlıklardan biridir.
 
-Her iki model de **aynı** kök nedenden (Kategori D, `%g` biçimlendirme)
-başarısız oldu — ikisi de Rust'ın varsayılan `{}` biçimini kullanıp C'nin
-6-anlamlı-basamak/sondaki-sıfır-atma davranışını yeniden üretmedi. Bu,
-veri setindeki tek "gerçekten iki model için de zor" örnektir ve bu
-boşluğun (aksine s09/s19/s38 gibi diğerlerinden) her iki modelin de
-varsayılan eğiliminde ortak bir kör nokta olduğunu gösterir.
+### 7.4 Ortak başarısızlıklar: s15, s27 ve s48 (Kategori D'nin üç örneği)
 
-### 7.5 Genel yorum
+- **s15_float_avg:** Her iki model de **aynı** kök nedenden (Kategori D,
+  `%g` biçimlendirme) başarısız oldu — ikisi de Rust'ın varsayılan `{}`
+  biçimini kullanıp C'nin 6-anlamlı-basamak/sondaki-sıfır-atma davranışını
+  yeniden üretmedi.
+- **s27_csv_stats:** Claude derlenen ama yanlış sonuç veren bir kod (FE)
+  üretti; Gemini ise `%g` biçimlendirmesini taklit etmeye çalışırken
+  geçersiz bir format string söz dizimi (`format!("{}e{:+=03}", m,
+  exp_num)`) üretti — Rust'ın biçim dizesi söz diziminde `:+=03` diye bir
+  belirteç yok, bu yüzden hiç derlenmedi (CE). İki model aynı köke
+  (biçimlendirme) çarpar ama farklı yüzeysel hata türleriyle tökezler.
+- **s48_cjson_number:** Kategori D'nin üçüncü bağımsız tekrarında (cJSON,
+  gerçek üretim kodu) her iki model de yine başarısız oldu, ama **farklı
+  hata türleriyle**: Claude derlenen ama yanlış sonuç veren bir kod (FE)
+  üretirken, Gemini derleme aşamasında takılan geçersiz bir söz dizimi
+  (CE, `let mut newbuffer: *mut u8;` etrafında sözdizimi hataları) üretti
+  — s27'dekiyle aynı örüntü: iki model aynı köke (biçimlendirme) çarpar
+  ama farklı yüzeysel hata türleriyle tökezler.
 
-Farklı modeller (a) **ortak** C↔Rust semantik boşluklarına (Kategori D)
-düşebilir, (b) **birbirinden bağımsız**, modele özgü hata sınıfları
-(Gemini'nin E0499 ödünç hatası, geçersiz format string'i) üretebilir, ve
-(c) **aynı boşluğu farklı idiyomatik tercihlerle tesadüfen atlatabilir**
-(§7.2'deki 9 örnek). Üçüncü gözlem özellikle önemlidir: bir modelin belirli
-bir kategori için "güvenli" görünmesi, o kategoriyi anladığı anlamına
-gelmeyebilir — yalnızca o modelin varsayılan kod-üretim tarzının o kod
-deseninde tesadüfen doğru sonuç vermesi olabilir. Bu, çoklu-model
-karşılaştırmalarının EA rakamlarını yüzeysel karşılaştırmak yerine, altta
-yatan kod-üretim tercihlerini incelemesi gerektiğini göstermektedir.
+Bu üç örnek birlikte, Kategori D'nin (çıktı biçimlendirme) veri setindeki
+**tek gerçekten model-bağımsız kör nokta** olduğunu güçlü biçimde
+doğrular: 3 bağımsız kod tabanının (kendi yazdığımız iki örnek + cJSON)
+3'ünde de, iki farklı modelin ikisi de aynı temel hataya düşmüştür.
+
+### 7.5 Genel yorum (57/57 tam veriyle)
+
+Tam veri seti üzerinde dört farklı model-etkileşim türü gözlenmiştir:
+(a) **ortak** C↔Rust semantik boşluğu — Kategori D, üç bağımsız kod
+tabanında iki modelin de aynı kör noktaya düşmesi (§7.4); (b) **model-özgü,
+kaynak-koddan bağımsız** hata sınıfları — Gemini'nin E0499 ödünç hatası ve
+geçersiz format string'i (§7.3), yalnızca modelin kendi kod-üretim
+tarzından kaynaklanan, C'nin belirli bir davranışıyla ilgisi olmayan
+hatalar; (c) **aynı boşluğu farklı idiyomatik tercihlerle tesadüfen
+atlatma** — Gemini'nin Kategori A, B, C, E, F, G, H, I'de (14 örnek,
+§7.2) sistematik olarak farklı varsayılanlar kullanması; ve (d) **model×
+kod-karmaşıklığı etkileşimi** — aynı iki modelin, kısa hedeflenmiş
+kategorilerde (Gemini üstün, §7.2) ile uzun/karmaşık gerçek üretim
+kodunda (Claude üstün, §7.2b) taban tabana zıt biçimde sıralanması.
+
+Dördüncü gözlem özellikle önemlidir çünkü EA'nın toplam sayısal
+karşılaştırmasını (Gemini %89.47 > Claude %70.18) yanıltıcı kılar: bu
+fark, esasen veri setinin çoğunluğunu oluşturan kısa/orta uzunluktaki
+hedefli örneklerden (Kategori A-I) kaynaklanır; veri setinin en uzun ve
+en karmaşık 3 örneğinde (musl/Redis/cJSON) sıralama tam tersine
+dönmektedir. Bir modelin belirli bir kategori için "güvenli" görünmesi, o
+kategoriyi anladığı anlamına gelmeyebilir — yalnızca o modelin varsayılan
+kod-üretim tarzının o kod deseninde tesadüfen doğru sonuç vermesi
+olabilir. Bu, çoklu-model karşılaştırmalarının toplam EA rakamlarını
+yüzeysel biçimde sıralamak yerine, hem kategori bazında kırılımı hem de
+altta yatan kod-üretim tercihlerini incelemesi gerektiğini göstermektedir.
 
 ---
 
 ## 8. Bellek Güvenliği ve `unsafe` Kullanımı
 
-114 çeviri dosyasının (57 örnek × Round 1/Round 2) tamamı `unsafe`/ham
-işaretçi kullanımı için tarandı: yalnızca **6 dosyada** (s37_bsd_getopt,
-s44_fib_memo_static, s46_musl_qsort'un her iki turu) gerçek `unsafe`
-kullanıldı — üçü de C kodunun kendisinin yapısal olarak dayattığı bir
+114 çeviriden (57 örnek × Round 1/Round 2; çok dosyalı üç örnek gerçek
+dosya sayısını 122'ye çıkarır) `unsafe`/ham işaretçi kullanımı için
+taranmıştır: yalnızca **8'i** (4 örnek × 2 tur: s37_bsd_getopt,
+s44_fib_memo_static, s46_musl_qsort, s50_id_generator) gerçek `unsafe`
+kullanıldı — dördü de C kodunun kendisinin yapısal olarak dayattığı bir
 gerekliliği yansıtır:
 - **s37 (getopt):** `optarg`/`optind`/`optopt`/`opterr` — çağıran kod
   tarafından okunması beklenen, dışa açık değiştirilebilir global durum.
@@ -499,6 +618,10 @@ gerekliliği yansıtır:
   değiştirilebilir durum gerektirir.
 - **s46 (musl smoothsort):** Genel-amaçlı `void*` imzasına dayanan bit-düzeyi
   byte-pointer aritmetiği.
+- **s50 (id_generator, Kategori E'nin 2. örneği):** s19 ile aynı
+  `static mut` yapısı, ama bu kez erişim doğru biçimde `unsafe` bloğuna
+  sarılmış (§3.7) — modelin `unsafe` ekleme davranışının aynı kalıpta bile
+  tutarlı olmadığının kanıtı.
 
 **Daha çarpıcı bulgu:** Ham `void*` işaretçi aritmetiğine yapısal olarak
 bağımlı `heapsort()` (s39_bsd_heapsort) ve veri setindeki en karmaşık
@@ -521,22 +644,44 @@ boyunca kalıcı durum, generic `void*` imzası) etkileniyor.
 - **Kod uzunluğu ile başarı ilişkisi:** Mann-Whitney U testi, PASS (n=40) ve
   FAIL (n=17) gruplarının LoC dağılımları arasında istatistiksel olarak
   anlamlı bir fark bulamadı (U=287.0, p=0.359). Rank-biserial etki büyüklüğü
-  r=0.156 (küçük etki). Bootstrap-tabanlı gerçekleşen güç (achieved power,
-  α=0.05, 5000 tekrar): yalnızca **%15.0** — düşük güç, "anlamlı fark yok"
-  sonucunun bir Tip II hatası olabileceği anlamına gelir, kesin bir "ilişki
-  yoktur" iddiası değildir.
+  r=0.156 (küçük etki).
+- **Duyarlılık analizi (post-hoc/gözlemlenen güç yerine önerilen):**
+  Bootstrap-tabanlı gerçekleşen güç (achieved power, α=0.05, 5000 tekrar)
+  yalnızca **%15.0**'tır, ama bu ölçüt p-değerinin tekdüze bir dönüşümüdür
+  ve bağımsız bilgi taşımaz (Hoenig & Heisey 2001, "The Abuse of Power").
+  Bunun yerine hesaplanan duyarlılık analizi: n(FAIL)=17, n(PASS)=40,
+  α=0.05 ile %80 güçte saptanabilecek en küçük etki büyüklüğü, anlamlılığı
+  ölçmek için kullanılan AYNI Mann-Whitney U istatistiğinden ampirik
+  rank-biserial formülüyle (r=1-2U/(n1·n2), normal/AUC yaklaşık dönüşümü
+  değil) hesaplandığında rank-biserial |r|≈0.46'dır (U'nun bağ düzeltmeli
+  standart sapması üzerinden).
+  Gözlemlenen
+  r=0.156 bu eşiğin belirgin altındadır — veri seti bu büyüklükte küçük-orta
+  etkileri saptayacak güce sahip değildir; "anlamlı fark yok" sonucu kesin
+  bir ilişkisizlik kanıtı değil, düşük güçle tutarlı bir gözlem olarak
+  okunmalıdır (`harness/stats_report.py` ile hesaplanmıştır).
 - **p-değerinin istikrarsızlığı:** Veri seti n=36→39→45→48→53→57'ye
   büyüdükçe p-değeri 0.076 → 0.187 → 0.169 → 0.273 → 0.337 → 0.359 olarak
   dalgalandı — küçük örneklemlerde p-değerinin ne denli oynak olabileceğinin
   doğrudan, kendi verimizden bir kanıtı.
 - **İşaretçi kullanımı ile başarı ilişkisi:** Fisher'in kesin testi, işaretçi
-  kullanımı ile PASS/FAIL arasında anlamlı bir ilişki bulamadı (olasılık
-  oranı=1.93, p=0.385, %95 GA=[0.61, 6.11] — aralığın 1.0'ı içermesi
-  anlamsızlığı doğrular).
-- **Betimsel örüntü (Tablo 4):** FAIL grubunun string-fonksiyonu kullanım
-  oranı (%58.3) PASS grubundan (%36.1) yüksek; FAIL grubunda hiç
-  `malloc`/`calloc` kullanılmıyor (dinamik bellek yönetimi arıza riskini
-  artırmıyor, aksine düşürüyor gibi görünüyor — küçük örneklemde ön bulgu).
+  kullanımı ile PASS/FAIL arasında anlamlı bir ilişki bulamadı (tablo=
+  [[23,7],[17,10]], olasılık oranı=1.93, p=0.385, %95 GA=[0.61, 6.11] —
+  aralığın 1.0'ı içermesi anlamsızlığı doğrular).
+- **Betimsel örüntü (n=57 üzerinden, `harness/stats_report.py` ile
+  yeniden hesaplandı):** Ortalama LoC PASS=67.0/FAIL=59.8, medyan LoC
+  PASS=34.5/FAIL=27.0. FAIL grubunun string-fonksiyonu kullanım oranı
+  (%47.1) PASS grubundan (%37.5) yüksek; FAIL grubunda hiç
+  `malloc`/`calloc` kullanılmıyor (%0.0 vs PASS'te %22.5) — dinamik bellek
+  yönetimi arıza riskini artırmıyor, aksine düşürüyor gibi görünüyor (küçük
+  örneklemde ön bulgu). İşaretçi kullanımı PASS'te %57.5, FAIL'de %41.2.
+- **Model karşılaştırması (McNemar):** Claude ve Gemini AYNI 57 program
+  üzerinde ölçüldüğünden, genel EA farkının anlamlılığı eşleştirilmiş
+  (paired) bir tasarıma uygun McNemar testiyle sınanmıştır: yalnızca
+  Claude'un başarısız olduğu 14 örnek vs. yalnızca Gemini'nin başarısız
+  olduğu 3 örnek üzerinden McNemar kesin iki-yönlü **p=0.013** — genel fark
+  istatistiksel olarak anlamlıdır, ama §7'deki kategori kırılımı bu farkın
+  yönünün kategoriye göre değiştiğini göstermektedir.
 
 ---
 
@@ -583,9 +728,15 @@ tasarım aşamasında yoktu.
 5. **`unsafe` kullanımı isteğe bağlı değil, sözleşmeye bağlı:** Model, C
    kodunun kendisi gerektirmediği sürece hiç `unsafe` kullanmıyor — karmaşık
    bellek düzenlerini bile güvenli soyutlamalarla yeniden yapılandırabiliyor.
-6. **Bulgular tek modele özgü olabilir:** Gemini ile kısmi karşılaştırma, bazı
-   hataların modeller arası ortak (sistematik C↔Rust boşluğu), bazılarının
-   ise modele özgü (hallüsinasyon) olduğunu gösteriyor.
+6. **Bulgular tek modele özgü olabilir; "en iyi model" tek boyutlu bir soru
+   değildir:** Gemini ile 57/57 tam karşılaştırma, bazı hataların modeller
+   arası ortak (Kategori D, sistematik C↔Rust boşluğu — §7.4), bazılarının
+   modele özgü (Gemini'nin E0499 ödünç hatası — §7.3) olduğunu gösteriyor.
+   Daha da önemlisi: Gemini, Claude'un ikinci bağımsız örnekte de tekrar
+   kaçırdığı 5 kategoride (§7.2) tekdüze biçimde daha dayanıklı, ama en
+   uzun/karmaşık gerçek üretim kodu üçlüsünde (musl/Redis/cJSON, §7.2b)
+   tekdüze biçimde daha kırılgandır — "model A modelden B'den daha iyidir"
+   sorusunun yanıtı, kod tabanının niteliğine göre değişir.
 
 ---
 

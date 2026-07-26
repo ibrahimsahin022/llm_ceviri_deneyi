@@ -613,3 +613,367 @@ Kalan 13 örnek (s45_goto_cleanup - s57_shared_counter_threads), Gemini günlük
 kotası sıfırlandıktan sonra aynı yöntemle tamamlanabilir.
 
 ---
+
+## Gemini Çevirilerinin Tamamlanması — 44/57 → 57/57 (gerçek, TAM ölçüm) ve IEEE Formatında Yeni Makale
+
+Kullanıcı talimatıyla (`gemini api key ile kalanları yap`), kalan 13 örnek
+önce 10'u (`--sleep 150`, s45-s54) sonra son 3'ü (s55, s56, s57 — günlük
+kota sıfırlandıktan sonra `--sleep 60`) ile gerçek API çağrısıyla
+tamamlandı. `run_experiment.py --rust-dir translations_rust__gemini` ile
+57 örneğin tamamı gerçekten derlenip çalıştırılarak ölçüldü.
+
+### Gerçekten ölçülen nihai sayılar
+- **Gemini EA (n=57, TAM kapsam): 51/57 = %89.47** (4 CE, 0 RE, 2 FE, 0 NT;
+  önceki 41/44 = %93.18'in kısmi ölçümünün yerine geçer)
+- Yeni ortaya çıkan 3 başarısızlık (s46, s47, s48 — musl/Redis/cJSON, gerçek
+  üretim kodu): s46_musl_qsort (CE, geçersiz `*mut u8::null()` söz dizimi),
+  s47_redis_sds (FE, ekleme sırasında büyüme mantığı hatası — beklenen
+  `LEN=5 STR=start...` yerine `LEN=0`), s48_cjson_number (CE — Claude'da FE
+  idi, Kategori D'nin üçüncü bağımsız tekrarı). **Bu üçü Claude'un ilk
+  seferde 2/3 geçtiği aynı örnekler** — Gemini'nin genel EA üstünlüğünün
+  tekdüze olmadığının, gerçek üretim kodunda tersine döndüğünün kanıtı.
+- Kalan 5 örnek (s49, s51, s52, s53, s56 — hakem geri bildirimiyle eklenen
+  kök-neden 2. örnekleri + karmaşık makro) hepsi Gemini'de PASS: Claude'un
+  Round 1'de yalnızca birer örnekle temsil edilen 5 kategoride (C, F, G, H,
+  I) ikinci bağımsız denemede de aynı hatayı tekrarladığının (1/5), Gemini'nin
+  ise aynı 5 kategoriyi tutarlı idiyomatik tercihlerle (yine `i8`, yine
+  `c_long`, yine işaretli döngü, yine açık `match` aritmetiği, yeni olarak
+  gerçek `fn`'e çevrilen makro) sistemli biçimde atlattığının kanıtı.
+- `results/manifest_gemini.json`, `results/results_gemini.json/csv`,
+  `results/model_comparison.md` güncellendi.
+
+### Analiz dosyasına yansıtılan değişiklik
+`results/DETAYLI_SORUN_ANALIZI.md` §7 (Çoklu Model Analizi) 44/57 kısmi
+veriden 57/57 tam veriye güncellendi: karşılaştırma tablosu 57 örneğin
+tamamını kapsayacak şekilde genişletildi; yeni §7.2b eklendi (Claude'un
+geçtiği, Gemini'nin kaldığı gerçek üretim kodu örnekleri — ters yönlü
+örüntü); §7.3 Gemini'nin 4 kendine özgü başarısızlığını (s26, s27, s46,
+s47) kapsayacak şekilde genişletildi; §7.4 s48'i (ortak başarısızlık,
+farklı hata türü) içerecek şekilde güncellendi; §7.5 sentezi dört ayrı
+model-etkileşim türünü (ortak boşluk, model-özgü hata, tesadüfi atlatma,
+model×karmaşıklık etkileşimi) ayırt edecek şekilde yeniden yazıldı. §2.6
+(s15 vaka analizi) ve §11 (genel çıkarımlar madde 6) güncellendi.
+`results/DETAYLI_SORUN_ANALIZI.html` yeniden üretildi.
+
+### Yeni makale: IEEE iki-sütunlu format
+Kullanıcının paylaştığı IEEE konferans şablon görseline göre makale baştan
+yazıldı (`makale_IEEE_v1.docx`, scratchpad'teki `build_ieee_paper.py` ile
+üretildi — A4, iki sütun, Times New Roman, Roman rakamlı bölümler I-VI +
+Teşekkür + Kaynakça). Tüm geniş tablolar (I, III, IV, V, VI, VII) `w:cols`
+XML manipülasyonuyla geçici tek-sütun bölüm aralarına alınarak tam sayfa
+genişliğinde render edildi (ilk denemede bu sarmalama unutulmuş, tablolar
+iki-sütunlu alanda taşıp metinle çakışmıştı — Word COM otomasyonuyla PDF
+önizlemesi üzerinden tespit edilip düzeltildi). Toplam 6 sayfa (10 sayfa
+sınırının altında). Model×kategori kırılım tablosu (Tablo VI) ve §V-A
+tartışma paragrafı, 57/57 tam Gemini verisiyle güncellendi (Tablo VI'ya
+"Çok dosyalı (3/3-3/3)" ve "Karmaşık makro (0/1-1/1)" satırları eklendi).
+
+---
+
+## Simüle Edilmiş Hakem Denetimi Sonrası Kapsamlı Düzeltme Turu
+
+Kullanıcı, `makale_IEEE_v1.docx`'i başka bir yapay zekaya "hakem heyeti"
+gibi denetlettirip bulunan sorunları (`hakem_raporu.md`) ilettiği; bu
+raporda 14 çelişki (A1-A14), 6 kırık çapraz-referans/numaralandırma sorunu
+(B1-B6) ve 25 eksik/kavramsal nokta (C1-C25) tespit edilmişti. Her madde
+tek tek doğrulanıp (bazıları gerçek script/veri kontrolüyle çürütüldü,
+bazıları gerçekten hatalıydı) düzeltildi.
+
+### Gerçekten doğrulanıp düzeltilen kritik hatalar
+- **A1 (KRİTİK, gerçek hata):** s27_csv_stats hem "Claude'un hatası" hem
+  "Gemini'ye özgü" olarak sunulmuştu. Gerçekte s27'de **her iki model de**
+  başarısız (Claude FE, Gemini CE) — Gemini'ye özgü başarısızlık sayısı
+  4 değil **3**'tür (s26, s46, s47). Hem makalede hem
+  `DETAYLI_SORUN_ANALIZI.md` §7.3/§7.4'te düzeltildi.
+- **A6/A7 (KRİTİK, gerçek hata):** Makalede "PASS(n=36)/FAIL(n=12)" ile
+  raporlanan Mann-Whitney/Fisher istatistikleri aslında n=40/n=17 (tam
+  57'lik veri seti) üzerinden hesaplanmıştı — grup büyüklüğü etiketi
+  yanlıştı. `harness/stats_report.py` genişletilip (betimsel istatistik +
+  duyarlılık analizi + McNemar fonksiyonları eklenerek) tüm sayılar n=40/17
+  üzerinden yeniden, tekrarlanabilir biçimde hesaplandı ve
+  `results/stats_report.md` yeniden üretildi. Tablo VII (PASS/FAIL betimsel
+  özellikler) gerçek değerlerle güncellendi (65.9→67.0, 66.3→59.8, vb.).
+- **C10 (metodolojik):** Post-hoc "gerçekleşen güç" (%15.0) yerine, Hoenig &
+  Heisey (2001)'in eleştirdiği bu ölçütün yanına, önerilen **duyarlılık
+  analizi** eklendi: n=17/40, α=0.05, %80 güçte saptanabilir en küçük etki
+  |r|≈0.45 (ikili arama + Monte Carlo simülasyonuyla, `harness/
+  stats_report.py`'de `minimum_detectable_effect()`).
+- **C12 (eksik, gerçek test eklendi):** İki model aynı 57 program üzerinde
+  ölçüldüğü için doğru test McNemar'dır (bağımsız örneklem testi değil).
+  Gerçek hesap: yalnızca Claude FAIL=14, yalnızca Gemini FAIL=3, McNemar
+  kesin p=**0.013** — genel EA farkı anlamlı, ama kategoriye göre yön
+  değiştiriyor (`harness/stats_report.py`'de `mcnemar_exact()`).
+- **C17 (KEŞFEDİLEN YENİ HATA, raporda yoktu):** `unsafe` kullanan dosya
+  sayısını doğrularken (`grep -rl unsafe translations_rust*/*.rs`),
+  **s50_id_generator**'ın da her iki turda `unsafe` içerdiği görüldü —
+  önceki metin (hem makalede hem analiz dosyasında) "yalnızca 6 dosya"
+  diyordu ve s50'yi "model `&mut` parametre kullandı, `unsafe`'e hiç
+  düşmedi" olarak yanlış açıklıyordu. Gerçek: model yine `static mut`
+  kullandı ama bu kez erişimi doğru `unsafe` bloğuna sardı. Doğru sayı:
+  **8 dosya (4 örnek × 2 tur)**. Bu, dış denetimin tetiklediği ama dış
+  denetimin kendisinin yakalamadığı, kaynak koda bakarak bizzat doğrulanan
+  bir düzeltmedir.
+- **A9:** "20 istek/gün kotasıyla tek oturumda 54 çeviri" aritmetik olarak
+  imkânsızdı — gerçekte ölçüm 2026-07-22 ile 2026-07-26 arasında birden
+  fazla güne yayılmıştı; metin buna göre düzeltildi.
+- **A10:** Docker/Linux Round-2 karşılaştırmasında 52/55 sonucu için yalnızca
+  2 örnek (s38, s51) gerekçe gösterilmişti; gerçekte 3 örnek farklılaşıyor
+  (üçüncüsü s47 — nedeni `long` genişliği değil, CRLF/stdio metin-modu
+  farkı, yani C referansının kendisinin platforma bağlı davranması).
+  `results/platform_comparison.md`'den doğrulanıp düzeltildi.
+- **C3 (edition):** `rustc --edition` bayrağının hiç geçilmediği ve
+  varsayılan (2015) edition kullanıldığı belirtildi; ampirik test
+  (`rustc` ile `static_mut_refs` lint'i default/2021/2024 karşılaştırması)
+  yapılıp Kategori E'nin gerçek hatasının (E0133, unsafe eksikliği) edition-
+  bağımsız olduğu doğrulandı — raporun bu noktadaki varsayımı kısmen
+  yanlıştı, düzeltilerek yazıldı.
+- **A2, A3, A4, A5, A8, A11, A13, A14, B1-B6:** Tümü doğrulanıp düzeltildi
+  (sırasıyla: "%75" çelişkisi → "en iyi modelde bile 6/57 hata" biçiminde
+  yeniden çerçevelendi; "(kısmen)" kalıntısı silindi; "dört" → "beş"
+  kategori; "35/57" → "44/57" özgün örnek sayısı; Tablo başlıklarına
+  "Claude" eklendi; §II'deki model-özgü kategori listesi A,B,C,E,F,G,H,I
+  olarak düzeltildi; §IV-C doğrulama cümlesi netleştirildi; Öz'deki
+  "modele göre değişen iyileştirme" iddiası yalnızca Claude'a
+  sınırlandırıldı; tüm §V-C→§V-B çapraz referanslar, §IV-I→§IV-F, §IV-C→
+  §IV-B düzeltildi; Tablo VII→IV, IV→V, V→VI, VI→VII olacak şekilde ilk-
+  anılma sırasına göre yeniden numaralandırıldı).
+- **B4/B5:** `harness/make_figures.py`'deki 5 grafiğin içine gömülü,
+  Word alt yazılarıyla çelişen `ax.set_title()` çağrıları tamamen
+  kaldırıldı (IEEE'de başlık grafiğe gömülmez); tüm grafikler güncel 57
+  örneklik veriyle yeniden üretildi.
+
+### Eklenen yeni içerik (İngilizce özet, atıflar, madde listesi)
+İngilizce Abstract/Index Terms eklendi (IEEE konvansiyonu); anahtar kelime
+sayısı 9→6'ya indirildi; AS1-AS6 tek paragraftan madde listesine
+dönüştürüldü; [4]-[9] referansları ilk kez metin içi atıfla ilişkilendirildi;
+Rust edition, Gemini örnekleme parametreleri (temperature=0.2, top_p=1.0) ve
+ölçüm tarih aralığı eklendi; Claude çevirilerinin tekrarlanabilirlik
+sınırlaması (etkileşimli oturum, kayıtsız örnekleme parametreleri, k=1 tek
+örneklem) açıkça yazıldı.
+
+### Gerçek yeni deney GEREKTİREN, bilinçli olarak YAPILMAYAN maddeler
+Aşağıdakiler uydurma veri üretmemek için **yapılmadı**, bunun yerine
+Sınırlamalar bölümünde açık birer madde olarak yazıldı: (C1) k=3-5 tekrarlı
+örnekleme ve pass@k ölçümü; (C5) Round 2 düzeltmelerinin görülmemiş
+(held-out) girdilerle doğrulanması; (C6) gcov tabanlı kod kapsama ölçümü;
+(C9) C referansının farklı optimizasyon seviyelerinde tekrarı; (C21) tam
+kapsamlı ilişkili çalışmalar taraması (TransCoder/C2Rust ötesi); (C22)
+Zenodo/figshare DOI ataması.
+
+### Kaynakça girdileri — WebSearch ile doğrulandı
+[10], [11], [12] önce `[DOĞRULANMALI]` etiketiyle eklenmişti; ardından
+WebSearch aracı yüklenip gerçek arama yapılarak üçü de teyit edildi:
+[10] CISA/NSA/FBI "The Case for Memory Safe Roadmaps: Why both C-Suite
+Executives and Technical Experts Need to Take Memory Safe Coding
+Seriously" (Aralık 2023, cisa.gov/case-memory-safe-roadmaps) — tam başlık
+eklendi; [11] C2Rust (github.com/immunant/c2rust, Immunant Inc.) —
+doğru; [12] B. Rozière, M.-A. Lachaux, L. Chanussot, G. Lample,
+"Unsupervised Translation of Programming Languages," NeurIPS 2020,
+arXiv:2006.03511 — birebir doğru. `[DOĞRULANMALI]` etiketleri kaldırıldı.
+[13] (Hoenig & Heisey 2001) zaten iyi bilinen, yüksek güvenilirlikli bir
+kaynaktı.
+
+### Etkilenen dosyalar
+`harness/stats_report.py` (genişletildi), `results/stats_report.md`
+(yeniden üretildi), `harness/make_figures.py` (başlıklar kaldırıldı),
+`results/figures/*.png` (yeniden üretildi), `makale_IEEE_v1.docx`
+(kapsamlı revizyon), `results/DETAYLI_SORUN_ANALIZI.md` ve `.html`
+(eşleşen düzeltmeler).
+
+---
+
+## İkinci Tur Revizyon (`duzeltme_prompt_tur2.md`'ye Göre)
+
+Makale ikinci bir simüle hakem/revizyon turundan geçti; bu turda önceki
+düzeltmelerin kendisinin ürettiği 2 yeni çelişki ve birkaç eksik kalem
+giderildi. Tüm sayısal değerler ya mevcut `results/*.json` dosyalarından
+gerçek zamanlı yeniden hesaplandı ya da (istatistiksel yöntem
+düzeltmesinde olduğu gibi) `harness/stats_report.py` gerçekten yeniden
+çalıştırılarak elde edildi — hiçbir sayı elle uydurulmadı.
+
+### A — Zorunlu düzeltmeler (hepsi doğrulandı)
+- **A1 (kritik):** §IV-F'de Gemini'nin Claude'da görülmeyen 3 başarısızlığı
+  "hepsi CE'dir" deniyordu; s47 aslında FE'dir (boş `LEN=0` çıktısı — CE
+  değil). `results/results_gemini.json`'dan doğrudan doğrulandı: CE=
+  {s26, s27, s46, s48}=4, FE={s15, s47}=2, toplam 6=57−51 ✓. Metin "ikisi
+  derleme hatası (s46, s26), biri fonksiyonel hatadır (s47)" olarak
+  düzeltildi.
+- **A2 (kritik):** "114 çeviri (...8'i unsafe, 4 örnek×2 tur)" iddiası
+  yanlıştı. `results_round1.json`/`results_round2.json` karşılaştırması
+  ve `grep -rl unsafe translations_rust/ translations_rust_refined/`
+  doğrulaması: Round 2 yalnızca Round 1'de başarısız olan 17 örneği
+  yeniden çevirir (57+17=74 farklı çeviri, 114 değil); s37/s44/s46/s50
+  dördü de Round 1'de PASS olduğundan hiç yeniden çevrilmemiştir → unsafe
+  kullanan gerçek örnek sayısı 4 (%5.4), 8 değil. Ayrıca s19'un Round 2
+  düzeltmesinin `unsafe` KULLANMADIĞI (durumu `&mut i32` parametresi
+  olarak geçen güvenli bir tasarıma geçildiği — dosya içeriği okunarak
+  doğrulandı) açıkça eklendi.
+- **A3:** Gemini ölçüm tarih aralığı "2026-07-22 – 2026-07-26" idi;
+  2026-07-26 o anki tarihe göre gelecekteydi. `translations_rust__gemini/`
+  dosyalarının gerçek mtime'ları (`os.path.getmtime`) okunarak doğru
+  aralık (2026-07-22 – 2026-07-25) yazıldı.
+- **A4:** Öz/Abstract/Sonuç'ta hâlâ tek-katmanlı "94% sessiz" çerçevelemesi
+  vardı; §IV-C'nin kendi düzeltmesiyle (17 başarısızlığın 4'ü aslında
+  gürültülü RE, yalnızca 12'si/%70.6'sı gerçekten sessiz FE) tutarlı hale
+  getirilmek üzere üç yerde de iki-katmanlı çerçeveleme uygulandı.
+- **A5:** "(Docker) tam tekrar" ifadesi üç yerde niteliksiz kalmıştı;
+  hepsi "(55/57)" niteleyicisiyle güncellendi veya "bir tekrar" olarak
+  yumuşatıldı.
+- **A6:** §IV-B'deki "§IV-D'deki kök neden analizi" kırık çapraz referansı
+  (kök neden analizi aslında §IV-C'dir) düzeltildi.
+- **A7:** Depo URL'si (`github.com/ibrahimsahin022/llm_ceviri_deneyi` —
+  gerçek `git remote -v` çıktısından alındı) §III-E'ye eklendi; önceden
+  metinde hiçbir yerde geçmiyordu.
+
+### B — Test ortamında yapılan tek iş
+- **B1:** Test-girdisi bazında geçme oranı §III-E'de tanımlanmış ama hiç
+  raporlanmamıştı. `results_round1.json`'dan gerçek hesaplama: 195/226
+  (%86.3) — CE olan tek örneğin (s19) girdileri hiç çalıştırılamadığından
+  payda 229 değil 226. Ayrıca 12 FE örneğinin 6'sının (s06, s13, s15,
+  s20, s27, s38) yalnızca TEK bir sınır girdisinde saptığı bulundu ve
+  §IV-A'ya "hata yalnızca sessiz değil, aynı zamanda seyrek tetiklenir"
+  sonucuyla eklendi.
+
+### C — Yüksek değer / düşük maliyet
+- **C1:** "Sessiz hata oranı modele göre değişir" bulgusu (Claude 16/17
+  vs. Gemini 4/6) Öz, İngilizce Abstract ve Sonuç'a taşındı.
+- **C2:** §III-D'ye Round 2'nin tek turlu (single-shot, yakınsayana kadar
+  tekrarlanmayan) bir düzeltme olduğu ve bütçenin (1 tur) üç geri bildirim
+  seviyesinde sabit tutulduğu eklendi.
+- **C3:** Tablo V'te C ve F kategorilerine "†" dipnotu eklendi:
+  "doğru" davranış referans platformun (Windows/LLP64)
+  implementation-defined seçimine bağlıdır; §V-B'ye açıklayıcı cümle
+  eklendi.
+- **C4:** Şekil numaralandırması IEEE sırasına göre düzeltildi: eski
+  "Şekil 3b" → Şekil 4 (bootstrap CI), eski "Şekil 4" (kök-neden) →
+  Şekil 5; tüm metin içi atıflar güncellendi.
+- **C5:** Gemini'nin gerçek çözümlenmiş `modelVersion` alanı API
+  yanıtlarında hiç loglanmamıştı (`results/manifest_gemini.json`
+  doğrulandı) — sahte bir sürüm numarası uydurmak yerine bu, açık bir
+  tekrarlanabilirlik sınırlaması olarak §III-B ve §V-B'ye yazıldı.
+
+### D — Opsiyonel (kısmen uygulandı)
+- **D2:** Model×kategori etkileşiminin istatistiksel olarak test
+  edilmediği (yalnızca betimsel Tablo VII düzeyinde kaldığı) §V-B'ye
+  açıkça eklendi.
+- D1 (VERT/Syzygy/RustAssistant/CodeTransOcean/AVATAR atıfları) ve D3
+  (held-out doğrulama, gcov kapsaması) **yapılmadı** — ikisi de yeni
+  deney/doğrulama gerektirir; D1 ayrıca kaynakça uydurma riski taşıdığından
+  atlandı.
+
+### E — Küçük düzeltmeler
+- Duyarlılık analizi tutarsızlığı **kaynağında** düzeltildi:
+  `harness/stats_report.py`'deki `minimum_detectable_effect()`
+  anlamlılığı ölçmek için Mann-Whitney U kullanıyordu ama etki
+  büyüklüğünü normal/AUC yaklaşık dönüşümüyle hesaplıyordu (|r|≈0.45);
+  fonksiyon, AYNI U istatistiğinden ampirik rank-biserial formülüyle
+  (r=1-2U/(n1·n2)) hesaplayacak şekilde düzeltildi — gerçek yeniden
+  çalıştırma sonucu |r|≈0.46 (tüm 3 yerde — §IV-B, §V-B, DETAYLI_SORUN_
+  ANALIZI.md — güncellendi).
+- §III-A'daki bozuk parantez/iki-nokta-üst-üste noktalaması düzeltildi.
+- §II'deki ileri referans "(bkz. Tablo VII)" → "(§IV-F'de
+  ayrıntılandırıldığı gibi)" olarak yumuşatıldı.
+- İngilizce Abstract'a McNemar sonucu ve model-özgü sessiz hata oranı
+  eklendi (önceden yalnızca Türkçe Öz'de vardı, iki özet arasında içerik
+  paritesi sağlandı).
+- `harness/make_figures.py`: Şekil 5'teki (kök-neden) 3 kategori adındaki
+  açıklanmamış "(yeni)" etiketleri kaldırıldı (tutarsız uygulanıyordu —
+  aynı revizyonda ikinci örnek alan C ve F kategorilerinde bu etiket
+  yoktu). Şekil 3'teki (LoC) "154 satır — FAIL" etiketi x=73'teki (s27)
+  noktayla görsel olarak çakışıyordu; artık büyütülmüş ofset + bağlayıcı
+  ok çizgisiyle doğru noktaya net biçimde bağlanıyor; tüm 5 grafik yeniden
+  üretildi.
+- Öz kelime sayısı (270→243) ve Abstract (247) IEEE'nin ≤250 kelime
+  kuralına uyacak şekilde sıkıştırıldı, içerik kaybı olmadan.
+
+### Yapılamayan / kullanıcı kararı gereken kalemler
+Sayfa boyutu (A4 vs hedef IEEE şablonunun US Letter olması) ve ORCID
+kimlikleri, hedef yayın yeri ve yazarların gerçek ORCID'leri bilinmeden
+doldurulamaz; uydurulmadı, olduğu gibi bırakıldı.
+
+### Etkilenen dosyalar (2. tur)
+`harness/stats_report.py` (duyarlılık analizi yöntem düzeltmesi),
+`results/stats_report.md` (yeniden üretildi), `harness/make_figures.py`
+(etiket/ok düzeltmeleri), `results/figures/*.png` (yeniden üretildi),
+`makale_IEEE_v1.docx` (7→8 sayfa, kapsamlı revizyon),
+`results/DETAYLI_SORUN_ANALIZI.md` (duyarlılık analizi değeri
+eşitlendi).
+
+---
+
+## Üçüncü Tur — Final Editoryal Düzeltmeler (`duzeltme_prompt_final.md`'ye Göre)
+
+Makale üçüncü hakem turundan geçti: "kabul — küçük editoryal düzeltmelerle."
+Bu turda 5 zorunlu düzeltme (Z1-Z5) ve 3 kontrol (K1-K3) uygulandı. Hiçbir
+ölçüm/deney gerekmedi; doğrulanmış istatistikler (U=287.0, p=0.359,
+r=0.156, Fisher tablosu, McNemar p=0.013, |r|≈0.46, 195/226, Tablo
+V/VII toplamları) değiştirilmedi.
+
+### Z — Zorunlu düzeltmeler
+- **Z1:** §IV-E'de s19_global_counter yanlışlıkla "Kategori E'nin ikinci
+  örneği" olarak etiketlenmişti; Tablo V, §III-A ve §IV-A ile
+  karşılaştırıldığında **s19 ilk örnek, s50_id_generator ikinci örnektir**
+  (Tablo VII: "Kök-neden 2.örnek (5) — Claude 1/5" zaten s50'nin PASS
+  olduğunu, s19'un R1 CE'si olduğunu doğruluyordu). Düzeltilmiş metin artık
+  Kategori E'nin aynı model tarafından iki farklı biçimde (s50'de `unsafe`
+  ile doğru, s19'da Round 2'de `unsafe`'siz durum-parametreleştirme ile)
+  çözüldüğünü doğru sırayla anlatıyor.
+- **Z2:** Öz/Abstract'ta "Gemini'nin 6 başarısızlığının yalnızca 4'ü
+  derlemede yakalanmıştır" cümlesi bulguyu tersine çeviriyordu — asıl
+  vurgu Gemini'nin **düşük** sessizlik oranı (2/6=%33) olmalıyken, "yalnızca
+  4'ü" ifadesi 4'ü (derlenen/yakalanan kısmı) küçük gösteriyordu ve Claude
+  ile karşılaştırıldığında kutup karışıyordu. Öz, Abstract ve §VI Sonuç
+  üçü de "Claude %94 sessiz, Gemini yalnızca %33 sessiz (kalanı
+  derlemede yakalanır)" biçiminde **aynı kutupla** hizalandı — §VI'da da
+  aynı kutup tutarsızlığı (bağımsız olarak) bulunup düzeltildi. Bu
+  değişiklik özet uzunluğunu artırdığından, Öz'den kod-uzunluğu/en-uzun-
+  program yan cümlesi (§IV-B'de zaten var, tekrardı) ve Abstract'tan
+  "compile, run without panicking, and return wrong output" yan cümlesi
+  (bir önceki cümleyle örtüşüyordu) çıkarıldı. Sonuç: Öz 243→238 kelime,
+  Abstract 247→248 kelime (her ikisi de ≤250).
+- **Z3:** §IV-B'de "...hesaplandığında rank-biserial |r|≈0.46'dır
+  (havuzlanmış σ=89.5)" cümlesi kendi formülüyle (r=1-2U/(n1·n2), σ
+  içermeyen) çelişiyordu — parametrik yöntemden kalma bir parantezdi.
+  "(U'nun bağ düzeltmeli standart sapması üzerinden)" olarak düzeltildi;
+  aynı çelişki `results/DETAYLI_SORUN_ANALIZI.md`'de de bulunup
+  düzeltildi (sayının kendisi, |r|≈0.46, değişmedi).
+- **Z4:** Tablo II (Hata Taksonomisi) gövdede hiç atıf almıyordu; §III-C'ye
+  "(...eşitse PASS; Tablo II)" atfı eklendi.
+- **Z5:** §V-B'de üçüncü turdur duran ";"→"," noktalama hatası
+  ("...tamamlanmış olsa da; GPT-4o/DeepSeek..." → "...olsa da,...")
+  düzeltildi.
+
+### K — Kontroller
+- **K1 (önemli bulgu):** `gh repo view` ile doğrulandı —
+  `github.com/ibrahimsahin022/llm_ceviri_deneyi` deposu şu anda
+  **private**'tır, ayrıca yerel repo `origin/master`'ın **11 commit
+  ilerisindedir** (bu oturumdaki tüm düzeltmeler dahil, henüz hiç push
+  edilmemiş). Yani depo public olsa bile GitHub'daki içerik makalenin
+  iddia ettiği güncel durumu (57/57 Gemini, düzeltilmiş istatistikler vb.)
+  yansıtmıyor. Görünürlük değiştirme ve push işlemleri kullanıcı onayı
+  gerektiren geri döndürülebilir olmayan/paylaşılan-durum etkileyen
+  eylemler olduğundan **otomatik yapılmadı** — kullanıcıya ayrıca
+  soruldu. Yazar adları/e-postaları makalede zaten açık olduğundan
+  (çift-kör değil), K1(b)'deki anonim bağlantı önerisi uygulanmadı
+  (gerek yok).
+- **K2:** Şekil 5'teki "(yeni)" etiketleri kontrol edildi —
+  `harness/make_figures.py`'de bu etiketler **önceki turda zaten
+  kaldırılmıştı**; mevcut `fig5_rootcause.png` görsel olarak doğrulandı,
+  "(yeni)" etiketi yok. Ek işlem gerekmedi.
+- **K3:** Şekil 3'teki "154 satır — FAIL" etiketinin x≈73 noktasıyla
+  çakışması **önceki turda zaten** büyütülmüş ofset + bağlayıcı ok
+  çizgisiyle düzeltilmişti; mevcut `fig4_loc_vs_success.png` görsel
+  olarak doğrulandı, etiket doğru noktaya net biçimde bağlanıyor. Ek
+  işlem gerekmedi.
+
+### Yapılmayanlar (opsiyonel bölüm, zaman/veri kısıtı)
+Sayfa boyutu (A4) ve ORCID — hedef yayın yeri/gerçek ORCID'ler
+bilinmediğinden dokunulmadı. VERT/Syzygy/RustAssistant atıfları —
+doğrulanmadan eklenmedi (uydurma kaynakça riski). Held-out doğrulama ve
+gcov kapsaması — §V-B'de dürüstçe sınırlama olarak kalmaya devam ediyor.
+
+### Etkilenen dosyalar (3. tur)
+`makale_IEEE_v1.docx` (8 sayfa, kelime sayıları düzeltildi),
+`results/DETAYLI_SORUN_ANALIZI.md` (Z3 tutarlılığı).
+
+---

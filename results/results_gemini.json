@@ -2,24 +2,24 @@
   "label": "gemini",
   "rust_dir": "translations_rust__gemini",
   "release": false,
-  "total_samples": 44,
-  "passed_samples": 41,
-  "execution_accuracy_pct": 93.18,
+  "total_samples": 57,
+  "passed_samples": 51,
+  "execution_accuracy_pct": 89.47,
   "sample_category_counts": {
-    "compilation_error": 2,
+    "compilation_error": 4,
     "non_termination": 0,
     "runtime_error": 0,
-    "functional_error": 1,
-    "pass": 41
+    "functional_error": 2,
+    "pass": 51
   },
   "case_category_counts": {
     "compilation_error": 0,
     "non_termination": 0,
     "runtime_error": 0,
-    "functional_error": 1,
-    "pass": 157
+    "functional_error": 2,
+    "pass": 209
   },
-  "total_cases": 158,
+  "total_cases": 211,
   "results": [
     {
       "id": "s01_sum",
@@ -1358,6 +1358,439 @@
           "category": "pass",
           "expected": "6765",
           "got": "6765"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s45_goto_cleanup",
+      "loc_c": 43,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "-1 -999",
+          "got": "-1 -999"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0 0",
+          "got": "0 0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0 30",
+          "got": "0 30"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0 14850",
+          "got": "0 14850"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s46_musl_qsort",
+      "loc_c": 262,
+      "category": "compilation_error",
+      "cases": [],
+      "compile_error": "error: expected expression, found keyword `mut`\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust__gemini\\s46_musl_qsort.rs:89:20\n   |\n89 |     let mut ar = [*mut u8::null(); AR_LEN];\n   |                    ^^^ expected expression\n\nerror: expected expression, found keyword `mut`\n   --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust__gemini\\s46_musl_qsort.rs:131:20\n    |\n131 |     let mut ar = [*mut u8::null(); AR_LEN];\n    |                    ^^^ expected expression\n\nerror: aborting due to 2 previous errors\n\n",
+      "notes": ""
+    },
+    {
+      "id": "s47_redis_sds",
+      "loc_c": 522,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "LEN=15 STR=  Hello World  \nLEN=11 STR=Hello World\nLEN=11 STR=HELLO WORLD",
+          "got": "LEN=15 STR=  Hello World  \nLEN=11 STR=Hello World\nLEN=11 STR=HELLO WORLD"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "LEN=7 STR=Merhaba\nLEN=14 STR=Merhaba, Dunya\nLEN=14 STR=merhaba, dunya\nLEN=14 STR=merhaba, dunya",
+          "got": "LEN=7 STR=Merhaba\nLEN=14 STR=Merhaba, Dunya\nLEN=14 STR=merhaba, dunya\nLEN=14 STR=merhaba, dunya"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "LEN=3 STR=abc\nCMP=-1",
+          "got": "LEN=3 STR=abc\nCMP=-1"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "LEN=0 STR=\nLEN=14 STR=filled-in-text",
+          "got": "LEN=0 STR=\nLEN=14 STR=filled-in-text"
+        },
+        {
+          "input": "05.txt",
+          "category": "functional_error",
+          "expected": "LEN=5 STR=start\nLEN=45 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nLEN=295 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+          "got": "LEN=0 STR=\nLEN=5 STR=start\nLEN=45 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nLEN=295 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s48_cjson_number",
+      "loc_c": 389,
+      "category": "compilation_error",
+      "cases": [],
+      "compile_error": "warning: variable does not need to be mutable\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust__gemini\\s48_cjson_number.rs:78:9\n   |\n78 |     let mut newbuffer: *mut u8;\n   |         ----^^^^^^^^^\n   |         |\n   |         help: remove this `mut`\n   |\n   = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default\n\nwarning: variable does not need to be mutable\n   --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust__gemini\\s48_cjson_number.rs:162:9\n    |\n162 |     let mut number: f64;\n    |         ----^^^^^^\n    |         |\n    |         help: remove this `mut`\n\nwarning: variable does not need to be mutable\n   --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_",
+      "notes": ""
+    },
+    {
+      "id": "s49_negative_byte_count",
+      "loc_c": 27,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "11 0",
+          "got": "11 0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "12 12",
+          "got": "12 12"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1 0",
+          "got": "1 0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0 0",
+          "got": "0 0"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "38 8",
+          "got": "38 8"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s50_id_generator",
+      "loc_c": 30,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1000",
+          "got": "1000"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1000\n1001\n1002\n1003\n1004",
+          "got": "1000\n1001\n1002\n1003\n1004"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "",
+          "got": ""
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1000\n1001\n1002\n1003\n1004\n1005\n1006\n1007\n1008\n1009",
+          "got": "1000\n1001\n1002\n1003\n1004\n1005\n1006\n1007\n1008\n1009"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s51_long_clamp",
+      "loc_c": 33,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "10",
+          "got": "10"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "2147483647",
+          "got": "2147483647"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "-2147483648",
+          "got": "-2147483648"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "1000000000",
+          "got": "1000000000"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s52_window_sum",
+      "loc_c": 33,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "12",
+          "got": "12"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "30",
+          "got": "30"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "10",
+          "got": "10"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "9",
+          "got": "9"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s53_tax_bracket",
+      "loc_c": 31,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "100",
+          "got": "100"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "300",
+          "got": "300"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "700",
+          "got": "700"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "1500",
+          "got": "1500"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s54_stack_module",
+      "loc_c": 95,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "OK\nOK\n20\n20\n1\n10",
+          "got": "OK\nOK\n20\n20\n1\n10"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "EMPTY\nEMPTY",
+          "got": "EMPTY\nEMPTY"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "OK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK",
+          "got": "OK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "OK\nOK\n3\n5\nEMPTY\nOK\n7\n1",
+          "got": "OK\nOK\n3\n5\nEMPTY\nOK\n7\n1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s55_config_parser",
+      "loc_c": 112,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "test\n8080\nNOT_FOUND",
+          "got": "test\n8080\nNOT_FOUND"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "value with spaces\nval2",
+          "got": "value with spaces\nval2"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "NOT_FOUND",
+          "got": "NOT_FOUND"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "localhost\n9090",
+          "got": "localhost\n9090"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "",
+          "got": ""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s56_macro_table",
+      "loc_c": 97,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "add(20,10)=30\nm=21 x=22",
+          "got": "add(20,10)=30\nm=21 x=22"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "sub(20,10)=10\nm=21 x=22",
+          "got": "sub(20,10)=10\nm=21 x=22"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "mul(3,4)=12\nm=10 x=4",
+          "got": "mul(3,4)=12\nm=10 x=4"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "div(10,0)=0\nm=10 x=11",
+          "got": "div(10,0)=0\nm=10 x=11"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "add(-5,-5)=-10\nm=10 x=-4",
+          "got": "add(-5,-5)=-10\nm=10 x=-4"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s57_shared_counter_threads",
+      "loc_c": 71,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "4000",
+          "got": "4000"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "5000",
+          "got": "5000"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "16000",
+          "got": "16000"
         }
       ],
       "compile_error": "",

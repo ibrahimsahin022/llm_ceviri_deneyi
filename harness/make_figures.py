@@ -63,7 +63,6 @@ fig, ax = plt.subplots(figsize=(6.6, 4.2))
 bars = ax.bar(labels, vals, color=[COL["bar"], COL["non_termination"], COL["pass"]], width=0.58)
 ax.set_ylabel("Yürütme Doğruluğu (EA) %")
 ax.set_ylim(0, 112)
-ax.set_title("Şekil 2. Koşullara göre yürütme doğruluğu", pad=12)
 for b, v in zip(bars, vals):
     ax.text(b.get_x() + b.get_width() / 2, v + 2, f"%{v:.1f}", ha="center",
             fontsize=12, fontweight="bold")
@@ -96,7 +95,6 @@ for cat in cats:
 total_samples = load(COND[0][0])["total_samples"]
 ax.set_ylabel(f"Örnek sayısı (toplam {total_samples})")
 ax.set_ylim(0, total_samples + 2)
-ax.set_title("Şekil 3. Koşullara göre sonuç dağılımı", pad=12)
 ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=3, frameon=False, fontsize=9.5)
 ax.grid(axis="x", alpha=0)
 fig.tight_layout()
@@ -133,7 +131,6 @@ ax.set_yticks([0, 1])
 ax.set_yticklabels(["Başarısız", "Başarılı"], fontsize=11, fontweight="bold")
 ax.set_ylim(-0.55, 1.55)
 ax.set_xlabel("Kaynak kod uzunluğu (C, satır sayısı)")
-ax.set_title("Şekil 4. Kod uzunluğu ile başarı ilişkisi (Round 1)", pad=12)
 
 # yalnizca metinde tartisilan, bilgilendirici noktalar etiketlenir (tumu degil)
 highlight = {
@@ -143,9 +140,14 @@ highlight = {
 }
 for x, y, n in zip(xs, yj, names2):
     if n in highlight:
+        # buyuk ofset + baglayici ok: etiket metni genis oldugundan (ekran
+        # piksellerinde), yakin x-degerli baska noktalarla (ör. s27, x=73)
+        # karismasin diye noktadan acikca ayrilir ve bir cizgiyle baglanir.
         ax.annotate(highlight[n], (x, y), textcoords="offset points",
-                    xytext=(0, 14 if y >= 0.5 else -18), fontsize=8.5, ha="center",
-                    color="#333", fontweight="bold")
+                    xytext=(0, 30 if y >= 0.5 else -34), fontsize=8.5, ha="center",
+                    color="#333", fontweight="bold",
+                    arrowprops=dict(arrowstyle="-", color="#666", lw=0.8,
+                                     shrinkA=1, shrinkB=6))
 
 ax.set_xlim(-10, max_loc + 20)
 ax.grid(axis="y", alpha=0)
@@ -169,9 +171,9 @@ rootcauses = [
     ("Çıktı biçimlendirme (%g)", 3, "functional_error"),   # s15, s27, s48
     ("Global durum → static mut", 1, "compilation_error"), # s19
     ("Tamsayı genişliği (platform)", 2, "functional_error"),  # s38, s51
-    ("usize taşması (yeni)", 2, "runtime_error"),  # s40, s52
-    ("Switch fallthrough (yeni)", 2, "functional_error"),  # s43, s53
-    ("Makro çoklu-değerlendirme (yeni)", 1, "functional_error"),  # s56
+    ("usize taşması", 2, "runtime_error"),  # s40, s52
+    ("Switch fallthrough", 2, "functional_error"),  # s43, s53
+    ("Makro çoklu-değerlendirme", 1, "functional_error"),  # s56
 ]
 rootcauses.sort(key=lambda t: t[1])
 names = [t[0] for t in rootcauses]
@@ -184,7 +186,6 @@ for i, v in enumerate(counts):
     ax.text(v + 0.05, i, str(v), va="center", fontsize=11, fontweight="bold")
 ax.set_xlabel("Başarısız örnek sayısı")
 ax.set_xlim(0, max(counts) + 0.8)
-ax.set_title("Şekil 5. Başarısızlıkların kök-neden dağılımı (Round 1)", pad=12)
 legend_el = [
     Patch(facecolor=COL["runtime_error"], label="Çalışma Zamanı (RE)"),
     Patch(facecolor=COL["functional_error"], label="Fonksiyonel (FE)"),
@@ -225,7 +226,6 @@ bars = ax.bar(labels4b, points4b, color=[COL["bar"], COL["non_termination"], COL
               error_kw=dict(elinewidth=1.3, ecolor="#333"))
 ax.set_ylabel("Yürütme Doğruluğu (EA) % (bootstrap %95 GA ile)")
 ax.set_ylim(0, 112)
-ax.set_title("Şekil 4b. EA ve bootstrap %95 güven aralığı (n=5000 tekrar)", pad=12)
 for b, v in zip(bars, points4b):
     ax.text(b.get_x() + b.get_width() / 2, v + 8, f"%{v:.1f}", ha="center",
             fontsize=11, fontweight="bold")
