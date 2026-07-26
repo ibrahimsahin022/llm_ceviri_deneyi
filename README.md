@@ -130,6 +130,17 @@ mesajı görürsünüz — bu **beklenen bir durumdur, hata değildir.**
 | claude-sonnet-5 (referans, round1) | 57/57 | 40/57 | %70.18 | 1 | 4 | 12 | 0 |
 | gemini | 57/57 | 51/57 | %89.47 | 4 | 0 | 2 | 0 |
 
+## Makaledeki ana sayılar nerede üretiliyor?
+
+| Makaledeki değer | Üreten dosya |
+|---|---|
+| Tablo III (40/57, 42/57, 57/57 — üç koşul) | `harness/run_experiment.py` (3 ayrı `--label` koşusu) |
+| Tablo IV (betimsel özellikler) + Mann-Whitney/Fisher/bootstrap/McNemar | `harness/stats_report.py` → `results/stats_report.md` |
+| Tablo VII (model × kategori kırılımı, 40/51) | `harness/compare_models.py` → `results/model_comparison.md` |
+| Şekil 1-5 | `harness/make_figures.py` → `results/figures/*.png` |
+| Platform farkı (Round 2: %100→%94.55, 52/55) | `harness/compare_platforms.py` → `results/platform_comparison.md` |
+| Gemini çağrı kaydı (istem, zaman damgası, parametreler) | `harness/generate_translations.py` → `results/manifest_gemini.json` |
+
 ## Tam koşu (üç koşul + figürler + istatistikler)
 
 ```bash
