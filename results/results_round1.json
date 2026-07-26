@@ -289,21 +289,21 @@
           "category": "runtime_error",
           "expected": "261238937",
           "got": "",
-          "stderr": "thread 'main' (26580) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s09_djb2_hash.rs:9:16:"
+          "stderr": "thread 'main' (26580) panicked at translations_rust\\s09_djb2_hash.rs:9:16:"
         },
         {
           "input": "02.txt",
           "category": "runtime_error",
           "expected": "2704141334",
           "got": "",
-          "stderr": "thread 'main' (27528) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s09_djb2_hash.rs:9:16:"
+          "stderr": "thread 'main' (27528) panicked at translations_rust\\s09_djb2_hash.rs:9:16:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "2546203896",
           "got": "",
-          "stderr": "thread 'main' (16016) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s09_djb2_hash.rs:9:16:"
+          "stderr": "thread 'main' (16016) panicked at translations_rust\\s09_djb2_hash.rs:9:16:"
         }
       ],
       "compile_error": "",
@@ -433,21 +433,21 @@
           "category": "runtime_error",
           "expected": "1335831723",
           "got": "",
-          "stderr": "thread 'main' (21684) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s14_fnv_hash.rs:10:9:"
+          "stderr": "thread 'main' (21684) panicked at translations_rust\\s14_fnv_hash.rs:10:9:"
         },
         {
           "input": "02.txt",
           "category": "runtime_error",
           "expected": "22495912",
           "got": "",
-          "stderr": "thread 'main' (16568) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s14_fnv_hash.rs:10:9:"
+          "stderr": "thread 'main' (16568) panicked at translations_rust\\s14_fnv_hash.rs:10:9:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "2924308450",
           "got": "",
-          "stderr": "thread 'main' (18152) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s14_fnv_hash.rs:10:9:"
+          "stderr": "thread 'main' (18152) panicked at translations_rust\\s14_fnv_hash.rs:10:9:"
         }
       ],
       "compile_error": "",
@@ -596,7 +596,7 @@
       "loc_c": 21,
       "category": "compilation_error",
       "cases": [],
-      "compile_error": "error[E0133]: use of mutable static is unsafe and requires unsafe function or block\n --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s19_global_counter.rs:7:5\n  |\n7 |     CALL_COUNT += 1;\n  |     ^^^^^^^^^^ use of mutable static\n  |\n  = note: mutable statics can be mutated by multiple threads: aliasing violations or data races will cause undefined behavior\n\nerror[E0133]: use of mutable static is unsafe and requires unsafe function or block\n --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s19_global_counter.rs:8:5\n  |\n8 |     CALL_COUNT\n  |     ^^^^^^^^^^ use of mutable static\n  |\n  = note: mutable statics can be mutated by multiple threads: aliasing violations or data races will cause undefined behavior\n\n",
+      "compile_error": "error[E0133]: use of mutable static is unsafe and requires unsafe function or block\n --> translations_rust\\s19_global_counter.rs:7:5\n  |\n7 |     CALL_COUNT += 1;\n  |     ^^^^^^^^^^ use of mutable static\n  |\n  = note: mutable statics can be mutated by multiple threads: aliasing violations or data races will cause undefined behavior\n\nerror[E0133]: use of mutable static is unsafe and requires unsafe function or block\n --> translations_rust\\s19_global_counter.rs:8:5\n  |\n8 |     CALL_COUNT\n  |     ^^^^^^^^^^ use of mutable static\n  |\n  = note: mutable statics can be mutated by multiple threads: aliasing violations or data races will cause undefined behavior\n\n",
       "notes": ""
     },
     {
@@ -1239,7 +1239,7 @@
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (7856) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s40_diff_sum.rs:10:17:"
+          "stderr": "thread 'main' (7856) panicked at translations_rust\\s40_diff_sum.rs:10:17:"
         },
         {
           "input": "02.txt",
@@ -1678,14 +1678,14 @@
           "category": "runtime_error",
           "expected": "30",
           "got": "",
-          "stderr": "thread 'main' (19960) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:12:17:"
+          "stderr": "thread 'main' (19960) panicked at translations_rust\\s52_window_sum.rs:12:17:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (22204) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:12:17:"
+          "stderr": "thread 'main' (22204) panicked at translations_rust\\s52_window_sum.rs:12:17:"
         },
         {
           "input": "04.txt",

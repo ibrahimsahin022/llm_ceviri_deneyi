@@ -289,21 +289,21 @@
           "category": "runtime_error",
           "expected": "261238937",
           "got": "",
-          "stderr": "thread 'main' (7972) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_levelC\\s09_djb2_hash.rs:9:16:"
+          "stderr": "thread 'main' (7972) panicked at translations_rust_levelC\\s09_djb2_hash.rs:9:16:"
         },
         {
           "input": "02.txt",
           "category": "runtime_error",
           "expected": "2704141334",
           "got": "",
-          "stderr": "thread 'main' (8676) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_levelC\\s09_djb2_hash.rs:9:16:"
+          "stderr": "thread 'main' (8676) panicked at translations_rust_levelC\\s09_djb2_hash.rs:9:16:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "2546203896",
           "got": "",
-          "stderr": "thread 'main' (23064) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_levelC\\s09_djb2_hash.rs:9:16:"
+          "stderr": "thread 'main' (23064) panicked at translations_rust_levelC\\s09_djb2_hash.rs:9:16:"
         }
       ],
       "compile_error": "",
@@ -433,21 +433,21 @@
           "category": "runtime_error",
           "expected": "1335831723",
           "got": "",
-          "stderr": "thread 'main' (12612) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_levelC\\s14_fnv_hash.rs:10:9:"
+          "stderr": "thread 'main' (12612) panicked at translations_rust_levelC\\s14_fnv_hash.rs:10:9:"
         },
         {
           "input": "02.txt",
           "category": "runtime_error",
           "expected": "22495912",
           "got": "",
-          "stderr": "thread 'main' (17600) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_levelC\\s14_fnv_hash.rs:10:9:"
+          "stderr": "thread 'main' (17600) panicked at translations_rust_levelC\\s14_fnv_hash.rs:10:9:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "2924308450",
           "got": "",
-          "stderr": "thread 'main' (14256) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_levelC\\s14_fnv_hash.rs:10:9:"
+          "stderr": "thread 'main' (14256) panicked at translations_rust_levelC\\s14_fnv_hash.rs:10:9:"
         }
       ],
       "compile_error": "",
@@ -1258,7 +1258,7 @@
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (11988) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_levelC\\s40_diff_sum.rs:10:17:"
+          "stderr": "thread 'main' (11988) panicked at translations_rust_levelC\\s40_diff_sum.rs:10:17:"
         },
         {
           "input": "02.txt",
@@ -1697,14 +1697,14 @@
           "category": "runtime_error",
           "expected": "30",
           "got": "",
-          "stderr": "thread 'main' (19996) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_levelC\\s52_window_sum.rs:12:17:"
+          "stderr": "thread 'main' (19996) panicked at translations_rust_levelC\\s52_window_sum.rs:12:17:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (6672) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_levelC\\s52_window_sum.rs:12:17:"
+          "stderr": "thread 'main' (6672) panicked at translations_rust_levelC\\s52_window_sum.rs:12:17:"
         },
         {
           "input": "04.txt",

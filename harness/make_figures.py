@@ -20,7 +20,7 @@ plt.rcParams.update({
     "axes.spines.right": False,
     "axes.grid": True,
     "grid.alpha": 0.18,
-    "figure.dpi": 150,
+    "figure.dpi": 300,
     "axes.titleweight": "bold",
 })
 
@@ -39,6 +39,14 @@ TR = {
     "functional_error": "Fonksiyonel (FE)",
     "non_termination": "Sonlanmama (NT)",
     "compilation_error": "Derleme (CE)",
+}
+# Gri tonlamada da ayirt edilebilmesi icin renk + desen (hatch)
+HATCH = {
+    "pass": "",
+    "runtime_error": "xx",
+    "functional_error": "///",
+    "non_termination": "...",
+    "compilation_error": "\\\\",
 }
 
 
@@ -68,7 +76,7 @@ for b, v in zip(bars, vals):
             fontsize=12, fontweight="bold")
 ax.grid(axis="x", alpha=0)
 fig.tight_layout()
-fig.savefig(FIG / "fig2_execution_accuracy.png", bbox_inches="tight")
+fig.savefig(FIG / "fig2_execution_accuracy.png", dpi=300, bbox_inches="tight")
 plt.close(fig)
 
 # ============ FIGUR 3: Kosullara gore YIGILMIS ornek dagilimi ============
@@ -84,7 +92,7 @@ for cat in cats:
         if d:
             heights.append(d["sample_category_counts"][cat])
     ax.bar(condnames, heights, bottom=bottoms, color=COL[cat], label=TR[cat],
-           width=0.55, edgecolor="white", linewidth=0.6)
+           width=0.55, edgecolor="white", linewidth=0.6, hatch=HATCH[cat])
     # etiketler (0 olmayanlar)
     for i, h in enumerate(heights):
         if h > 0:
@@ -98,7 +106,7 @@ ax.set_ylim(0, total_samples + 2)
 ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=3, frameon=False, fontsize=9.5)
 ax.grid(axis="x", alpha=0)
 fig.tight_layout()
-fig.savefig(FIG / "fig3_error_distribution.png", bbox_inches="tight")
+fig.savefig(FIG / "fig3_error_distribution.png", dpi=300, bbox_inches="tight")
 plt.close(fig)
 
 # ============ FIGUR 4: Kod uzunlugu (LoC) vs sonuc ============
@@ -159,7 +167,7 @@ legend_handles = [
 ax.legend(handles=legend_handles, loc="upper center", bbox_to_anchor=(0.5, -0.16),
           ncol=2, frameon=False, fontsize=9.5)
 fig.tight_layout()
-fig.savefig(FIG / "fig4_loc_vs_success.png", bbox_inches="tight")
+fig.savefig(FIG / "fig4_loc_vs_success.png", dpi=300, bbox_inches="tight")
 plt.close(fig)
 
 # ============ FIGUR 5: Basarisizliklarin kok neden dagilimi (Round 1) ============
@@ -181,20 +189,22 @@ counts = [t[1] for t in rootcauses]
 colors = [COL[t[2]] for t in rootcauses]
 
 fig, ax = plt.subplots(figsize=(7.8, 4.0))
-ax.barh(names, counts, color=colors, edgecolor="white", height=0.62)
+bars5 = ax.barh(names, counts, color=colors, edgecolor="white", height=0.62)
+for bar, t in zip(bars5, rootcauses):
+    bar.set_hatch(HATCH[t[2]])
 for i, v in enumerate(counts):
     ax.text(v + 0.05, i, str(v), va="center", fontsize=11, fontweight="bold")
 ax.set_xlabel("Başarısız örnek sayısı")
 ax.set_xlim(0, max(counts) + 0.8)
 legend_el = [
-    Patch(facecolor=COL["runtime_error"], label="Çalışma Zamanı (RE)"),
-    Patch(facecolor=COL["functional_error"], label="Fonksiyonel (FE)"),
-    Patch(facecolor=COL["compilation_error"], label="Derleme (CE)"),
+    Patch(facecolor=COL["runtime_error"], hatch=HATCH["runtime_error"], label="Çalışma Zamanı (RE)"),
+    Patch(facecolor=COL["functional_error"], hatch=HATCH["functional_error"], label="Fonksiyonel (FE)"),
+    Patch(facecolor=COL["compilation_error"], hatch=HATCH["compilation_error"], label="Derleme (CE)"),
 ]
 ax.legend(handles=legend_el, loc="lower right", frameon=False, fontsize=9.5)
 ax.grid(axis="y", alpha=0)
 fig.tight_layout()
-fig.savefig(FIG / "fig5_rootcause.png", bbox_inches="tight")
+fig.savefig(FIG / "fig5_rootcause.png", dpi=300, bbox_inches="tight")
 plt.close(fig)
 
 # ============ FIGUR 4b: Bootstrap %95 guven arali ile EA (Faz 2) ============
@@ -231,7 +241,7 @@ for b, v in zip(bars, points4b):
             fontsize=11, fontweight="bold")
 ax.grid(axis="x", alpha=0)
 fig.tight_layout()
-fig.savefig(FIG / "fig4b_bootstrap_ci.png", bbox_inches="tight")
+fig.savefig(FIG / "fig4b_bootstrap_ci.png", dpi=300, bbox_inches="tight")
 plt.close(fig)
 
 print("Figurler uretildi:")
