@@ -55,8 +55,8 @@ def load(label):
     return json.load(open(p, encoding="utf-8")) if p.exists() else None
 
 
-COND = [("round1", "Round 1\ndoğrudan · debug"),
-        ("round1_release", "Round 1\ndoğrudan · release"),
+COND = [("round1", "Round 1\nham çeviri · debug"),
+        ("round1_release", "Round 1\nham çeviri · release"),
         ("round2", "Round 2\niyileştirilmiş · debug")]
 
 # ============ FIGUR 2: Yurutme Dogrulugu (EA) ============
@@ -72,7 +72,7 @@ bars = ax.bar(labels, vals, color=[COL["bar"], COL["non_termination"], COL["pass
 ax.set_ylabel("Yürütme Doğruluğu (EA) %")
 ax.set_ylim(0, 112)
 for b, v in zip(bars, vals):
-    ax.text(b.get_x() + b.get_width() / 2, v + 2, f"%{v:.1f}", ha="center",
+    ax.text(b.get_x() + b.get_width() / 2, v + 2, f"%{v:.2f}", ha="center",
             fontsize=12, fontweight="bold")
 ax.grid(axis="x", alpha=0)
 fig.tight_layout()
@@ -80,7 +80,10 @@ fig.savefig(FIG / "fig2_execution_accuracy.png", dpi=300, bbox_inches="tight")
 plt.close(fig)
 
 # ============ FIGUR 3: Kosullara gore YIGILMIS ornek dagilimi ============
-cats = ["pass", "functional_error", "runtime_error", "compilation_error", "non_termination"]
+cats_all = ["pass", "functional_error", "runtime_error", "compilation_error", "non_termination"]
+# hicbir kosulda gozlenmeyen kategoriler (ör. non_termination) efsaneye eklenmez
+cats = [c for c in cats_all
+        if sum(load(lab)["sample_category_counts"][c] for lab, _ in COND if load(lab)) > 0]
 fig, ax = plt.subplots(figsize=(7.4, 4.6))
 xpos = range(len([c for c in COND if load(c[0])]))
 condnames = [name for lab, name in COND if load(lab)]
@@ -173,15 +176,15 @@ plt.close(fig)
 # ============ FIGUR 5: Basarisizliklarin kok neden dagilimi (Round 1) ============
 # Elle tanimlanan kok-neden gruplari (analize dayali)
 rootcauses = [
-    ("Unsigned tamsayı taşması", 2, "runtime_error"),      # s09, s14
-    ("String modeli (karakter/bayt)", 2, "functional_error"),  # s06, s13
-    ("char işaret (signedness)", 2, "functional_error"),   # s20, s49
-    ("Çıktı biçimlendirme (%g)", 3, "functional_error"),   # s15, s27, s48
-    ("Global durum → static mut", 1, "compilation_error"), # s19
-    ("Tamsayı genişliği (platform)", 2, "functional_error"),  # s38, s51
-    ("usize taşması", 2, "runtime_error"),  # s40, s52
-    ("Switch fallthrough", 2, "functional_error"),  # s43, s53
-    ("Makro çoklu-değerlendirme", 1, "functional_error"),  # s56
+    ("A. Unsigned tamsayı taşması", 2, "runtime_error"),      # s09, s14
+    ("B. String modeli (karakter/bayt)", 2, "functional_error"),  # s06, s13
+    ("C. char işaret (signedness)", 2, "functional_error"),   # s20, s49
+    ("D. Çıktı biçimlendirme (%g)", 3, "functional_error"),   # s15, s27, s48
+    ("E. Global durum → static mut", 1, "compilation_error"), # s19
+    ("F. Tamsayı genişliği (platform)", 2, "functional_error"),  # s38, s51
+    ("G. usize taşması", 2, "runtime_error"),  # s40, s52
+    ("H. Switch fallthrough", 2, "functional_error"),  # s43, s53
+    ("I. Makro çoklu-değerlendirme", 1, "functional_error"),  # s56
 ]
 rootcauses.sort(key=lambda t: t[1])
 names = [t[0] for t in rootcauses]
@@ -237,7 +240,7 @@ bars = ax.bar(labels4b, points4b, color=[COL["bar"], COL["non_termination"], COL
 ax.set_ylabel("Yürütme Doğruluğu (EA) % (bootstrap %95 GA ile)")
 ax.set_ylim(0, 112)
 for b, v in zip(bars, points4b):
-    ax.text(b.get_x() + b.get_width() / 2, v + 8, f"%{v:.1f}", ha="center",
+    ax.text(b.get_x() + b.get_width() / 2, v + 8, f"%{v:.2f}", ha="center",
             fontsize=11, fontweight="bold")
 ax.grid(axis="x", alpha=0)
 fig.tight_layout()
