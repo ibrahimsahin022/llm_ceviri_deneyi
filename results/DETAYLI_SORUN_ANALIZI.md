@@ -14,7 +14,7 @@ platform, çoklu model, kısıtlı geri bildirim, bellek güvenliği) ve bunlard
 
 ## 1. Genel Çerçeve
 
-**Veri seti:** 57 C programı, 229 test girdisi, 10-522 satır arası. Programlar
+**Veri seti:** 57 C programı, 233 test girdisi, 10-522 satır arası. Programlar
 dokuz kaynak/rol kategorisine ayrılır (bkz. `VERISETI_VE_ALGORITMALAR.md`).
 **Çeviri:** Claude Sonnet 5, zero-shot (tek geçiş, hiçbir insan düzeltmesi
 veya derleme/test geri bildirimi olmadan).
@@ -332,9 +332,13 @@ genişliğinden kaynaklandığını netleştirir).
 
 | Koşul | Windows EA | Linux EA | Fark |
 |---|---|---|---|
-| Round 1 — debug | %70.91 (39/55) | %72.73 (40/55) | +1.82 puan |
-| Round 1 — release | %74.55 (41/55) | %76.36 (42/55) | +1.81 puan |
-| Round 2 — iyileştirilmiş | %100.00 (55/55) | **%94.55 (52/55)** | **−5.45 puan** |
+| Round 1 — debug | %70.18 (40/57) | %71.93 (41/57) | +1.75 puan |
+| Round 1 — release | %73.68 (42/57) | %75.44 (43/57) | +1.76 puan |
+| Round 2 — iyileştirilmiş | %100.00 (57/57) | **%94.74 (54/57)** | **−5.26 puan** |
+
+(2026-07-30 itibarıyla veri setinin tamamı — s56/s57 dahil 57 örnek — üzerinde
+yeniden çalıştırıldı; ilk ölçüm 55 örnekle yapılmıştı. Yeni eklenen s56/s57 iki
+platformda da aynı sonucu verdi, platforma duyarlı üç örnek değişmedi.)
 
 **s38_bsd_strtol ve s51_long_clamp (Round 2, "düzeltilmiş"):** Windows için
 yazılan `i32` düzeltmesi, Linux'ta `long` gerçekten 64-bit olduğundan artık

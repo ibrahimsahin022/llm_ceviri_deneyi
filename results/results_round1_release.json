@@ -16,10 +16,10 @@
     "compilation_error": 0,
     "non_termination": 0,
     "runtime_error": 3,
-    "functional_error": 22,
-    "pass": 201
+    "functional_error": 23,
+    "pass": 204
   },
-  "total_cases": 226,
+  "total_cases": 230,
   "results": [
     {
       "id": "s01_sum",
@@ -590,7 +590,7 @@
       "loc_c": 21,
       "category": "compilation_error",
       "cases": [],
-      "compile_error": "error[E0133]: use of mutable static is unsafe and requires unsafe function or block\n --> translations_rust\\s19_global_counter.rs:7:5\n  |\n7 |     CALL_COUNT += 1;\n  |     ^^^^^^^^^^ use of mutable static\n  |\n  = note: mutable statics can be mutated by multiple threads: aliasing violations or data races will cause undefined behavior\n\nerror[E0133]: use of mutable static is unsafe and requires unsafe function or block\n --> translations_rust\\s19_global_counter.rs:8:5\n  |\n8 |     CALL_COUNT\n  |     ^^^^^^^^^^ use of mutable static\n  |\n  = note: mutable statics can be mutated by multiple threads: aliasing violations or data races will cause undefined behavior\n\n",
+      "compile_error": "error[E0133]: use of mutable static is unsafe and requires unsafe function or block\n --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s19_global_counter.rs:7:5\n  |\n7 |     CALL_COUNT += 1;\n  |     ^^^^^^^^^^ use of mutable static\n  |\n  = note: mutable statics can be mutated by multiple threads: aliasing violations or data races will cause undefined behavior\n\nerror[E0133]: use of mutable static is unsafe and requires unsafe function or block\n --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s19_global_counter.rs:8:5\n  |\n8 |     CALL_COUNT\n  |     ^^^^^^^^^^ use of mutable static\n  |\n  = note: mutable statics can be mutated by multiple threads: aliasing violations or data races will cause undefined behavior\n\n",
       "notes": ""
     },
     {
@@ -1233,7 +1233,7 @@
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (27668) panicked at translations_rust\\s40_diff_sum.rs:11:23:"
+          "stderr": "thread 'main' (7388) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s40_diff_sum.rs:11:23:"
         },
         {
           "input": "02.txt",
@@ -1462,6 +1462,18 @@
           "category": "pass",
           "expected": "-469 -469 -468 -460 -445 -430 -424 -422 -405 -388 -362 -345 -341 -269 -266 -198 -173 -163 -156 -131 -93 -91 -57 -46 -30 -24 -18 -10 18 28 40 50 57 61 97 100 102 134 147 149 213 222 230 233 266 280 297",
           "got": "-469 -469 -468 -460 -445 -430 -424 -422 -405 -388 -362 -345 -341 -269 -266 -198 -173 -163 -156 -131 -93 -91 -57 -46 -30 -24 -18 -10 18 28 40 50 57 61 97 100 102 134 147 149 213 222 230 233 266 280 297"
+        },
+        {
+          "input": "06.txt",
+          "category": "pass",
+          "expected": "7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7",
+          "got": "7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7"
+        },
+        {
+          "input": "07.txt",
+          "category": "pass",
+          "expected": "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16",
+          "got": "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16"
         }
       ],
       "compile_error": "",
@@ -1501,6 +1513,12 @@
           "category": "pass",
           "expected": "LEN=5 STR=start\nLEN=45 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nLEN=295 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
           "got": "LEN=5 STR=start\nLEN=45 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nLEN=295 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+        },
+        {
+          "input": "06.txt",
+          "category": "pass",
+          "expected": "LEN=14 STR=xxHelloWorldyy\nLEN=10 STR=HelloWorld\nLEN=5 STR=World\nCMP=0\nLEN=4 STR=same\nCMP=0",
+          "got": "LEN=14 STR=xxHelloWorldyy\nLEN=10 STR=HelloWorld\nLEN=5 STR=World\nCMP=0\nLEN=4 STR=same\nCMP=0"
         }
       ],
       "compile_error": "",
@@ -1540,6 +1558,12 @@
           "category": "functional_error",
           "expected": "123456789.123456\n99999999999999.9\n1e-06\n3\n-3",
           "got": "123456789.123456\n99999999999999.9\n0.000001\n3\n-3"
+        },
+        {
+          "input": "06.txt",
+          "category": "functional_error",
+          "expected": "2147483647\n2147483648\nPARSE_ERROR\n12\n4.94065645841247e-324",
+          "got": "2147483647\n2147483648\nPARSE_ERROR\n12\n0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
         }
       ],
       "compile_error": "",
@@ -1672,14 +1696,14 @@
           "category": "runtime_error",
           "expected": "30",
           "got": "",
-          "stderr": "thread 'main' (13816) panicked at translations_rust\\s52_window_sum.rs:14:23:"
+          "stderr": "thread 'main' (8832) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (24716) panicked at translations_rust\\s52_window_sum.rs:14:23:"
+          "stderr": "thread 'main' (26360) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
         },
         {
           "input": "04.txt",

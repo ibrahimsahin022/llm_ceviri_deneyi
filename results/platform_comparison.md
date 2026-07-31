@@ -7,9 +7,9 @@ Linux: Docker `ubuntu:24.04`, apt gcc 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) + 
 
 | Kosul | Windows EA | Linux EA | Fark |
 |---|---|---|---|
-| Round 1 - dogrudan, debug | %70.91 (39/55) | %72.73 (40/55) | +1.82 puan |
-| Round 1 - dogrudan, release | %74.55 (41/55) | %76.36 (42/55) | +1.81 puan |
-| Round 2 - iyilestirilmis, debug | %100.00 (55/55) | %94.55 (52/55) | -5.45 puan |
+| Round 1 - dogrudan, debug | %70.18 (40/57) | %71.93 (41/57) | +1.75 puan |
+| Round 1 - dogrudan, release | %73.68 (42/57) | %75.44 (43/57) | +1.76 puan |
+| Round 2 - iyilestirilmis, debug | %100.00 (57/57) | %94.74 (54/57) | -5.26 puan |
 
 ## Platforma Gore Farklilik Gosteren Ornekler
 

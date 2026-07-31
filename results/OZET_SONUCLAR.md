@@ -22,7 +22,7 @@
 > birden fazla derleme birimi, pthread tabanlı paylaşılan bellek eşzamanlılığı)
 > ve karmaşık makro genişletmesini test etmek için 4 yeni program (s54-s57)
 > eklendi.
-> Güncel veri seti: **57 program, 229 test girdisi**. Çeviriyi yapan model:
+> Güncel veri seti: **57 program, 233 test girdisi**. Çeviriyi yapan model:
 > **Claude Sonnet 5** (model kimliği: claude-sonnet-5) — tekrarlanabilirlik için
 > sürüm bilgisi kasıtlı olarak belirtilmiştir; bulgular bu modele özgüdür.
 

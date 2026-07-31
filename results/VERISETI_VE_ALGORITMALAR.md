@@ -33,7 +33,7 @@ yapan model, derleyiciler, değerlendirme yöntemi ve her örnek programın algo
 
 ## 2. Veri Seti: "C→Rust Legacy Çeviri Benchmark'ı" (özgün)
 
-- **Boyut:** 57 program, 229 test girdisi, kaynak kod uzunluğu 10–522 satır (C).
+- **Boyut:** 57 program, 233 test girdisi, kaynak kod uzunluğu 10–522 satır (C).
   (İlk sürüm 24 program / 10–88 satırdı; kod uzunluğu ile başarı ilişkisini daha
   güçlü test etmek için 69–141 satır arasında 5 yeni program eklendi: s25–s29;
   ardından veri setinin tamamen kendi yazdığımız kodlardan oluşmadığını göstermek

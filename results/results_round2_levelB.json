@@ -16,10 +16,10 @@
     "compilation_error": 0,
     "non_termination": 0,
     "runtime_error": 0,
-    "functional_error": 17,
-    "pass": 212
+    "functional_error": 18,
+    "pass": 215
   },
-  "total_cases": 229,
+  "total_cases": 233,
   "results": [
     {
       "id": "s01_sum",
@@ -1480,6 +1480,18 @@
           "category": "pass",
           "expected": "-469 -469 -468 -460 -445 -430 -424 -422 -405 -388 -362 -345 -341 -269 -266 -198 -173 -163 -156 -131 -93 -91 -57 -46 -30 -24 -18 -10 18 28 40 50 57 61 97 100 102 134 147 149 213 222 230 233 266 280 297",
           "got": "-469 -469 -468 -460 -445 -430 -424 -422 -405 -388 -362 -345 -341 -269 -266 -198 -173 -163 -156 -131 -93 -91 -57 -46 -30 -24 -18 -10 18 28 40 50 57 61 97 100 102 134 147 149 213 222 230 233 266 280 297"
+        },
+        {
+          "input": "06.txt",
+          "category": "pass",
+          "expected": "7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7",
+          "got": "7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7"
+        },
+        {
+          "input": "07.txt",
+          "category": "pass",
+          "expected": "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16",
+          "got": "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16"
         }
       ],
       "compile_error": "",
@@ -1519,6 +1531,12 @@
           "category": "pass",
           "expected": "LEN=5 STR=start\nLEN=45 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nLEN=295 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
           "got": "LEN=5 STR=start\nLEN=45 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nLEN=295 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+        },
+        {
+          "input": "06.txt",
+          "category": "pass",
+          "expected": "LEN=14 STR=xxHelloWorldyy\nLEN=10 STR=HelloWorld\nLEN=5 STR=World\nCMP=0\nLEN=4 STR=same\nCMP=0",
+          "got": "LEN=14 STR=xxHelloWorldyy\nLEN=10 STR=HelloWorld\nLEN=5 STR=World\nCMP=0\nLEN=4 STR=same\nCMP=0"
         }
       ],
       "compile_error": "",
@@ -1558,6 +1576,12 @@
           "category": "functional_error",
           "expected": "123456789.123456\n99999999999999.9\n1e-06\n3\n-3",
           "got": "123456789.123456\n99999999999999.9\n0.000001\n3\n-3"
+        },
+        {
+          "input": "06.txt",
+          "category": "functional_error",
+          "expected": "2147483647\n2147483648\nPARSE_ERROR\n12\n4.94065645841247e-324",
+          "got": "2147483647\n2147483648\nPARSE_ERROR\n12\n0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
         }
       ],
       "compile_error": "",

@@ -1,0 +1,7 @@
+6
+NEW xxHelloWorldyy
+TRIM xy
+RANGE -5 -1
+CMP World
+NEW same
+CMP same

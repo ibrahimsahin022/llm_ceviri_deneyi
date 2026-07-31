@@ -44,9 +44,9 @@ s42_bitfields,25,pass,4,4
 s43_switch_fallthrough,25,pass,5,5
 s44_fib_memo_static,29,pass,4,4
 s45_goto_cleanup,43,pass,4,4
-s46_musl_qsort,262,pass,5,5
-s47_redis_sds,522,functional_error,5,4
-s48_cjson_number,389,pass,5,5
+s46_musl_qsort,262,pass,7,7
+s47_redis_sds,522,functional_error,6,5
+s48_cjson_number,389,pass,6,6
 s49_negative_byte_count,27,pass,5,5
 s50_id_generator,30,pass,4,4
 s51_long_clamp,33,functional_error,5,3
@@ -54,3 +54,5 @@ s52_window_sum,33,pass,5,5
 s53_tax_bracket,31,pass,5,5
 s54_stack_module,95,pass,5,5
 s55_config_parser,112,pass,5,5
+s56_macro_table,97,pass,5,5
+s57_shared_counter_threads,71,pass,5,5

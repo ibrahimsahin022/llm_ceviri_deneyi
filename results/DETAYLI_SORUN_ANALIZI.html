@@ -429,24 +429,28 @@ genişliğinden kaynaklandığını netleştirir).</p>
 <tbody>
 <tr>
 <td>Round 1 — debug</td>
-<td>%70.91 (39/55)</td>
-<td>%72.73 (40/55)</td>
-<td>+1.82 puan</td>
+<td>%70.18 (40/57)</td>
+<td>%71.93 (41/57)</td>
+<td>+1.75 puan</td>
 </tr>
 <tr>
 <td>Round 1 — release</td>
-<td>%74.55 (41/55)</td>
-<td>%76.36 (42/55)</td>
-<td>+1.81 puan</td>
+<td>%73.68 (42/57)</td>
+<td>%75.44 (43/57)</td>
+<td>+1.76 puan</td>
 </tr>
 <tr>
 <td>Round 2 — iyileştirilmiş</td>
-<td>%100.00 (55/55)</td>
-<td><strong>%94.55 (52/55)</strong></td>
-<td><strong>−5.45 puan</strong></td>
+<td>%100.00 (57/57)</td>
+<td><strong>%94.74 (54/57)</strong></td>
+<td><strong>−5.26 puan</strong></td>
 </tr>
 </tbody>
 </table>
+<p><em>(2026-07-30 itibarıyla veri setinin tamamı — s56/s57 dahil 57 örnek —
+üzerinde yeniden çalıştırıldı; ilk ölçüm 55 örnekle yapılmıştı. Yeni eklenen
+s56/s57 iki platformda da aynı sonucu verdi, platforma duyarlı üç örnek
+değişmedi.)</em></p>
 <p><strong>s38_bsd_strtol ve s51_long_clamp (Round 2, "düzeltilmiş"):</strong> Windows için
 yazılan <code>i32</code> düzeltmesi, Linux'ta <code>long</code> gerçekten 64-bit olduğundan artık
 <strong>yanlış</strong> sonuç üretiyor — iki platform arasında PASS/FAIL durumu tam olarak

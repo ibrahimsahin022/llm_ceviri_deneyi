@@ -3,7 +3,7 @@
 Bu proje, **eski kodların büyük dil modelleriyle (LLM) yeni bir dile çevrilirken
 oluşan sessiz semantik hataları** deneysel olarak ölçmek için hazırlanmış,
 çalıştırılabilir bir test ortamıdır. Makalenin "Yöntem" ve "Bulgular" bölümlerinin
-verisi bu ortamdan üretilir. Proje **57 C programı** ve **229 test girdisi**
+verisi bu ortamdan üretilir. Proje **57 C programı** ve **233 test girdisi**
 içerir (24 temel algoritma; 5 daha uzun özgün program; Rosetta Code'dan [4] 7
 algoritma; OpenBSD/FreeBSD libc'sinden [5] 3 üretim fonksiyonu; musl/Redis/cJSON'dan
 [6,7,8] 3 uzun üretim kodu; hedeflenmemiş boşlukları kapsayan 6 özgün program;
@@ -42,7 +42,7 @@ Sonuç dosyaları (`results/` altında):
 llm_ceviri_deneyi/
 ├── samples_c/                  # Kaynak (referans) C programları — tekil .c dosyaları
 │                                #   veya çok dosyalı örnekler icin alt klasor (manifest.json ile)
-├── tests/<ornek>/*.txt          # Her örnek için test girdileri (229 dosya, 57 örnek)
+├── tests/<ornek>/*.txt          # Her örnek için test girdileri (233 dosya, 57 örnek)
 ├── translations_rust/           # Claude Sonnet 5 cevirileri (Round 1 — dogrudan)
 ├── translations_rust_refined/   # Claude, Round 2 — Seviye A/oracle geri bildirim
 ├── translations_rust_levelB/    # Claude, Round 2 — Seviye B (orta ayrintili geri bildirim)
@@ -138,7 +138,7 @@ mesajı görürsünüz — bu **beklenen bir durumdur, hata değildir.**
 | Tablo IV (betimsel özellikler) + Mann-Whitney/Fisher/bootstrap/McNemar | `harness/stats_report.py` → `results/stats_report.md` |
 | Tablo VII (model × kategori kırılımı, 40/51) | `harness/compare_models.py` → `results/model_comparison.md` |
 | Şekil 1-5 | `harness/make_figures.py` → `results/figures/*.png` |
-| Platform farkı (Round 2: %100→%94.55, 52/55) | `harness/compare_platforms.py` → `results/platform_comparison.md` |
+| Platform farkı (Round 2: %100→%94.74, 54/57) | `harness/compare_platforms.py` → `results/platform_comparison.md` |
 | Gemini çağrı kaydı (istem, zaman damgası, parametreler) | `harness/generate_translations.py` → `results/manifest_gemini.json` |
 
 ## Tam koşu (üç koşul + figürler + istatistikler)
@@ -165,12 +165,12 @@ docker compose run --rm experiment-linux   # 3 round'u konteyner icinde calistir
 python harness/compare_platforms.py        # Windows vs Linux karsilastirmasi
 ```
 
-**Önemli not:** Bu Docker tekrarı, veri seti **55 örnekken** (s56 ve s57 veri
-setine eklenmeden önce) yapılmıştır ve o zamandan beri güncellenmemiştir —
-bu yüzden `results/platform_comparison.md`'deki sayılar `n=55` üzerindendir
-(örn. "Round 2 Linux: %94.55, 52/55"), güncel `n=57` veri setiyle değil. Bu,
-makalenin §IV-F bölümünde de açıkça belirtilmiştir; 57 beklerken 55 görürseniz
-bu bir tutarsızlık değil, bilinen bir zamanlama farkıdır.
+**Not:** Bu Docker tekrarı ilk olarak veri seti 55 örnekken (s56 ve s57
+eklenmeden önce) yapılmıştı; 2026-07-30'da s56/s57 dahil **57 örneğin
+tamamı** üzerinde yeniden çalıştırıldı ve `results/platform_comparison.md`
+artık `n=57` üzerindendir (Round 2 Linux: %94.74, 54/57). Yeni eklenen
+s56/s57 iki platformda da aynı sonucu verdi; platforma duyarlı üç örnek
+(s38, s51, s47) değişmedi.
 
 ## Çoklu-model çeviri üretme (Gemini/GPT-4o/DeepSeek)
 
