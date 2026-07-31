@@ -2,24 +2,24 @@
   "label": "round1_release",
   "rust_dir": "translations_rust",
   "release": true,
-  "total_samples": 57,
-  "passed_samples": 42,
-  "execution_accuracy_pct": 73.68,
+  "total_samples": 75,
+  "passed_samples": 50,
+  "execution_accuracy_pct": 66.67,
   "sample_category_counts": {
     "compilation_error": 1,
     "non_termination": 0,
     "runtime_error": 2,
-    "functional_error": 12,
-    "pass": 42
+    "functional_error": 22,
+    "pass": 50
   },
   "case_category_counts": {
     "compilation_error": 0,
     "non_termination": 0,
     "runtime_error": 3,
-    "functional_error": 23,
-    "pass": 204
+    "functional_error": 42,
+    "pass": 258
   },
-  "total_cases": 230,
+  "total_cases": 303,
   "results": [
     {
       "id": "s01_sum",
@@ -1233,7 +1233,7 @@
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (7388) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s40_diff_sum.rs:11:23:"
+          "stderr": "thread 'main' (31916) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s40_diff_sum.rs:11:23:"
         },
         {
           "input": "02.txt",
@@ -1696,14 +1696,14 @@
           "category": "runtime_error",
           "expected": "30",
           "got": "",
-          "stderr": "thread 'main' (8832) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
+          "stderr": "thread 'main' (22608) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
         },
         {
           "input": "03.txt",
           "category": "runtime_error",
           "expected": "0",
           "got": "",
-          "stderr": "thread 'main' (26360) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
+          "stderr": "thread 'main' (30848) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust\\s52_window_sum.rs:14:23:"
         },
         {
           "input": "04.txt",
@@ -1911,6 +1911,606 @@
           "category": "pass",
           "expected": "16000",
           "got": "16000"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s58_rolling_hash_poly31",
+      "loc_c": 18,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "99162322",
+          "got": "99162322"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "3685539155",
+          "got": "3685539155"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "97",
+          "got": "97"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1974998638",
+          "got": "1974998638"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s59_sdbm_hash",
+      "loc_c": 19,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "684824882",
+          "got": "684824882"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "87711571",
+          "got": "87711571"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "353698304",
+          "got": "353698304"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s60_elf_hash",
+      "loc_c": 23,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "7258927",
+          "got": "7258927"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "226560517",
+          "got": "226560517"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "120",
+          "got": "120"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "32666646",
+          "got": "32666646"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s61_utf8_byte_vs_char_count",
+      "loc_c": 23,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "5 5",
+          "got": "5 5"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "9 8",
+          "got": "9 8"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "9 7",
+          "got": "9 7"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0 0",
+          "got": "0 0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s62_strtok_tokenizer",
+      "loc_c": 25,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0: the\n1: quick\n2: brown\n3: fox",
+          "got": "0: the\n1: quick\n2: brown\n3: fox"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0: single",
+          "got": "0: single"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0: a\n1: b\n2: c\n3: d\n4: e",
+          "got": "0: a\n1: b\n2: c\n3: d\n4: e"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0: merhaba\n1: dünya\n2: nasılsın",
+          "got": "0: merhaba\n1: dünya\n2: nasılsın"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s63_palindrome_bytes",
+      "loc_c": 27,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "EVET",
+          "got": "EVET"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "HAYIR",
+          "got": "HAYIR"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "EVET",
+          "got": "EVET"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "HAYIR",
+          "got": "EVET"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s64_char_minmax_signed",
+      "loc_c": 29,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "101 111",
+          "got": "101 111"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "65 122",
+          "got": "65 122"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "-80 117",
+          "got": "97 196"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "-97 -59",
+          "got": "159 197"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s65_ctype_isalpha_highbyte",
+      "loc_c": 24,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "10 3",
+          "got": "10 3"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "6 0",
+          "got": "6 0"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "7 4",
+          "got": "8 4"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "0 3",
+          "got": "6 3"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s66_xor_checksum_signed_extend",
+      "loc_c": 22,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "98",
+          "got": "98"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "7",
+          "got": "7"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "26",
+          "got": "26"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "38",
+          "got": "38"
+        },
+        {
+          "input": "05.txt",
+          "category": "functional_error",
+          "expected": "4294967247",
+          "got": "207"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s67_stats_stddev_format",
+      "loc_c": 28,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "2 0.816497",
+          "got": "2 0.816496580927726"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "4.32 3.00693",
+          "got": "4.32 3.006925339944442"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "10 0",
+          "got": "10 0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1.5 0.5",
+          "got": "1.5 0.5"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s68_currency_round_format",
+      "loc_c": 16,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "59.97",
+          "got": "59.97"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "0.3",
+          "got": "0.30000000000000004"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "201",
+          "got": "201"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "23.331",
+          "got": "23.331000000000003"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s69_sqlite_snprintf_g",
+      "loc_c": 17,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "3.14286",
+          "got": "3.142857142857143"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "0.333333",
+          "got": "0.3333333333333333"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "12.5",
+          "got": "12.5"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "3.14159",
+          "got": "3.1415929203539825"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s70_global_lcg_rng",
+      "loc_c": 25,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "16838\n5758\n10113\n17515\n31051",
+          "got": "16838\n5758\n10113\n17515\n31051"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "19081\n17033\n15269",
+          "got": "19081\n17033\n15269"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "21468",
+          "got": "21468"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "26728\n12758\n16183\n2239",
+          "got": "26728\n12758\n16183\n2239"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s71_global_errbuf",
+      "loc_c": 39,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "5\nHATA: division by zero\n5",
+          "got": "5\nHATA: division by zero\n5"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "HATA: division by zero",
+          "got": "HATA: division by zero"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "33\nHATA: division by zero\n1",
+          "got": "33\nHATA: division by zero\n1"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-3",
+          "got": "-3"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s72_global_log_level",
+      "loc_c": 31,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "[DEBUG] baslangic\n[INFO] bilgi mesaji\n[WARN] uyari mesaji\n[ERROR] hata mesaji",
+          "got": "[DEBUG] baslangic\n[INFO] bilgi mesaji\n[WARN] uyari mesaji\n[ERROR] hata mesaji"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "[INFO] bilgi mesaji\n[WARN] uyari mesaji\n[ERROR] hata mesaji",
+          "got": "[INFO] bilgi mesaji\n[WARN] uyari mesaji\n[ERROR] hata mesaji"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "[WARN] uyari mesaji\n[ERROR] hata mesaji",
+          "got": "[WARN] uyari mesaji\n[ERROR] hata mesaji"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "[ERROR] hata mesaji",
+          "got": "[ERROR] hata mesaji"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s73_bsd_atoi_overflow",
+      "loc_c": 22,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "12345",
+          "got": "12345"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "705032704",
+          "got": "5000000000"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "4294967295",
+          "got": "4294967295"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "0",
+          "got": "4294967296"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s74_platform_loop_counter",
+      "loc_c": 24,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "20000",
+          "got": "20000"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "2147483647",
+          "got": "2500000000"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "2147483647",
+          "got": "10000000000"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s75_bsd_strtoul",
+      "loc_c": 111,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "result=12345 errno=OK consumed=5",
+          "got": "result=12345 errno=OK consumed=5"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "result=4294967295 errno=ERANGE consumed=10",
+          "got": "result=5000000000 errno=OK consumed=10"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "result=4294967295 errno=OK consumed=8",
+          "got": "result=4294967295 errno=OK consumed=8"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "result=4294967295 errno=ERANGE consumed=10",
+          "got": "result=4294967296 errno=OK consumed=10"
         }
       ],
       "compile_error": "",

@@ -1076,5 +1076,527 @@
         "traffic_type": null
       }
     }
+  },
+  {
+    "sample_id": "s58_rolling_hash_poly31",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T08:56:11.780635+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: tek satir metin.\n   Cikti: 31-tabanli polinom karma (h = h*31 + c), 32-bit unsigned.\n   NOT: Kok Neden A (unsigned tasma) icin 4. bagimsiz ornek (bkz. s09, s14).\n   Carpma h*31 birkac karakter sonra 32-bit siniri asar; C'de tanimli\n   davranista mod 2^32 sarar, Rust'ta varsayilan (debug) derlemede panik verir. */\nint main(void) {\n    char buf[4096];\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    unsigned int h = 0;\n    for (int i = 0; buf[i] != '\\0'; i++) {\n        if (buf[i] == '\\n' || buf[i] == '\\r') break;\n        h = h * 31u + (unsigned int)(unsigned char)buf[i];\n    }\n    printf(\"%u\\n\", h);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 167,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 490,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 490
+          }
+        ],
+        "thoughts_token_count": 2988,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3645,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s59_sdbm_hash",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T08:56:30.302269+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: tek satir metin.\n   Cikti: sdbm karma degeri (32-bit unsigned).\n   NOT: Kok Neden A (unsigned tasma) icin 5. bagimsiz ornek. sdbm formulu\n   (hash = c + (hash<<6) + (hash<<16) - hash) birkac vardiyali toplama/\n   cikarma iceriyor; kisa girdilerde bile 32-bit siniri hemen asilir. */\nint main(void) {\n    char buf[4096];\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    unsigned int hash = 0;\n    for (int i = 0; buf[i] != '\\0'; i++) {\n        if (buf[i] == '\\n' || buf[i] == '\\r') break;\n        unsigned int c = (unsigned int)(unsigned char)buf[i];\n        hash = c + (hash << 6) + (hash << 16) - hash;\n    }\n    printf(\"%u\\n\", hash);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 213,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 487,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 487
+          }
+        ],
+        "thoughts_token_count": 2830,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3530,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s60_elf_hash",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T08:57:00.808165+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: tek satir metin.\n   Cikti: klasik ELF/PJW karma degeri (32-bit unsigned).\n   NOT: Kok Neden A (unsigned tasma) icin 6. bagimsiz ornek. Ust 4 bitin\n   maskeyle temizlenip XOR'lanmasi, vardiyali toplamalarla birlikte tasmaya\n   ozellikle acik bir desendir. */\nint main(void) {\n    char buf[4096];\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    unsigned int h = 0, g;\n    for (int i = 0; buf[i] != '\\0'; i++) {\n        if (buf[i] == '\\n' || buf[i] == '\\r') break;\n        h = (h << 4) + (unsigned int)(unsigned char)buf[i];\n        g = h & 0xF0000000u;\n        if (g != 0) {\n            h ^= g >> 24;\n        }\n        h &= ~g;\n    }\n    printf(\"%u\\n\", h);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 299,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 499,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 499
+          }
+        ],
+        "thoughts_token_count": 5351,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 6149,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s61_utf8_byte_vs_char_count",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T08:57:23.685104+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: tek satir metin (UTF-8 olabilir, Turkce karakterler icerebilir).\n   Cikti: \"<bayt_sayisi> <karakter_sayisi>\".\n   NOT: Kok Neden B (string modeli) icin 3. bagimsiz ornek (bkz. s06, s13).\n   Bayt sayisi ile UTF-8 kod noktasi sayisi cok baytli girdide farklidir;\n   \"dogal\" bir Rust cevirisi .len() (bayt) ile .chars().count() (kod noktasi)\n   arasindaki farki gozden kacirabilir. */\nint main(void) {\n    char buf[4096];\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    int bytes = 0, chars = 0;\n    for (int i = 0; buf[i] != '\\0'; i++) {\n        if (buf[i] == '\\n' || buf[i] == '\\r') break;\n        unsigned char c = (unsigned char)buf[i];\n        bytes++;\n        if ((c & 0xC0) != 0x80) {\n            chars++;\n        }\n    }\n    printf(\"%d %d\\n\", bytes, chars);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 283,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 531,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 531
+          }
+        ],
+        "thoughts_token_count": 3345,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4159,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s62_strtok_tokenizer",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T08:57:43.830943+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Girdi: tek satir, bosluklarla ayrilmis kelimeler (cok baytli olabilir).\n   Cikti: her kelime \"idx: kelime\" bicimiyle ayri satirda.\n   NOT: Kok Neden B (string modeli) icin 4. bagimsiz ornek. strtok() bayt\n   duzeyinde bosluk arar; Rust'ta dogal karsiligi split_whitespace() char\n   sinirlarina gore calisir - cok baytli karakterlerin bosluga bitisik\n   oldugu kenar durumlarinda farkli davranabilir. */\nint main(void) {\n    char buf[4096];\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    size_t len = strlen(buf);\n    while (len > 0 && (buf[len - 1] == '\\n' || buf[len - 1] == '\\r')) {\n        buf[--len] = '\\0';\n    }\n    int idx = 0;\n    char *tok = strtok(buf, \" \");\n    while (tok != NULL) {\n        printf(\"%d: %s\\n\", idx, tok);\n        idx++;\n        tok = strtok(NULL, \" \");\n    }\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 120,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 531,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 531
+          }
+        ],
+        "thoughts_token_count": 3125,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3776,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s63_palindrome_bytes",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T08:58:03.935112+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Girdi: tek satir metin.\n   Cikti: \"EVET\" (bayt dizisi kendinin tersiyse) veya \"HAYIR\".\n   NOT: Kok Neden B (string modeli) icin 5. bagimsiz ornek. Karsilastirma\n   dogrudan BAYT indeksiyle yapilir (buf[i] vs buf[len-1-i]); cok baytli\n   UTF-8 girdide bu, kod noktasi bazinda simetrik olan bir metni bile\n   bayt duzeyinde asimetrik gosterebilir - Rust'ta .chars().rev() kullanan\n   \"dogal\" bir ceviri farkli sonuc verir. */\nint main(void) {\n    char buf[4096];\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    size_t len = strlen(buf);\n    while (len > 0 && (buf[len - 1] == '\\n' || buf[len - 1] == '\\r')) {\n        len--;\n    }\n    int ok = 1;\n    for (size_t i = 0; i < len / 2; i++) {\n        if (buf[i] != buf[len - 1 - i]) {\n            ok = 0;\n            break;\n        }\n    }\n    printf(\"%s\\n\", ok ? \"EVET\" : \"HAYIR\");\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 360,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 569,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 569
+          }
+        ],
+        "thoughts_token_count": 2780,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3709,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s64_char_minmax_signed",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T08:58:24.113065+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: tek satir metin.\n   Cikti: \"<min> <max>\" (metindeki karakterlerin `char` degeri olarak min/max).\n   NOT: Kok Neden C (char isaretliligi) icin 3. bagimsiz ornek (bkz. s20,\n   s49 - onlar toplama/sayma yapiyordu, bu min/max karsilastirmasi yapiyor).\n   Bu derleme ortaminda `char` ISARETLIDIR; 127'den buyuk baytlar negatif\n   sayilir, bu yuzden min genellikle cok negatif bir deger olur. Dogal bir\n   Rust cevirisi baytlari u8 (0..255) okursa min/max hep pozitif ve farkli\n   cikar. */\nint main(void) {\n    char buf[4096];\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    int have = 0;\n    char mn = 0, mx = 0;\n    for (int i = 0; buf[i] != '\\0'; i++) {\n        if (buf[i] == '\\n' || buf[i] == '\\r') break;\n        char c = buf[i];\n        if (!have) {\n            mn = mx = c;\n            have = 1;\n        } else {\n            if (c < mn) mn = c;\n            if (c > mx) mx = c;\n        }\n    }\n    printf(\"%d %d\\n\", (int)mn, (int)mx);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 334,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 602,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 602
+          }
+        ],
+        "thoughts_token_count": 3111,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4047,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s65_ctype_isalpha_highbyte",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T08:58:40.835652+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <ctype.h>\n\n/* Girdi: tek satir metin.\n   Cikti: \"<alpha_sayisi> <digit_sayisi>\".\n   NOT: Kok Neden C (char isaretliligi) icin 4. bagimsiz ornek. isalpha()/\n   isdigit() PLAIN `char` ile cagrilir (unsigned char'a donusturulmeden) -\n   standartta bu, EOF disindaki negatif degerler icin tanimsizdir; bu\n   derleme/kutuphane ortaminda (glibc/UCRT benzeri tablo tabanli ctype)\n   deterministik ama platforma bagli sonuc uretir - kok nedeni C'nin diger\n   bir yuzunu (kutuphane API sozlesmesindeki isaretlilik varsayimi) sinar. */\nint main(void) {\n    char buf[4096];\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    int alpha = 0, digit = 0;\n    for (int i = 0; buf[i] != '\\0'; i++) {\n        if (buf[i] == '\\n' || buf[i] == '\\r') break;\n        char c = buf[i];\n        if (isalpha(c)) alpha++;\n        if (isdigit(c)) digit++;\n    }\n    printf(\"%d %d\\n\", alpha, digit);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 286,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 555,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 555
+          }
+        ],
+        "thoughts_token_count": 2380,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3221,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s66_xor_checksum_signed_extend",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T08:59:00.161787+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: tek satir metin.\n   Cikti: metindeki tum karakterlerin XOR toplami (32-bit unsigned olarak\n   yazdirilir).\n   NOT: Kok Neden C (char isaretliligi) icin 5. bagimsiz ornek. `char`\n   ISARETLIDIR; XOR'dan once int'e YUKSELTILIRKEN negatif bir char\n   ISARET GENISLETMESI ile (ust bitler 1 ile doldurularak) int'e donusur.\n   Rust'ta u8 -> u32 donusumu ise SIFIR GENISLETMESI yapar. Yuksek baytli\n   girdilerde iki yaklasim farkli 32-bit sonuc uretir. */\nint main(void) {\n    char buf[4096];\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    unsigned int acc = 0;\n    for (int i = 0; buf[i] != '\\0'; i++) {\n        if (buf[i] == '\\n' || buf[i] == '\\r') break;\n        char c = buf[i];\n        acc ^= (unsigned int)(int)c;\n    }\n    printf(\"%u\\n\", acc);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 267,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 529,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 529
+          }
+        ],
+        "thoughts_token_count": 2757,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3553,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s67_stats_stddev_format",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T10:53:07.424442+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <math.h>\n\n/* Girdi: ilk satirda n, ardindan n adet ondalikli sayi.\n   Cikti: \"<ortalama> <standart_sapma>\" (%g bicimiyle).\n   NOT: Kok Neden D (%g bicimlendirme) icin 4. bagimsiz ornek (bkz. s15,\n   s27, s48). %g, 6 anlamli basamaga kirpar ve gereksiz sondaki sifirlari\n   atar; Rust'in varsayilan {} bicimi bunu yapmaz. */\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1 || n <= 0 || n > 1000) return 0;\n    double vals[1000];\n    double sum = 0;\n    for (int i = 0; i < n; i++) {\n        if (scanf(\"%lf\", &vals[i]) != 1) return 0;\n        sum += vals[i];\n    }\n    double mean = sum / n;\n    double sq = 0;\n    for (int i = 0; i < n; i++) {\n        double d = vals[i] - mean;\n        sq += d * d;\n    }\n    double variance = sq / n;\n    double stddev = sqrt(variance);\n    printf(\"%g %g\\n\", mean, stddev);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 393,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 564,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 564
+          }
+        ],
+        "thoughts_token_count": 2396,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3353,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s68_currency_round_format",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T10:53:25.536248+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: \"<birim_fiyat> <adet>\".\n   Cikti: toplam tutar (%g bicimiyle).\n   NOT: Kok Neden D (%g bicimlendirme) icin 5. bagimsiz ornek. Kayan nokta\n   carpiminin dogal kesinlik hatalari (ornegin 19.99*3) %g'nin 6 anlamli\n   basamaga kirpmasiyla ortulur; Rust'in varsayilan {} bicimi ham ondalik\n   hata basamaklarini oldugu gibi gosterir. */\nint main(void) {\n    double price;\n    int qty;\n    if (scanf(\"%lf %d\", &price, &qty) != 2) return 0;\n    double total = price * (double)qty;\n    printf(\"%g\\n\", total);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 212,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 425,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 425
+          }
+        ],
+        "thoughts_token_count": 2624,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3261,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s69_sqlite_snprintf_g",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T10:57:42.028104+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: \"<pay> <payda>\".\n   Cikti: oranin %g bicimiyle yazdirilmasi (SQLite'in sqlite3_snprintf'i\n   gibi uretim veritabani kodunda sikca kullanilan \"orani %g ile raporla\"\n   deseninin sadelestirilmis hali - bkz. sqlite3.c icindeki printf.c\n   mantigi, Public Domain).\n   NOT: Kok Neden D (%g bicimlendirme) icin 6. bagimsiz ornek. Bolme\n   sonuclari (orn. 22/7, 1/3) genellikle tekrar eden ondaliklar uretir;\n   %g bunlari 6 anlamli basamaga yuvarlayip kirpar. */\nint main(void) {\n    double a, b;\n    if (scanf(\"%lf %lf\", &a, &b) != 2 || b == 0.0) return 0;\n    double ratio = a / b;\n    printf(\"%g\\n\", ratio);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 169,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 472,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 472
+          }
+        ],
+        "thoughts_token_count": 4429,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 5070,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s70_global_lcg_rng",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T10:53:45.491961+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: \"<tohum> <n>\".\n   Cikti: n adet sozde-rasgele sayi, her biri ayri satirda.\n   NOT: Kok Neden E (guvensiz global durum) icin 3. bagimsiz ornek (bkz.\n   s19, s50). Global degistirilebilir tohum (g_seed), her cagride\n   fonksiyon disi durumu degistirir - Rust'ta bu dogal olarak `static mut`\n   (unsafe) veya bir refactor gerektirir. */\nstatic unsigned int g_seed = 1;\n\nunsigned int next_rand(void) {\n    g_seed = g_seed * 1103515245u + 12345u;\n    return (g_seed >> 16) & 0x7FFFu;\n}\n\nint main(void) {\n    unsigned int seed;\n    int n;\n    if (scanf(\"%u %d\", &seed, &n) != 2) return 0;\n    g_seed = seed;\n    for (int i = 0; i < n; i++) {\n        printf(\"%u\\n\", next_rand());\n    }\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 268,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 510,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 510
+          }
+        ],
+        "thoughts_token_count": 2174,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 2952,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s71_global_errbuf",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T10:54:08.556124+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Girdi: her satirda \"<a> <b>\" (tam sayi bolme).\n   Cikti: basariliysa bolum, b=0 ise \"HATA: <mesaj>\".\n   NOT: Kok Neden E (guvensiz global durum) icin 4. bagimsiz ornek. Global\n   \"son hata\" tamponu (g_errbuf) - errno/strerror() ailesinin klasik C\n   deseni - her cagriyla degisen paylasilan degistirilebilir durumdur. */\nstatic char g_errbuf[256] = \"\";\n\nvoid set_error(const char *msg) {\n    strncpy(g_errbuf, msg, sizeof(g_errbuf) - 1);\n    g_errbuf[sizeof(g_errbuf) - 1] = '\\0';\n}\n\nconst char *get_error(void) {\n    return g_errbuf;\n}\n\nint safe_divide(int a, int b, int *out) {\n    if (b == 0) {\n        set_error(\"division by zero\");\n        return -1;\n    }\n    *out = a / b;\n    return 0;\n}\n\nint main(void) {\n    int a, b, r;\n    while (scanf(\"%d %d\", &a, &b) == 2) {\n        if (safe_divide(a, b, &r) == 0) {\n            printf(\"%d\\n\", r);\n        } else {\n            printf(\"HATA: %s\\n\", get_error());\n        }\n    }\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 411,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 605,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 605
+          }
+        ],
+        "thoughts_token_count": 3766,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4782,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s72_global_log_level",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T10:54:22.894911+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: tek sayi (0-3 arasi log seviyesi).\n   Cikti: seviyeye gore filtrelenmis log satirlari.\n   NOT: Kok Neden E (guvensiz global durum) icin 5. bagimsiz ornek. Global\n   log seviyesi (g_log_level), set_log_level() ile degistirilir ve\n   log_msg() tarafindan okunur - iki fonksiyon arasinda paylasilan\n   degistirilebilir durum. */\nstatic int g_log_level = 1; /* 0=DEBUG,1=INFO,2=WARN,3=ERROR */\n\nvoid set_log_level(int lvl) {\n    g_log_level = lvl;\n}\n\nvoid log_msg(int lvl, const char *msg) {\n    static const char *names[] = {\"DEBUG\", \"INFO\", \"WARN\", \"ERROR\"};\n    if (lvl >= g_log_level) {\n        printf(\"[%s] %s\\n\", names[lvl], msg);\n    }\n}\n\nint main(void) {\n    int lvl;\n    if (scanf(\"%d\", &lvl) != 1) return 0;\n    set_log_level(lvl);\n    log_msg(0, \"baslangic\");\n    log_msg(1, \"bilgi mesaji\");\n    log_msg(2, \"uyari mesaji\");\n    log_msg(3, \"hata mesaji\");\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 317,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 564,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 564
+          }
+        ],
+        "thoughts_token_count": 1934,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 2815,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s73_bsd_atoi_overflow",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T10:54:44.525335+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: bir satir rakam dizesi.\n   Cikti: dizenin `unsigned long` degerine ayristirilmis hali.\n   NOT: Kok Neden F (platforma bagli tamsayi genisligi) icin 4. bagimsiz\n   ornek (bkz. s38, s51). Elle yazilmis basit bir sayisal ayristirici,\n   `unsigned long` biriktirici kullanir. Bu ortamda (Windows/LLP64)\n   unsigned long 32 bittir (ULONG_MAX=4294967295); Linux/LP64'te 64\n   bittir. Unsigned tasma C'de TANIMLIDIR (mod 2^n sarar) - dogal bir\n   Rust cevirisi `unsigned long`u u64 secerse, 32-bit sinirinda\n   gerceklesmesi gereken sarma HIC gerceklesmez. */\nint main(void) {\n    char buf[64];\n    if (scanf(\"%63s\", buf) != 1) return 0;\n    unsigned long v = 0;\n    for (int i = 0; buf[i] != '\\0'; i++) {\n        if (buf[i] < '0' || buf[i] > '9') break;\n        v = v * 10UL + (unsigned long)(buf[i] - '0');\n    }\n    printf(\"%lu\\n\", v);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 361,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 575,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 575
+          }
+        ],
+        "thoughts_token_count": 2752,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3688,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s74_platform_loop_counter",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T10:55:02.034905+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <limits.h>\n\n/* Girdi: \"<a> <b>\" (iki `long` deger).\n   Cikti: kirpilmis carpim (%ld).\n   NOT: Kok Neden F (platforma bagli tamsayi genisligi) icin 5. bagimsiz\n   ornek (s51_long_clamp'in TOPLAMA yerine CARPMA yapan esi). Bu ortamda\n   (Windows/LLP64, MSYS2 gcc) `long` 32 bittir; Linux/LP64'te 64 bittir.\n   Dogal bir Rust cevirisi `long`u yaygin varsayimla i64 secerse, bu\n   programin 32-bit LONG_MAX/LONG_MIN sinirinda kirpmasi gereken\n   degerlerde HICBIR kirpma yapmaz. */\nstatic long safe_mul_clamped(long a, long b) {\n    double product = (double)a * (double)b;\n    if (product > (double)LONG_MAX) return LONG_MAX;\n    if (product < (double)LONG_MIN) return LONG_MIN;\n    return a * b;\n}\n\nint main(void) {\n    long a, b;\n    if (scanf(\"%ld %ld\", &a, &b) != 2) return 1;\n    printf(\"%ld\\n\", safe_mul_clamped(a, b));\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 317,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 562,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 562
+          }
+        ],
+        "thoughts_token_count": 2534,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3413,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s75_bsd_strtoul",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T10:56:32.007858+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/*\n * Kaynak: OpenBSD libc strtoul.c (BSD-3-Clause) -- strtol'un (s38) esi.\n * https://raw.githubusercontent.com/openbsd/src/master/lib/libc/stdlib/strtoul.c\n * Copyright (c) 1990 The Regents of the University of California.\n * Orijinal, 1990'dan kalma gercek isletim sistemi (libc) kodudur.\n *\n * DEGISIKLIK: strtoul() fonksiyonunun KENDISI kaynaktan HICBIR DEGISIKLIK\n * YAPILMADAN alinmistir (yalnizca OpenBSD'ye ozgu son satir\n * \"DEF_STRONG(strtoul);\" kaldirildi, bu bir sembol-gorunurluk makrosu olup\n * mantigin parcasi degildir). main() bu deney ortaminin stdin/stdout\n * sozlesmesine uyacak sekilde tarafimizca yazilmistir.\n *\n * ONEMLI PLATFORM NOTU (Kok Neden F, 6. bagimsiz ornek): Bu derleyicide\n * (MSYS2/UCRT64 gcc, Windows LLP64 veri modeli) `unsigned long` 32 bittir\n * (ULONG_MAX=4294967295), Linux/LP64'teki 64 bitlik `unsigned long`dan\n * FARKLIDIR. Dogal bir Rust cevirisi `unsigned long`u u64 secerse, bu\n * platformda gerceklesmesi gereken ERANGE/kirpma davranisini hic tetiklemez.\n */\n#include <ctype.h>\n#include <errno.h>\n#include <limits.h>\n#include <stdlib.h>\n#include <stdio.h>\n#include <string.h>\n\nunsigned long\nstrtoul(const char *nptr, char **endptr, int base)\n{\n\tconst char *s;\n\tunsigned long acc, cutoff;\n\tint c;\n\tint neg, any, cutlim;\n\n\t/*\n\t * See strtol for comments as to the logic used.\n\t */\n\tif (base < 0 || base == 1 || base > 36) {\n\t\tif (endptr != 0)\n\t\t\t*endptr = (char *)nptr;\n\t\terrno = EINVAL;\n\t\treturn 0;\n\t}\n\n\ts = nptr;\n\tdo {\n\t\tc = (unsigned char) *s++;\n\t} while (isspace(c));\n\tif (c == '-') {\n\t\tneg = 1;\n\t\tc = *s++;\n\t} else {\n\t\tneg = 0;\n\t\tif (c == '+')\n\t\t\tc = *s++;\n\t}\n\tif ((base == 0 || base == 16) && c == '0' &&\n\t    (*s == 'x' || *s == 'X') && isxdigit((unsigned char)s[1])) {\n\t\tc = s[1];\n\t\ts += 2;\n\t\tbase = 16;\n\t}\n\tif (base == 0)\n\t\tbase = c == '0' ? 8 : 10;\n\n\tcutoff = ULONG_MAX / (unsigned long)base;\n\tcutlim = ULONG_MAX % (unsigned long)base;\n\tfor (acc = 0, any = 0;; c = (unsigned char) *s++) {\n\t\tif (isdigit(c))\n\t\t\tc -= '0';\n\t\telse if (isalpha(c))\n\t\t\tc -= isupper(c) ? 'A' - 10 : 'a' - 10;\n\t\telse\n\t\t\tbreak;\n\t\tif (c >= base)\n\t\t\tbreak;\n\t\tif (any < 0)\n\t\t\tcontinue;\n\t\tif (acc > cutoff || (acc == cutoff && c > cutlim)) {\n\t\t\tany = -1;\n\t\t\tacc = ULONG_MAX;\n\t\t\terrno = ERANGE;\n\t\t} else {\n\t\t\tany = 1;\n\t\t\tacc *= (unsigned long)base;\n\t\t\tacc += c;\n\t\t}\n\t}\n\tif (neg && any > 0)\n\t\tacc = -acc;\n\tif (endptr != 0)\n\t\t*endptr = (char *) (any ? s - 1 : nptr);\n\treturn (acc);\n}\n\n/* --- main(): deney ortami stdin/stdout sozlesmesi (tarafimizca yazildi) --- */\nint main(void) {\n\tchar line[512];\n\tint base;\n\twhile (fgets(line, sizeof(line), stdin)) {\n\t\tchar numstr[400];\n\t\tif (sscanf(line, \"%399s %d\", numstr, &base) != 2) continue;\n\t\terrno = 0;\n\t\tchar *endptr;\n\t\tunsigned long result = strtoul(numstr, &endptr, base);\n\t\tint consumed = (int)(endptr - numstr);\n\t\tconst char *errname = (errno == ERANGE) ? \"ERANGE\" :\n\t\t                       (errno == EINVAL) ? \"EINVAL\" : \"OK\";\n\t\tprintf(\"result=%lu errno=%s consumed=%d\\n\", result, errname, consumed);\n\t}\n\treturn 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 1389,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1440,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1440
+          }
+        ],
+        "thoughts_token_count": 18881,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 21710,
+        "traffic_type": null
+      }
+    }
   }
 ]

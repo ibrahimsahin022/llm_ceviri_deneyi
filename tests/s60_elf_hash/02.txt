@@ -1,0 +1,1 @@
+elf hash function test string here
