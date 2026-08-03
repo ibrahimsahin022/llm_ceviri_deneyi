@@ -1,5 +1,566 @@
 [
   {
+    "sample_id": "s110_queue_module",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T20:13:05.058627+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/* ---- dosya: queue.c ---- */\n#include \"queue.h\"\n\nvoid queue_init(Queue *q) {\n    q->front = 0;\n    q->rear = 0;\n    q->count = 0;\n}\n\nint queue_is_empty(const Queue *q) {\n    return q->count == 0;\n}\n\nint queue_is_full(const Queue *q) {\n    return q->count == QUEUE_CAPACITY;\n}\n\nint queue_enqueue(Queue *q, int value) {\n    if (queue_is_full(q)) return 0;\n    q->data[q->rear] = value;\n    q->rear = (q->rear + 1) % QUEUE_CAPACITY;\n    q->count++;\n    return 1;\n}\n\nint queue_dequeue(Queue *q, int *out) {\n    if (queue_is_empty(q)) return 0;\n    *out = q->data[q->front];\n    q->front = (q->front + 1) % QUEUE_CAPACITY;\n    q->count--;\n    return 1;\n}\n\nint queue_size(const Queue *q) {\n    return q->count;\n}\n\n\n/* ---- dosya: main.c ---- */\n#include <stdio.h>\n#include \"queue.h\"\n\n/* Girdi: ilk satirda islem sayisi n, ardindan n satir - her biri\n   \"E <deger>\" (enqueue) veya \"D\" (dequeue).\n   Cikti: her islem icin bir satir - enqueue basariliysa \"OK\", kapasite\n   doluysa \"FULL\"; dequeue basariliysa deger, kuyruk bosşa \"EMPTY\".\n   Sonda kuyrugun son boyutu. */\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    Queue q;\n    queue_init(&q);\n\n    for (int i = 0; i < n; i++) {\n        char op[4];\n        if (scanf(\"%3s\", op) != 1) return 0;\n        if (op[0] == 'E') {\n            int v;\n            if (scanf(\"%d\", &v) != 1) return 0;\n            if (queue_enqueue(&q, v)) {\n                printf(\"OK\\n\");\n            } else {\n                printf(\"FULL\\n\");\n            }\n        } else {\n            int out;\n            if (queue_dequeue(&q, &out)) {\n                printf(\"%d\\n\", out);\n            } else {\n                printf(\"EMPTY\\n\");\n            }\n        }\n    }\n\n    printf(\"size=%d\\n\", queue_size(&q));\n    return 0;\n}\n\n\n/* NOT: Bu, birden fazla C dosyasindan (yukarida belirtilen dosya adlariyla) olusan cok-dosyali bir programdir. Lutfen TEK BIR Rust dosyasi (tek bir main.rs) olarak, ayni davranissal sozlesmeyi koruyacak sekilde cevirin. */\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 652,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 942,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 942
+          }
+        ],
+        "thoughts_token_count": 4123,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 5717,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s111_linked_list_module",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T20:14:19.491191+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/* ---- dosya: list.c ---- */\n#include <stdlib.h>\n#include \"list.h\"\n\nvoid list_init(List *l) {\n    l->head = NULL;\n    l->size = 0;\n}\n\nvoid list_push_front(List *l, int value) {\n    Node *n = malloc(sizeof(Node));\n    n->value = value;\n    n->next = l->head;\n    l->head = n;\n    l->size++;\n}\n\nint list_remove(List *l, int value) {\n    Node *cur = l->head;\n    Node *prev = NULL;\n    while (cur != NULL) {\n        if (cur->value == value) {\n            if (prev == NULL) {\n                l->head = cur->next;\n            } else {\n                prev->next = cur->next;\n            }\n            free(cur);\n            l->size--;\n            return 1;\n        }\n        prev = cur;\n        cur = cur->next;\n    }\n    return 0;\n}\n\nint list_contains(const List *l, int value) {\n    Node *cur = l->head;\n    while (cur != NULL) {\n        if (cur->value == value) return 1;\n        cur = cur->next;\n    }\n    return 0;\n}\n\nint list_size(const List *l) {\n    return l->size;\n}\n\nvoid list_free(List *l) {\n    Node *cur = l->head;\n    while (cur != NULL) {\n        Node *next = cur->next;\n        free(cur);\n        cur = next;\n    }\n    l->head = NULL;\n    l->size = 0;\n}\n\n\n/* ---- dosya: main.c ---- */\n#include <stdio.h>\n#include \"list.h\"\n\n/* Girdi: ilk satirda islem sayisi n, ardindan n satir - \"P <deger>\" (push\n   front), \"R <deger>\" (remove), \"C <deger>\" (contains).\n   Cikti: R icin \"REMOVED\"/\"NOTFOUND\"; C icin \"YES\"/\"NO\". Sonda listenin\n   son boyutu. */\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    List l;\n    list_init(&l);\n\n    for (int i = 0; i < n; i++) {\n        char op[4];\n        int v;\n        if (scanf(\"%3s %d\", op, &v) != 2) return 0;\n        if (op[0] == 'P') {\n            list_push_front(&l, v);\n        } else if (op[0] == 'R') {\n            printf(\"%s\\n\", list_remove(&l, v) ? \"REMOVED\" : \"NOTFOUND\");\n        } else {\n            printf(\"%s\\n\", list_contains(&l, v) ? \"YES\" : \"NO\");\n        }\n    }\n\n    printf(\"size=%d\\n\", list_size(&l));\n    list_free(&l);\n    return 0;\n}\n\n\n/* NOT: Bu, birden fazla C dosyasindan (yukarida belirtilen dosya adlariyla) olusan cok-dosyali bir programdir. Lutfen TEK BIR Rust dosyasi (tek bir main.rs) olarak, ayni davranissal sozlesmeyi koruyacak sekilde cevirin. */\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 371,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1043,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1043
+          }
+        ],
+        "thoughts_token_count": 2841,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4255,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s112_producer_consumer_threads",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T20:15:34.777278+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/* ---- dosya: buffer.c ---- */\n#include \"buffer.h\"\n\nvoid buffer_init(BoundedBuffer *b) {\n    b->count = 0;\n    b->in = 0;\n    b->out = 0;\n    pthread_mutex_init(&b->lock, NULL);\n    pthread_cond_init(&b->not_full, NULL);\n    pthread_cond_init(&b->not_empty, NULL);\n}\n\nvoid buffer_put(BoundedBuffer *b, int value) {\n    pthread_mutex_lock(&b->lock);\n    while (b->count == BUFFER_CAPACITY) {\n        pthread_cond_wait(&b->not_full, &b->lock);\n    }\n    b->data[b->in] = value;\n    b->in = (b->in + 1) % BUFFER_CAPACITY;\n    b->count++;\n    pthread_cond_signal(&b->not_empty);\n    pthread_mutex_unlock(&b->lock);\n}\n\nint buffer_get(BoundedBuffer *b) {\n    pthread_mutex_lock(&b->lock);\n    while (b->count == 0) {\n        pthread_cond_wait(&b->not_empty, &b->lock);\n    }\n    int value = b->data[b->out];\n    b->out = (b->out + 1) % BUFFER_CAPACITY;\n    b->count--;\n    pthread_cond_signal(&b->not_full);\n    pthread_mutex_unlock(&b->lock);\n    return value;\n}\n\nvoid buffer_destroy(BoundedBuffer *b) {\n    pthread_mutex_destroy(&b->lock);\n    pthread_cond_destroy(&b->not_full);\n    pthread_cond_destroy(&b->not_empty);\n}\n\n\n/* ---- dosya: main.c ---- */\n#include <stdio.h>\n#include <pthread.h>\n#include \"buffer.h\"\n\n/* Girdi: bir tam sayi N (uretilecek/tuketilecek eleman sayisi, 1..N).\n   Cikti: tuketicinin topladigi toplam (N*(N+1)/2 ile ayni - zamanlamadan\n   BAGIMSIZ, deterministik). */\n\ntypedef struct {\n    BoundedBuffer *buf;\n    int n;\n} ProducerArgs;\n\ntypedef struct {\n    BoundedBuffer *buf;\n    int n;\n    long sum;\n} ConsumerArgs;\n\nstatic void *producer(void *arg) {\n    ProducerArgs *pa = (ProducerArgs *)arg;\n    for (int i = 1; i <= pa->n; i++) {\n        buffer_put(pa->buf, i);\n    }\n    return NULL;\n}\n\nstatic void *consumer(void *arg) {\n    ConsumerArgs *ca = (ConsumerArgs *)arg;\n    ca->sum = 0;\n    for (int i = 0; i < ca->n; i++) {\n        ca->sum += buffer_get(ca->buf);\n    }\n    return NULL;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1 || n < 0 || n > 100000) return 0;\n\n    BoundedBuffer buf;\n    buffer_init(&buf);\n\n    ProducerArgs pa = { &buf, n };\n    ConsumerArgs ca = { &buf, n, 0 };\n\n    pthread_t prod_thread, cons_thread;\n    pthread_create(&prod_thread, NULL, producer, &pa);\n    pthread_create(&cons_thread, NULL, consumer, &ca);\n    pthread_join(prod_thread, NULL);\n    pthread_join(cons_thread, NULL);\n\n    buffer_destroy(&buf);\n    printf(\"%ld\\n\", ca.sum);\n    return 0;\n}\n\n\n/* NOT: Bu, birden fazla C dosyasindan (yukarida belirtilen dosya adlariyla) olusan cok-dosyali bir programdir. Lutfen TEK BIR Rust dosyasi (tek bir main.rs) olarak, ayni davranissal sozlesmeyi koruyacak sekilde cevirin. */\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 772,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1181,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1181
+          }
+        ],
+        "thoughts_token_count": 3019,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4972,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s113_rwlock_counter",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T20:16:44.999677+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/* ---- dosya: rwstate.c ---- */\n#include \"rwstate.h\"\n\nvoid rwstate_init(RwState *s) {\n    s->counter = 0;\n    pthread_rwlock_init(&s->lock, NULL);\n}\n\nvoid rwstate_increment(RwState *s) {\n    pthread_rwlock_wrlock(&s->lock);\n    s->counter += 1;\n    pthread_rwlock_unlock(&s->lock);\n}\n\nlong rwstate_read(RwState *s) {\n    pthread_rwlock_rdlock(&s->lock);\n    long v = s->counter;\n    pthread_rwlock_unlock(&s->lock);\n    return v;\n}\n\nvoid rwstate_destroy(RwState *s) {\n    pthread_rwlock_destroy(&s->lock);\n}\n\n\n/* ---- dosya: main.c ---- */\n#include <stdio.h>\n#include <pthread.h>\n#include \"rwstate.h\"\n\n/* Girdi: iki tam sayi - n_writers (yazici sayisi), increments_per_writer\n   (her yazicinin artis sayisi).\n   Cikti: tum yazicilar bittikten sonraki sayac degeri\n   (n_writers * increments_per_writer ile ayni - deterministik). */\n\ntypedef struct {\n    RwState *state;\n    int increments;\n} WriterArgs;\n\nstatic void *writer(void *arg) {\n    WriterArgs *wa = (WriterArgs *)arg;\n    for (int i = 0; i < wa->increments; i++) {\n        rwstate_increment(wa->state);\n    }\n    return NULL;\n}\n\nint main(void) {\n    int n_writers, increments;\n    if (scanf(\"%d %d\", &n_writers, &increments) != 2) return 1;\n    if (n_writers <= 0 || n_writers > 64 || increments < 0) return 1;\n\n    RwState state;\n    rwstate_init(&state);\n\n    pthread_t threads[64];\n    WriterArgs args[64];\n\n    for (int i = 0; i < n_writers; i++) {\n        args[i].state = &state;\n        args[i].increments = increments;\n        pthread_create(&threads[i], NULL, writer, &args[i]);\n    }\n    for (int i = 0; i < n_writers; i++) {\n        pthread_join(threads[i], NULL);\n    }\n\n    printf(\"%ld\\n\", rwstate_read(&state));\n    rwstate_destroy(&state);\n    return 0;\n}\n\n\n/* NOT: Bu, birden fazla C dosyasindan (yukarida belirtilen dosya adlariyla) olusan cok-dosyali bir programdir. Lutfen TEK BIR Rust dosyasi (tek bir main.rs) olarak, ayni davranissal sozlesmeyi koruyacak sekilde cevirin. */\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 479,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 913,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 913
+          }
+        ],
+        "thoughts_token_count": 1737,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3129,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s114_simple_threadpool",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T20:17:55.206147+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n/* ---- dosya: pool.c ---- */\n#include \"pool.h\"\n\nvoid pool_init(TaskPool *p, int n_tasks) {\n    p->next_task = 0;\n    p->n_tasks = n_tasks;\n    p->total = 0;\n    pthread_mutex_init(&p->lock, NULL);\n}\n\nint pool_next_task(TaskPool *p, int *task_id) {\n    int got = 0;\n    pthread_mutex_lock(&p->lock);\n    if (p->next_task < p->n_tasks) {\n        *task_id = p->next_task;\n        p->next_task++;\n        got = 1;\n    }\n    pthread_mutex_unlock(&p->lock);\n    return got;\n}\n\nvoid pool_add_result(TaskPool *p, long value) {\n    pthread_mutex_lock(&p->lock);\n    p->total += value;\n    pthread_mutex_unlock(&p->lock);\n}\n\nlong pool_total(const TaskPool *p) {\n    return p->total;\n}\n\nvoid pool_destroy(TaskPool *p) {\n    pthread_mutex_destroy(&p->lock);\n}\n\n\n/* ---- dosya: main.c ---- */\n#include <stdio.h>\n#include <pthread.h>\n#include \"pool.h\"\n\n/* Girdi: iki tam sayi - n_tasks (gorev sayisi), n_workers (isci parcaciği\n   sayisi).\n   Cikti: 1^2 + 2^2 + ... + n_tasks^2 toplami (isci sayisindan/zamanlamadan\n   BAGIMSIZ, deterministik). */\n\nstatic void *worker(void *arg) {\n    TaskPool *p = (TaskPool *)arg;\n    int task_id;\n    while (pool_next_task(p, &task_id)) {\n        long v = (long)(task_id + 1) * (long)(task_id + 1);\n        pool_add_result(p, v);\n    }\n    return NULL;\n}\n\nint main(void) {\n    int n_tasks, n_workers;\n    if (scanf(\"%d %d\", &n_tasks, &n_workers) != 2) return 1;\n    if (n_tasks < 0 || n_tasks > 100000 || n_workers <= 0 || n_workers > 64) return 1;\n\n    TaskPool pool;\n    pool_init(&pool, n_tasks);\n\n    pthread_t threads[64];\n    for (int i = 0; i < n_workers; i++) {\n        pthread_create(&threads[i], NULL, worker, &pool);\n    }\n    for (int i = 0; i < n_workers; i++) {\n        pthread_join(threads[i], NULL);\n    }\n\n    printf(\"%ld\\n\", pool_total(&pool));\n    pool_destroy(&pool);\n    return 0;\n}\n\n\n/* NOT: Bu, birden fazla C dosyasindan (yukarida belirtilen dosya adlariyla) olusan cok-dosyali bir programdir. Lutfen TEK BIR Rust dosyasi (tek bir main.rs) olarak, ayni davranissal sozlesmeyi koruyacak sekilde cevirin. */\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 585,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1004,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1004
+          }
+        ],
+        "thoughts_token_count": 1684,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3273,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s115_bitvector_set",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T20:19:07.843125+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: ilk satirda islem sayisi n, ardindan n satir - \"S <bit>\" (set),\n   \"C <bit>\" (clear), \"T <bit>\" (test).\n   Cikti: T icin \"1\"/\"0\". Sonda kume icindeki toplam 1-bit sayisi (popcount).\n   NOT: bit indeksi/kelime indeksi aritmetigi (`bit / 64`, `bit % 64`)\n   Kok Neden G ile dolayli olarak ilgilidir - `1u << (bit % 64)` deseninde\n   kaydirma miktari dogru turde (unsigned) tutulmazsa davranis degisebilir. */\n\n#define NUM_WORDS 4\n#define BITS_PER_WORD 64\n\nint main(void) {\n    unsigned long long words[NUM_WORDS] = {0, 0, 0, 0};\n\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        char op[4];\n        int bit;\n        if (scanf(\"%3s %d\", op, &bit) != 2) return 0;\n        if (bit < 0 || bit >= NUM_WORDS * BITS_PER_WORD) continue;\n        int w = bit / BITS_PER_WORD;\n        int b = bit % BITS_PER_WORD;\n        if (op[0] == 'S') {\n            words[w] |= (1ULL << b);\n        } else if (op[0] == 'C') {\n            words[w] &= ~(1ULL << b);\n        } else {\n            printf(\"%d\\n\", (int)((words[w] >> b) & 1ULL));\n        }\n    }\n\n    int count = 0;\n    for (int w = 0; w < NUM_WORDS; w++) {\n        unsigned long long v = words[w];\n        while (v) {\n            count += (int)(v & 1ULL);\n            v >>= 1;\n        }\n    }\n    printf(\"count=%d\\n\", count);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 487,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 738,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 738
+          }
+        ],
+        "thoughts_token_count": 2539,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3764,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s116_tagged_union_variant",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T20:20:17.629198+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: ilk satirda sekil sayisi n, ardindan n satir - \"C <r>\" (daire,\n   yaricap r) veya \"R <w> <h>\" (dikdortgen, genislik/yukseklik) - r,w,h\n   TAM SAYI (alan hesaplari da tam sayi olarak yapilir, PI=3 kullanilir\n   basitlik icin).\n   Cikti: her sekil icin alani, sonda toplam alan.\n   NOT: C'nin etiketli union'i (tag + union {circle;rect;}) Rust'in enum'una\n   (her varyant kendi verisini tasir) DOGAL olarak esler - bu, \"kolay\"\n   bir cevirinin nasil goruneceginin bir kontrol ornegidir (bkz. s117-120\n   ile karsilastir). */\n\ntypedef enum { SHAPE_CIRCLE, SHAPE_RECT } ShapeTag;\n\ntypedef struct {\n    int radius;\n} Circle;\n\ntypedef struct {\n    int width;\n    int height;\n} Rect;\n\ntypedef struct {\n    ShapeTag tag;\n    union {\n        Circle circle;\n        Rect rect;\n    } data;\n} Shape;\n\nstatic long shape_area(const Shape *s) {\n    if (s->tag == SHAPE_CIRCLE) {\n        return 3L * s->data.circle.radius * s->data.circle.radius;\n    } else {\n        return (long)s->data.rect.width * s->data.rect.height;\n    }\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long total = 0;\n    for (int i = 0; i < n; i++) {\n        char kind[4];\n        if (scanf(\"%3s\", kind) != 1) return 0;\n        Shape s;\n        if (kind[0] == 'C') {\n            int r;\n            if (scanf(\"%d\", &r) != 1) return 0;\n            s.tag = SHAPE_CIRCLE;\n            s.data.circle.radius = r;\n        } else {\n            int w, h;\n            if (scanf(\"%d %d\", &w, &h) != 2) return 0;\n            s.tag = SHAPE_RECT;\n            s.data.rect.width = w;\n            s.data.rect.height = h;\n        }\n        long a = shape_area(&s);\n        printf(\"%ld\\n\", a);\n        total += a;\n    }\n\n    printf(\"total=%ld\\n\", total);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 491,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 859,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 859
+          }
+        ],
+        "thoughts_token_count": 1612,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 2962,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s117_goto_retry_loop",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T20:21:27.780668+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: iki tam sayi - deger v, basari esigi threshold. Ayrica bir satir\n   daha: n (deneme basina v'ye eklenecek artis miktari).\n   Cikti: v, threshold'a ULASANA KADAR n eklenerek kac deneme yapildigi\n   (v basitce >= threshold ise 0).\n   NOT: `goto retry;` ile yeniden-deneme dongusu klasik ama artik \"eski\n   moda\" sayilan bir C idiomudur (Linux cekirdegi ve bircok sistem\n   programinda hala yaygin). Rust'ta `goto` YOK - dogru ceviri `loop {}`\n   + `break`/`continue` gerektirir; yanlis cevrilirse ya SONSUZ DONGU ya\n   da erken/gec durma olabilir. */\n\nint main(void) {\n    long v, threshold, step;\n    if (scanf(\"%ld %ld\", &v, &threshold) != 2) return 0;\n    if (scanf(\"%ld\", &step) != 1) return 0;\n    if (step <= 0) return 0;\n\n    int attempts = 0;\n\nretry:\n    if (v >= threshold) {\n        goto done;\n    }\n    v += step;\n    attempts++;\n    if (attempts > 1000000) {\n        goto done;\n    }\n    goto retry;\n\ndone:\n    printf(\"attempts=%d final=%ld\\n\", attempts, v);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 305,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 579,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 579
+          }
+        ],
+        "thoughts_token_count": 2037,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 2921,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s118_variadic_sum",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T20:22:39.478003+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdarg.h>\n\n/* Girdi: ilk satirda n (arguman sayisi), ardindan n tam sayi.\n   Cikti: n tam sayinin toplami, degisken-argumanli (va_list) bir\n   fonksiyon uzerinden hesaplanir.\n   NOT: C'nin va_list/va_arg mekanizmasinin Rust'ta DOGRUDAN karsiligi\n   YOKTUR (Rust \"variadic\" fonksiyonlari yalniz extern \"C\" FFI icin\n   destekler, kullanici kodu icin degil). Doğal ceviri, argumanlari bir\n   dilime (slice) veya Vec'e toplayan sabit-imzali bir fonksiyona\n   donusturmektir - bu, C<->Rust arasinda \"dogrudan\" cevrilemeyen bir dil\n   ozelligi ornegidir. */\n\nstatic long sum_variadic(int count, ...) {\n    va_list args;\n    va_start(args, count);\n    long total = 0;\n    for (int i = 0; i < count; i++) {\n        total += va_arg(args, int);\n    }\n    va_end(args);\n    return total;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1 || n < 0 || n > 20) return 0;\n\n    int values[20];\n    for (int i = 0; i < n; i++) {\n        if (scanf(\"%d\", &values[i]) != 1) return 0;\n    }\n\n    long total;\n    switch (n) {\n        case 0: total = sum_variadic(0); break;\n        case 1: total = sum_variadic(1, values[0]); break;\n        case 2: total = sum_variadic(2, values[0], values[1]); break;\n        case 3: total = sum_variadic(3, values[0], values[1], values[2]); break;\n        default: {\n            /* n>3 icin basit dongulu toplam (variadic cagrisi sabit\n               olmali) - test girdileri asıl variadic yolunu (n<=3)\n               kullanir. */\n            total = 0;\n            for (int i = 0; i < n; i++) total += values[i];\n            break;\n        }\n    }\n\n    printf(\"%ld\\n\", total);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 376,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 810,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 810
+          }
+        ],
+        "thoughts_token_count": 2013,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3199,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s119_setjmp_error_handling",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T20:23:51.022425+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <setjmp.h>\n\n/* Girdi: ilk satirda n (islenecek deger sayisi), ardindan n tam sayi.\n   Cikti: her deger icin, sifira bolme \"hatasi\" simule edilirse (deger==0)\n   setjmp/longjmp ile checkpoint'e donulup \"ERROR\" yazdirilir; aksi halde\n   100/deger sonucu yazdirilir. Sonda islenen (hataya dusmeyen) deger\n   sayisi.\n   NOT: setjmp/longjmp, C'nin \"yapisal olmayan\" (non-local) kontrol akisi\n   mekanizmasidir - fonksiyonlar arasi ZIPLAMA yapar. Rust'ta DOGRUDAN\n   karsiligi YOKTUR; dogal ceviri Result<T, E> + `?` operatorudur. Bu,\n   \"hata isleme felsefesi\" farkinin (C: geriye-zipla, Rust: degeri\n   yaymali/propagate) somut bir test edilebilir ornegidir. */\n\nstatic jmp_buf checkpoint;\n\nstatic int safe_divide(int numerator, int denominator) {\n    if (denominator == 0) {\n        longjmp(checkpoint, 1);\n    }\n    return numerator / denominator;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1 || n < 0 || n > 1000) return 0;\n\n    int values[1000];\n    for (int i = 0; i < n; i++) {\n        if (scanf(\"%d\", &values[i]) != 1) return 0;\n    }\n\n    int processed = 0;\n    for (int i = 0; i < n; i++) {\n        if (setjmp(checkpoint) == 0) {\n            int result = safe_divide(100, values[i]);\n            printf(\"%d\\n\", result);\n            processed++;\n        } else {\n            printf(\"ERROR\\n\");\n        }\n    }\n\n    printf(\"processed=%d\\n\", processed);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 277,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 719,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 719
+          }
+        ],
+        "thoughts_token_count": 2197,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3193,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s120_function_pointer_dispatch",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T21:59:44.834437+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Girdi: ilk satirda islem sayisi n, ardindan n satir - \"<op> <a> <b>\"\n   (op: add/sub/mul/div, a,b tam sayi).\n   Cikti: her islem icin sonuc (div icin b==0 ise \"DIVZERO\").\n   NOT: Fonksiyon isaretcisi dizisi ({isim, fn} eslesmesiyle \"dagitim\n   tablosu\") klasik bir C deseni - Rust'ta `fn(i32,i32)->i32` isaretcileri\n   veya kapatmalar (closures) ile dogal olarak eslenir; ilginc soru LLM'in\n   HashMap<&str, fn(...)> mi yoksa daha az idiomatik bir if/else zinciri\n   mi sececegidir (ikisi de dogru olabilir, ama \"dagitim tablosu\" ruhu\n   kaybolabilir). */\n\ntypedef int (*BinOp)(int, int);\n\nstatic int op_add(int a, int b) { return a + b; }\nstatic int op_sub(int a, int b) { return a - b; }\nstatic int op_mul(int a, int b) { return a * b; }\n\ntypedef struct {\n    const char *name;\n    BinOp fn;\n} OpEntry;\n\nstatic OpEntry dispatch_table[] = {\n    { \"add\", op_add },\n    { \"sub\", op_sub },\n    { \"mul\", op_mul },\n};\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        char op[8];\n        int a, b;\n        if (scanf(\"%7s %d %d\", op, &a, &b) != 3) return 0;\n\n        if (strcmp(op, \"div\") == 0) {\n            if (b == 0) {\n                printf(\"DIVZERO\\n\");\n            } else {\n                printf(\"%d\\n\", a / b);\n            }\n            continue;\n        }\n\n        int found = 0;\n        for (size_t k = 0; k < sizeof(dispatch_table) / sizeof(dispatch_table[0]); k++) {\n            if (strcmp(op, dispatch_table[k].name) == 0) {\n                printf(\"%d\\n\", dispatch_table[k].fn(a, b));\n                found = 1;\n                break;\n            }\n        }\n        if (!found) {\n            printf(\"UNKNOWN\\n\");\n        }\n    }\n\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 585,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 851,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 851
+          }
+        ],
+        "thoughts_token_count": 2771,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4207,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s121_recursive_descent_calc2",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.971317771s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+  },
+  {
+    "sample_id": "s122_trie_insert_search",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T22:52:29.883699+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n/* Girdi: ilk satirda islem sayisi n, ardindan n satir - \"I <kelime>\"\n   (ekle) veya \"S <kelime>\" (ara). Kelimeler yalniz kucuk harf a-z.\n   Cikti: S icin \"YES\"/\"NO\".\n   Trie (onek agaci) - her dugum 26 cocuk isaretcisi + \"kelime sonu\"\n   bayragi tutar. Rust'a cevrilirken klasik malloc/free tabanli agac\n   yapisi Box/Option ile ifade edilmeli - s111 (bagli liste) ile ayni\n   \"sahiplik\" zorlugunun agac versiyonu. */\n\n#define ALPHABET 26\n\ntypedef struct TrieNode {\n    struct TrieNode *children[ALPHABET];\n    int is_end;\n} TrieNode;\n\nstatic TrieNode *trie_new_node(void) {\n    TrieNode *n = calloc(1, sizeof(TrieNode));\n    return n;\n}\n\nstatic void trie_insert(TrieNode *root, const char *word) {\n    TrieNode *cur = root;\n    for (const char *c = word; *c; c++) {\n        int idx = *c - 'a';\n        if (idx < 0 || idx >= ALPHABET) continue;\n        if (cur->children[idx] == NULL) {\n            cur->children[idx] = trie_new_node();\n        }\n        cur = cur->children[idx];\n    }\n    cur->is_end = 1;\n}\n\nstatic int trie_search(TrieNode *root, const char *word) {\n    TrieNode *cur = root;\n    for (const char *c = word; *c; c++) {\n        int idx = *c - 'a';\n        if (idx < 0 || idx >= ALPHABET) return 0;\n        if (cur->children[idx] == NULL) return 0;\n        cur = cur->children[idx];\n    }\n    return cur->is_end;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    TrieNode *root = trie_new_node();\n\n    for (int i = 0; i < n; i++) {\n        char op[4], word[64];\n        if (scanf(\"%3s %63s\", op, word) != 2) return 0;\n        if (op[0] == 'I') {\n            trie_insert(root, word);\n        } else {\n            printf(\"%s\\n\", trie_search(root, word) ? \"YES\" : \"NO\");\n        }\n    }\n\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 639,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 901,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 901
+          }
+        ],
+        "thoughts_token_count": 2538,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4078,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s123_avl_tree_insert",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T22:53:53.150077+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n\n/* Girdi: ilk satirda eklenecek deger sayisi n, ardindan n tam sayi\n   (birbirinden FARKLI degerler).\n   Cikti: tum degerler AVL agacina eklendikten sonra, INORDER (sirali)\n   dolasim.\n   NOT: s28_bst_traversal'dan DAHA ZOR - AVL, her ekleme sonrasi denge\n   faktorunu kontrol edip gerektiginde ROTASYON (LL/RR/LR/RL) yapar.\n   Bu, s28'in \"duz\" BST'sinden cok daha fazla isaretci-yeniden-baglama\n   icerir - Rust'ta Box<Node> agaclarinda rotasyon yazmak, odunc\n   denetleyicisiyle (borrow checker) ozellikle surtusmeli bir alandir\n   (bkz. s111, s122 ile ayni aile). */\n\ntypedef struct Node {\n    int value;\n    int height;\n    struct Node *left;\n    struct Node *right;\n} Node;\n\nstatic int node_height(Node *n) {\n    return n ? n->height : 0;\n}\n\nstatic int max_int(int a, int b) {\n    return a > b ? a : b;\n}\n\nstatic Node *new_node(int value) {\n    Node *n = malloc(sizeof(Node));\n    n->value = value;\n    n->height = 1;\n    n->left = NULL;\n    n->right = NULL;\n    return n;\n}\n\nstatic Node *rotate_right(Node *y) {\n    Node *x = y->left;\n    Node *t2 = x->right;\n    x->right = y;\n    y->left = t2;\n    y->height = max_int(node_height(y->left), node_height(y->right)) + 1;\n    x->height = max_int(node_height(x->left), node_height(x->right)) + 1;\n    return x;\n}\n\nstatic Node *rotate_left(Node *x) {\n    Node *y = x->right;\n    Node *t2 = y->left;\n    y->left = x;\n    x->right = t2;\n    x->height = max_int(node_height(x->left), node_height(x->right)) + 1;\n    y->height = max_int(node_height(y->left), node_height(y->right)) + 1;\n    return y;\n}\n\nstatic int balance_factor(Node *n) {\n    return n ? node_height(n->left) - node_height(n->right) : 0;\n}\n\nstatic Node *avl_insert(Node *node, int value) {\n    if (node == NULL) return new_node(value);\n\n    if (value < node->value) {\n        node->left = avl_insert(node->left, value);\n    } else if (value > node->value) {\n        node->right = avl_insert(node->right, value);\n    } else {\n        return node;\n    }\n\n    node->height = 1 + max_int(node_height(node->left), node_height(node->right));\n    int balance = balance_factor(node);\n\n    if (balance > 1 && value < node->left->value) {\n        return rotate_right(node);\n    }\n    if (balance < -1 && value > node->right->value) {\n        return rotate_left(node);\n    }\n    if (balance > 1 && value > node->left->value) {\n        node->left = rotate_left(node->left);\n        return rotate_right(node);\n    }\n    if (balance < -1 && value < node->right->value) {\n        node->right = rotate_right(node->right);\n        return rotate_left(node);\n    }\n\n    return node;\n}\n\nstatic void inorder(Node *node) {\n    if (node == NULL) return;\n    inorder(node->left);\n    printf(\"%d \", node->value);\n    inorder(node->right);\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    Node *root = NULL;\n    for (int i = 0; i < n; i++) {\n        int v;\n        if (scanf(\"%d\", &v) != 1) return 0;\n        root = avl_insert(root, v);\n    }\n\n    inorder(root);\n    printf(\"\\n\");\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 979,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1333,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1333
+          }
+        ],
+        "thoughts_token_count": 3607,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 5919,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s124_graph_bfs",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T22:55:08.242105+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: ilk satirda v (dugum sayisi) e (kenar sayisi), ardindan e satir\n   \"a b\" (yonsuz kenar a-b), sonra baslangic dugumu s.\n   Cikti: BFS ziyaret sirasi (dugum numaralari, bosluk ile ayrilmis).\n   Komsuluk listesi (adjacency list) sabit boyutlu dizilerle temsil edilir\n   (basitlik icin dugum basina en fazla MAX_DEG komsu). */\n\n#define MAX_V 100\n#define MAX_DEG 20\n\nstatic int adj[MAX_V][MAX_DEG];\nstatic int adj_count[MAX_V];\nstatic int visited[MAX_V];\nstatic int queue[MAX_V];\n\nstatic void add_edge(int a, int b) {\n    adj[a][adj_count[a]++] = b;\n    adj[b][adj_count[b]++] = a;\n}\n\nint main(void) {\n    int v, e;\n    if (scanf(\"%d %d\", &v, &e) != 2) return 0;\n\n    for (int i = 0; i < e; i++) {\n        int a, b;\n        if (scanf(\"%d %d\", &a, &b) != 2) return 0;\n        add_edge(a, b);\n    }\n\n    int start;\n    if (scanf(\"%d\", &start) != 1) return 0;\n\n    int qhead = 0, qtail = 0;\n    queue[qtail++] = start;\n    visited[start] = 1;\n\n    int first = 1;\n    while (qhead < qtail) {\n        int cur = queue[qhead++];\n        if (!first) printf(\" \");\n        printf(\"%d\", cur);\n        first = 0;\n        for (int i = 0; i < adj_count[cur]; i++) {\n            int next = adj[cur][i];\n            if (!visited[next]) {\n                visited[next] = 1;\n                queue[qtail++] = next;\n            }\n        }\n    }\n    printf(\"\\n\");\n    (void)v;\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 626,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 746,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 746
+          }
+        ],
+        "thoughts_token_count": 2008,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3380,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s125_graph_dfs_cycle",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T22:56:30.114311+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: ilk satirda v (dugum sayisi) e (kenar sayisi), ardindan e satir\n   \"a b\" (YONLU kenar a->b).\n   Cikti: yonlu grafta CEVRIM varsa \"CYCLE\", yoksa \"NOCYCLE\".\n   Klasik 3-renkli (beyaz/gri/siyah) DFS cevrim tespiti - \"gri\" (yigin\n   uzerinde, henuz bitmemis) bir dugume tekrar rastlamak cevrim demektir. */\n\n#define MAX_V 100\n#define MAX_DEG 20\n\nstatic int adj[MAX_V][MAX_DEG];\nstatic int adj_count[MAX_V];\nstatic int color[MAX_V]; /* 0=beyaz, 1=gri, 2=siyah */\nstatic int has_cycle = 0;\n\nstatic void dfs(int u) {\n    color[u] = 1;\n    for (int i = 0; i < adj_count[u]; i++) {\n        int v = adj[u][i];\n        if (color[v] == 1) {\n            has_cycle = 1;\n            return;\n        }\n        if (color[v] == 0) {\n            dfs(v);\n            if (has_cycle) return;\n        }\n    }\n    color[u] = 2;\n}\n\nint main(void) {\n    int v, e;\n    if (scanf(\"%d %d\", &v, &e) != 2) return 0;\n\n    for (int i = 0; i < e; i++) {\n        int a, b;\n        if (scanf(\"%d %d\", &a, &b) != 2) return 0;\n        adj[a][adj_count[a]++] = b;\n    }\n\n    for (int i = 0; i < v && !has_cycle; i++) {\n        if (color[i] == 0) {\n            dfs(i);\n        }\n    }\n\n    printf(\"%s\\n\", has_cycle ? \"CYCLE\" : \"NOCYCLE\");\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 539,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 733,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 733
+          }
+        ],
+        "thoughts_token_count": 2348,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3620,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s126_priority_queue_heap",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T22:58:20.531205+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: ilk satirda islem sayisi n, ardindan n satir - \"I <deger>\"\n   (ekle) veya \"X\" (en kucugu cikar).\n   Cikti: X icin cikarilan deger, yigin bosşa \"EMPTY\". Sonda yigindaki\n   eleman sayisi.\n   Min-heap (ikili yigin), dizi tabanli (index i'nin cocuklari 2i+1,\n   2i+2). */\n\n#define MAX_HEAP 1000\n\nstatic int heap[MAX_HEAP];\nstatic int heap_size = 0;\n\nstatic void swap(int *a, int *b) {\n    int t = *a; *a = *b; *b = t;\n}\n\nstatic void sift_up(int i) {\n    while (i > 0) {\n        int parent = (i - 1) / 2;\n        if (heap[parent] <= heap[i]) break;\n        swap(&heap[parent], &heap[i]);\n        i = parent;\n    }\n}\n\nstatic void sift_down(int i) {\n    for (;;) {\n        int left = 2 * i + 1;\n        int right = 2 * i + 2;\n        int smallest = i;\n        if (left < heap_size && heap[left] < heap[smallest]) smallest = left;\n        if (right < heap_size && heap[right] < heap[smallest]) smallest = right;\n        if (smallest == i) break;\n        swap(&heap[i], &heap[smallest]);\n        i = smallest;\n    }\n}\n\nstatic void heap_push(int value) {\n    heap[heap_size] = value;\n    heap_size++;\n    sift_up(heap_size - 1);\n}\n\nstatic int heap_pop(int *out) {\n    if (heap_size == 0) return 0;\n    *out = heap[0];\n    heap_size--;\n    heap[0] = heap[heap_size];\n    sift_down(0);\n    return 1;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        char op[4];\n        if (scanf(\"%3s\", op) != 1) return 0;\n        if (op[0] == 'I') {\n            int v;\n            if (scanf(\"%d\", &v) != 1) return 0;\n            heap_push(v);\n        } else {\n            int out;\n            if (heap_pop(&out)) {\n                printf(\"%d\\n\", out);\n            } else {\n                printf(\"EMPTY\\n\");\n            }\n        }\n    }\n\n    printf(\"size=%d\\n\", heap_size);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 325,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 915,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 915
+          }
+        ],
+        "thoughts_token_count": 2733,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3973,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s127_gauss_matrix_inverse",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T22:59:59.853496+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <math.h>\n\n/* Girdi: n (matris boyutu, n x n), ardindan n*n kayan nokta sayisi (satir\n   satir).\n   Cikti: matrisin tersi (n satir, her satirda n sayi, %.4f ile), veya\n   matris tekil ise (pivot ~0) \"SINGULAR\".\n   Gauss-Jordan eleme ile [A|I] -> [I|A^-1]. NOT: kismi pivotlama (partial\n   pivoting) YOK - basitlik icin dogrudan pivot satirina bolme yapiliyor;\n   bu, sayisal kararlilik acisindan \"naif\" ama KUCUK test matrisleri icin\n   yeterlidir ve deterministiktir. */\n\n#define MAX_N 10\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1 || n <= 0 || n > MAX_N) return 0;\n\n    double a[MAX_N][2 * MAX_N];\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            if (scanf(\"%lf\", &a[i][j]) != 1) return 0;\n        }\n        for (int j = 0; j < n; j++) {\n            a[i][n + j] = (i == j) ? 1.0 : 0.0;\n        }\n    }\n\n    for (int col = 0; col < n; col++) {\n        double pivot = a[col][col];\n        if (fabs(pivot) < 1e-9) {\n            printf(\"SINGULAR\\n\");\n            return 0;\n        }\n        for (int j = 0; j < 2 * n; j++) {\n            a[col][j] /= pivot;\n        }\n        for (int row = 0; row < n; row++) {\n            if (row == col) continue;\n            double factor = a[row][col];\n            for (int j = 0; j < 2 * n; j++) {\n                a[row][j] -= factor * a[col][j];\n            }\n        }\n    }\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            printf(\"%.4f \", a[i][n + j]);\n        }\n        printf(\"\\n\");\n    }\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 460,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 822,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 822
+          }
+        ],
+        "thoughts_token_count": 3370,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4652,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s128_custom_tokenizer",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T23:01:23.486004+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\n/* Girdi: tek satir, basit JSON-benzeri metin (yalniz {, }, [, ], :, ,,\n   tirnakli string \"...\", sayi, true/false/null iceriyor - cJSON DEGIL,\n   ozgun basit bir tokenizer).\n   Cikti: her token kendi satirinda, \"TUR:deger\" bicimiyle (TUR: BRACE,\n   BRACKET, COLON, COMMA, STRING, NUMBER, BOOL, NULL). */\n\nstatic const char *p;\n\nstatic void emit_string(void) {\n    p++; /* acilis tirnak */\n    char buf[256];\n    int len = 0;\n    while (*p && *p != '\"' && len < 255) {\n        buf[len++] = *p++;\n    }\n    buf[len] = 0;\n    if (*p == '\"') p++;\n    printf(\"STRING:%s\\n\", buf);\n}\n\nstatic void emit_number(void) {\n    char buf[64];\n    int len = 0;\n    while ((isdigit((unsigned char)*p) || *p == '-' || *p == '.') && len < 63) {\n        buf[len++] = *p++;\n    }\n    buf[len] = 0;\n    printf(\"NUMBER:%s\\n\", buf);\n}\n\nint main(void) {\n    char line[1024];\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    line[strcspn(line, \"\\r\\n\")] = 0;\n    p = line;\n\n    while (*p) {\n        if (*p == ' ' || *p == '\\t') {\n            p++;\n        } else if (*p == '{' || *p == '}') {\n            printf(\"BRACE:%c\\n\", *p);\n            p++;\n        } else if (*p == '[' || *p == ']') {\n            printf(\"BRACKET:%c\\n\", *p);\n            p++;\n        } else if (*p == ':') {\n            printf(\"COLON::\\n\");\n            p++;\n        } else if (*p == ',') {\n            printf(\"COMMA:,\\n\");\n            p++;\n        } else if (*p == '\"') {\n            emit_string();\n        } else if (isdigit((unsigned char)*p) || *p == '-') {\n            emit_number();\n        } else if (strncmp(p, \"true\", 4) == 0) {\n            printf(\"BOOL:true\\n\");\n            p += 4;\n        } else if (strncmp(p, \"false\", 5) == 0) {\n            printf(\"BOOL:false\\n\");\n            p += 5;\n        } else if (strncmp(p, \"null\", 4) == 0) {\n            printf(\"NULL:null\\n\");\n            p += 4;\n        } else {\n            p++;\n        }\n    }\n\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 798,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 937,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 937
+          }
+        ],
+        "thoughts_token_count": 4880,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 6615,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s129_command_dispatch_table",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.809264258s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+  },
+  {
+    "sample_id": "s130_qsort_callback_structs",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T23:03:02.611720+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n/* Girdi: ilk satirda n (kayit sayisi) ve mod (\"NAME\" veya \"SCORE\"),\n   ardindan n satir \"<isim> <puan>\".\n   Cikti: kayitlar mod'a gore SIRALANMIS halde, her biri kendi satirinda\n   \"<isim> <puan>\".\n   NOT: stdlib qsort() + struct karsilastirici (comparator) callback -\n   Rust'ta bu, `slice::sort_by` veya `sort_by_key` ile dogal olarak\n   eslesir, ama C'nin \"iki void* alan, calisma-zamaninda secilen\n   karsilastirici fonksiyonu\" deseni (mod'a gore FARKLI qsort cagirisi)\n   Rust'a fonksiyon degeri/kapatma (closure) olarak mi, yoksa if/else ile\n   iki ayri sort cagrisi olarak mi cevrilecegi ilginc bir tasarim\n   secimidir. */\n\ntypedef struct {\n    char name[32];\n    int score;\n} Record;\n\nstatic int cmp_by_name(const void *a, const void *b) {\n    const Record *ra = (const Record *)a;\n    const Record *rb = (const Record *)b;\n    return strcmp(ra->name, rb->name);\n}\n\nstatic int cmp_by_score(const void *a, const void *b) {\n    const Record *ra = (const Record *)a;\n    const Record *rb = (const Record *)b;\n    if (ra->score != rb->score) return ra->score - rb->score;\n    return strcmp(ra->name, rb->name);\n}\n\nint main(void) {\n    int n;\n    char mode[8];\n    if (scanf(\"%d %7s\", &n, mode) != 2) return 0;\n    if (n < 0 || n > 1000) return 0;\n\n    Record *records = malloc(sizeof(Record) * n);\n    for (int i = 0; i < n; i++) {\n        if (scanf(\"%31s %d\", records[i].name, &records[i].score) != 2) return 0;\n    }\n\n    if (strcmp(mode, \"NAME\") == 0) {\n        qsort(records, n, sizeof(Record), cmp_by_name);\n    } else {\n        qsort(records, n, sizeof(Record), cmp_by_score);\n    }\n\n    for (int i = 0; i < n; i++) {\n        printf(\"%s %d\\n\", records[i].name, records[i].score);\n    }\n\n    free(records);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 500,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 873,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 873
+          }
+        ],
+        "thoughts_token_count": 2162,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3535,
+        "traffic_type": null
+      }
+    }
+  },
+  {
     "sample_id": "s20_char_sum",
     "model_id": "gemini-flash-latest",
     "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 43.875711929s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '43s'}]}}"
@@ -1598,5 +2159,461 @@
         "traffic_type": null
       }
     }
+  },
+  {
+    "sample_id": "s76_array_shrink_countdown",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T11:33:55.049109+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: ilk satirda n, ardindan n tam sayi, sonra k.\n   Cikti: dizinin SON k elemani (soldan n-k index'inden itibaren).\n   NOT: Kok Neden G (usize tasmasi) icin 3. bagimsiz ornek (bkz. s40 'n-1',\n   s52 'i-1'). Buradaki desen n-k'dir (k degiskendir, sabit 1 degil). C'de\n   int ile n<k oldugunda \"n-k\" negatif olur ve baslangic indeksi kirpilarak\n   0'a cekilir - guvenli. Rust'ta n,k usize'a cevrilirse n-k, n<k iken\n   TASMA PANIGI verir (guvenli if kontrolu es gecilirse). */\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1 || n < 0 || n > 1000) return 0;\n    int arr[1000];\n    for (int i = 0; i < n; i++) {\n        if (scanf(\"%d\", &arr[i]) != 1) return 0;\n    }\n    int k;\n    if (scanf(\"%d\", &k) != 1) return 0;\n    int start = n - k;\n    if (start < 0) start = 0;\n    for (int i = start; i < n; i++) {\n        printf(\"%d \", arr[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 312,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 599,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 599
+          }
+        ],
+        "thoughts_token_count": 2352,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3263,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s77_ring_buffer_index",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T11:34:09.591760+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: ilk satirda cap (tampon kapasitesi) ve n (islem sayisi),\n   ardindan n satir: her biri \"1\" (ileri git) veya \"0\" (geri git).\n   Cikti: her adimdan sonra mevcut yazma indeksi.\n   NOT: Kok Neden G (usize tasmasi) icin 4. bagimsiz ornek. \"Bir onceki\n   indekse don\" islemi C'de \"(idx - 1 + cap) % cap\" ile GUVENLE yazilir\n   (idx=0 iken bile negatif olmaz). Rust'a cevrilirken usize ile ayni\n   ifade `+ cap` korunmazsa idx=0 iken (idx - 1) TASMA PANIGI verir. */\nint main(void) {\n    int cap, n;\n    if (scanf(\"%d %d\", &cap, &n) != 2 || cap <= 0) return 0;\n    int idx = 0;\n    for (int t = 0; t < n; t++) {\n        int op;\n        if (scanf(\"%d\", &op) != 1) return 0;\n        if (op == 1) {\n            idx = (idx + 1) % cap;\n        } else {\n            idx = (idx - 1 + cap) % cap;\n        }\n        printf(\"%d\\n\", idx);\n    }\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 292,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 555,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 555
+          }
+        ],
+        "thoughts_token_count": 1611,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 2458,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s78_sliding_window_min",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-07-31T11:35:43.911911+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: ilk satirda n, ardindan n tam sayi.\n   Cikti: \"yerel minimum\" olan indekslerin sayisi (arr[i] < arr[i-1] VE\n   arr[i] < arr[i+1], sinir elemanlari haric).\n   NOT: Kok Neden G (usize tasmasi) icin 5. bagimsiz ornek (s52'nin farkli\n   bir \"onceki eleman\" deseni: pencere toplami yerine yerel minimum\n   sayimi). C'de int i ile i-1, kontrolden once hesaplansa bile negatif\n   olabilir ve sorun olmaz. Rust'a usize ile cevrilirse i=0 iken i-1\n   hesaplanmasi (kontrolden ONCE) TASMA PANIGI verir. */\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1 || n < 2 || n > 1000) return 0;\n    int arr[1000];\n    for (int i = 0; i < n; i++) {\n        if (scanf(\"%d\", &arr[i]) != 1) return 0;\n    }\n    int count = 0;\n    for (int i = 0; i < n; i++) {\n        int prev_idx = i - 1;\n        int next_idx = i + 1;\n        if (prev_idx >= 0 && next_idx < n) {\n            if (arr[i] < arr[prev_idx] && arr[i] < arr[next_idx]) {\n                count++;\n            }\n        }\n    }\n    printf(\"%d\\n\", count);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 282,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 630,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 630
+          }
+        ],
+        "thoughts_token_count": 2072,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 2984,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s79_http_status_class",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T20:03:26.112136+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: HTTP durum kodu (tam sayi).\n   Cikti: kodun \"sinif ozellikleri\" bit toplami (dusmeli switch ile\n   kumulatif). 5xx->8, 4xx dahil ek +4, 3xx dahil ek +2, 2xx dahil ek +1;\n   1xx ve bilinmeyenler icin 0.\n   NOT: Kok Neden H (switch dusmesi) icin 3. bagimsiz ornek (bkz. s43,\n   s53). C'nin switch dusme (fallthrough) davranisi burada kumulatif bir\n   puan olusturur. Rust'in match'i varsayilan olarak dusmez; LLM bunu\n   acikca yeniden uretmezse sonuc yanlis olur. */\nint main(void) {\n    int code;\n    if (scanf(\"%d\", &code) != 1) return 0;\n    int tier = code / 100;\n    int score = 0;\n    switch (tier) {\n        case 5: score += 8; /* fallthrough */\n        case 4: score += 4; /* fallthrough */\n        case 3: score += 2; /* fallthrough */\n        case 2: score += 1;\n                break;\n        default: score = 0;\n    }\n    printf(\"%d\\n\", score);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 366,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 548,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 548
+          }
+        ],
+        "thoughts_token_count": 2094,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3008,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s80_state_machine_fallthrough",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-01T21:51:22.599744+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: hedef durum (0=IDLE,1=CONNECTING,2=HANDSHAKE,3=READY).\n   Cikti: o duruma ulasmak icin gerekli kumulatif adim sayisi (dusmeli\n   switch ile her asamadan gecerken +1).\n   NOT: Kok Neden H (switch dusmesi) icin 4. bagimsiz ornek. Durum\n   makinesi gecisleri, gercek protokol/baglanti kodlarinda yaygin bir\n   \"her asamadan sirayla gec\" desenidir - dusme kasitlidir. */\nint main(void) {\n    int target;\n    if (scanf(\"%d\", &target) != 1) return 0;\n    int steps = 0;\n    switch (target) {\n        case 3: steps++; /* READY */ /* fallthrough */\n        case 2: steps++; /* HANDSHAKE */ /* fallthrough */\n        case 1: steps++; /* CONNECTING */ /* fallthrough */\n        case 0: steps++; /* IDLE */\n                break;\n        default: steps = -1;\n    }\n    printf(\"%d\\n\", steps);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 144,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 493,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 493
+          }
+        ],
+        "thoughts_token_count": 1771,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 2408,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s81_grade_bucket_fallthrough",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T23:04:12.694450+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n/* Girdi: not (0-100 arasi tam sayi).\n   Cikti: notun kac \"basari rozeti\" kazandigi (dusmeli switch, esik\n   tabanli, kumulatif; ayrica coklu-etiketli case: 10 ve 9 ayni govdeyi\n   paylasir).\n   NOT: Kok Neden H (switch dusmesi) icin 5. bagimsiz ornek (s53'un\n   vergi yerine rozet sayan esi). */\nint main(void) {\n    int grade;\n    if (scanf(\"%d\", &grade) != 1) return 0;\n    int tier = grade / 10; /* 0..10 */\n    int badges = 0;\n    switch (tier) {\n        case 10:\n        case 9: badges++; /* fallthrough (A rozeti) */\n        case 8: badges++; /* fallthrough (B rozeti) */\n        case 7: badges++; /* fallthrough (C rozeti) */\n        case 6: badges++; /* D rozeti */\n                break;\n        default: badges = 0;\n    }\n    printf(\"%d\\n\", badges);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 171,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 510,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 510
+          }
+        ],
+        "thoughts_token_count": 1890,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 2571,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s82_macro_minmax_sideeffect",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.692388237s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+  },
+  {
+    "sample_id": "s83_macro_swap_no_temp",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T23:05:39.541021+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n#define SWAP(a, b, tmp) do { tmp = a; a = b; b = tmp; } while (0)\n\n/* Girdi: n (dizi boyutu) ve dizinin elemanlari.\n   Cikti: dizinin, YAN ETKILI bir indeks ifadesiyle (i++) SWAP makrosu\n   kullanilarak degistirildikten sonraki hali, ve i'nin son degeri.\n   NOT: Kok Neden I (makro coklu-degerlendirme) icin 3. bagimsiz ornek\n   (s56/s82'den farkli: makro PARAMETRESININ DEGERI degil ERISIM YOLU\n   yan etkilidir). SWAP govdesinde 'a' iki kez gecer (tmp=a ve a=b);\n   a=arr[i++] ise, i IKI KEZ artar ve ikinci erisim FARKLI bir diziye\n   yazar - klasik makro tuzagi. Fonksiyona cevrilen bir Rust karsiligi\n   argumani BIR KEZ degerlendirir (i BIR KEZ artar), bu yuzden sonuc\n   C'den FARKLI olur. */\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1 || n < 2 || n > 100) return 0;\n    int arr[100];\n    for (int k = 0; k < n; k++) {\n        if (scanf(\"%d\", &arr[k]) != 1) return 0;\n    }\n    int tmp;\n    int i = 0;\n    SWAP(arr[i++], arr[1], tmp);\n    for (int k = 0; k < n; k++) {\n        printf(\"%d \", arr[k]);\n    }\n    printf(\"\\n\");\n    printf(\"i=%d\\n\", i);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 303,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 674,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 674
+          }
+        ],
+        "thoughts_token_count": 2403,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3380,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s84_xmacro_enum_strings",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T23:07:19.549735+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Girdi: bir renk adi (string).\n   Cikti: rengin X-Macro'dan uretilen enum indeksi (bulunamazsa -1).\n   NOT: Kok Neden I (makro coklu-degerlendirme / X-Macro) icin 4. bagimsiz\n   ornek (s56'dan farkli alan: komut listesi yerine renk listesi - ayni\n   \"tek dogru kaynak\" X-Macro deseni). COLOR_LIST tek bir yerde tanimlanir;\n   hem enum'u hem isim dizisini ayni listeden turetir. LLM'in Rust'a\n   cevirirken bu tek-kaynak ilkesini koruyup korumadigi (bir enum + turetilmis\n   bir dizi/match) ilginc bir sorudur. */\n#define COLOR_LIST \\\n    X(RED, \"red\") \\\n    X(GREEN, \"green\") \\\n    X(BLUE, \"blue\") \\\n    X(YELLOW, \"yellow\") \\\n    X(BLACK, \"black\")\n\ntypedef enum {\n#define X(name, str) COLOR_##name,\n    COLOR_LIST\n#undef X\n    COLOR_COUNT\n} Color;\n\nstatic const char *color_names[COLOR_COUNT] = {\n#define X(name, str) str,\n    COLOR_LIST\n#undef X\n};\n\nint main(void) {\n    char buf[32];\n    if (scanf(\"%31s\", buf) != 1) return 0;\n    int idx = -1;\n    for (int i = 0; i < COLOR_COUNT; i++) {\n        if (strcmp(color_names[i], buf) == 0) {\n            idx = i;\n            break;\n        }\n    }\n    printf(\"%d\\n\", idx);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 349,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 658,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 658
+          }
+        ],
+        "thoughts_token_count": 2373,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3380,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s85_sqlite_stricmp",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T23:09:29.830667+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Kaynak: SQLite src/util.c, sqlite3_stricmp() / sqlite3StrICmp() (birebir).\n   https://raw.githubusercontent.com/sqlite/sqlite/master/src/util.c\n   Lisans: Public Domain (SQLite'in kendi lisans beyani, \"The author disclaims\n   copyright to this source code\").\n   DEGISIKLIK: sqlite3UpperToLower tablosunun ic kodlamasi SQLite'ta bit-\n   sikistirilmis bir CtypeMap uzerinden turetilir; burada ayni ASCII\n   davranisini (A-Z -> a-z, digerleri degismez) veren standart esdeger\n   256-baytlik tablo kullanildi. sqlite3StrICmp govdesi DEGISTIRILMEDEN\n   alindi.\n   Girdi: iki satir metin (zLeft, zRight).\n   Cikti: sqlite3StrICmp'nin dondurdugu HAM int fark degeri (normallestirilmis\n   -1/0/1 DEGIL - tam sayisal fark, C referansiyla birebir karsilastirma\n   icin). */\n\nstatic unsigned char UpperToLower[256];\n\nstatic void initUpperToLower(void) {\n    for (int i = 0; i < 256; i++) {\n        if (i >= 'A' && i <= 'Z') UpperToLower[i] = (unsigned char)(i + 32);\n        else UpperToLower[i] = (unsigned char)i;\n    }\n}\n\nint sqlite3StrICmp(const char *zLeft, const char *zRight){\n  unsigned char *a, *b;\n  int c, x;\n  a = (unsigned char *)zLeft;\n  b = (unsigned char *)zRight;\n  for(;;){\n    c = *a;\n    x = *b;\n    if( c==x ){\n      if( c==0 ) break;\n    }else{\n      c = (int)UpperToLower[c] - (int)UpperToLower[x];\n      if( c ) break;\n    }\n    a++;\n    b++;\n  }\n  return c;\n}\n\nint sqlite3_stricmp(const char *zLeft, const char *zRight){\n  if( zLeft==0 ){\n    return zRight ? -1 : 0;\n  }else if( zRight==0 ){\n    return 1;\n  }\n  return sqlite3StrICmp(zLeft, zRight);\n}\n\nint main(void) {\n    initUpperToLower();\n    char left[256], right[256];\n    if (!fgets(left, sizeof(left), stdin)) return 0;\n    if (!fgets(right, sizeof(right), stdin)) return 0;\n    left[strcspn(left, \"\\r\\n\")] = 0;\n    right[strcspn(right, \"\\r\\n\")] = 0;\n    printf(\"%d\\n\", sqlite3_stricmp(left, right));\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 944,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 942,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 942
+          }
+        ],
+        "thoughts_token_count": 7827,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 9713,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s86_sqlite_strglob",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T23:11:43.936816+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Kaynak: SQLite src/func.c, patternCompare() (GLOB eslestirme motoru,\n   sqlite3_strglob'un cekirdegi) - birebir alindi.\n   https://raw.githubusercontent.com/sqlite/sqlite/master/src/func.c\n   + src/utf.c, sqlite3Utf8Read() (birebir).\n   Lisans: Public Domain.\n   DEGISIKLIK: Yalnizca ana dosya bagimliliklari (Utf8Read makrosu, u8/u32\n   tipleri, SQLITE_MATCH sabitleri) yerel olarak yeniden tanimlandi;\n   patternCompare govdesi DEGISTIRILMEDEN alindi.\n   Girdi: iki satir - once GLOB deseni, sonra karsilastirilacak metin.\n   Cikti: \"MATCH\" veya \"NOMATCH\". */\n\ntypedef unsigned char u8;\ntypedef unsigned int u32;\n\n#define SQLITE_MATCH             0\n#define SQLITE_NOMATCH           1\n#define SQLITE_NOWILDCARDMATCH   2\n\nstruct compareInfo {\n  u8 matchAll;\n  u8 matchOne;\n  u8 matchSet;\n  u8 noCase;\n};\n\nstatic const struct compareInfo globInfo = { '*', '?', '[', 0 };\n\nstatic const unsigned char sqlite3Utf8Trans1[] = {\n  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,\n  0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,\n  0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,\n  0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,\n  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,\n  0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,\n  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,\n  0x00, 0x01, 0x02, 0x03, 0x00, 0x01, 0x00, 0x00,\n};\n\nstatic u32 sqlite3Utf8Read(const unsigned char **pz){\n  unsigned int c;\n  c = *((*pz)++);\n  if( c>=0xc0 ){\n    c = sqlite3Utf8Trans1[c-0xc0];\n    while( (*(*pz) & 0xc0)==0x80 ){\n      c = (c<<6) + (0x3f & *((*pz)++));\n    }\n    if( c<0x80\n        || (c&0xFFFFF800)==0xD800\n        || (c&0xFFFFFFFE)==0xFFFE ){  c = 0xFFFD; }\n  }\n  return c;\n}\n\n#define Utf8Read(A) sqlite3Utf8Read(&(A))\n#define sqlite3Toupper(x) (((x)>='a'&&(x)<='z')?(x)-32:(x))\n#define sqlite3Tolower(x) (((x)>='A'&&(x)<='Z')?(x)+32:(x))\n#define SQLITE_SKIP_UTF8(z) { if( (*(z++))>=0xc0 ){ while( (*z & 0xc0)==0x80 ){ z++; } } }\n\nstatic int patternCompare(\n  const u8 *zPattern,\n  const u8 *zString,\n  const struct compareInfo *pInfo,\n  u32 matchOther\n){\n  u32 c, c2;\n  u32 matchOne = pInfo->matchOne;\n  u32 matchAll = pInfo->matchAll;\n  u8 noCase = pInfo->noCase;\n  const u8 *zEscaped = 0;\n\n  while( (c = Utf8Read(zPattern))!=0 ){\n    if( c==matchAll ){\n      while( (c=Utf8Read(zPattern)) == matchAll\n             || (c == matchOne && matchOne!=0) ){\n        if( c==matchOne && sqlite3Utf8Read(&zString)==0 ){\n          return SQLITE_NOWILDCARDMATCH;\n        }\n      }\n      if( c==0 ){\n        return SQLITE_MATCH;\n      }else if( c==matchOther ){\n        if( pInfo->matchSet==0 ){\n          c = sqlite3Utf8Read(&zPattern);\n          if( c==0 ) return SQLITE_NOWILDCARDMATCH;\n        }else{\n          while( *zString ){\n            int bMatch = patternCompare(&zPattern[-1],zString,pInfo,matchOther);\n            if( bMatch!=SQLITE_NOMATCH ) return bMatch;\n            SQLITE_SKIP_UTF8(zString);\n          }\n          return SQLITE_NOWILDCARDMATCH;\n        }\n      }\n\n      if( c<0x80 ){\n        char zStop[3];\n        int bMatch;\n        if( noCase ){\n          zStop[0] = (char)sqlite3Toupper(c);\n          zStop[1] = (char)sqlite3Tolower(c);\n          zStop[2] = 0;\n        }else{\n          zStop[0] = (char)c;\n          zStop[1] = 0;\n        }\n        while(1){\n          zString += strcspn((const char*)zString, zStop);\n          if( zString[0]==0 ) break;\n          zString++;\n          bMatch = patternCompare(zPattern,zString,pInfo,matchOther);\n          if( bMatch!=SQLITE_NOMATCH ) return bMatch;\n        }\n      }else{\n        int bMatch;\n        while( (c2 = Utf8Read(zString))!=0 ){\n          if( c2!=c ) continue;\n          bMatch = patternCompare(zPattern,zString,pInfo,matchOther);\n          if( bMatch!=SQLITE_NOMATCH ) return bMatch;\n        }\n      }\n      return SQLITE_NOWILDCARDMATCH;\n    }\n    if( c==matchOther ){\n      if( pInfo->matchSet==0 ){\n        c = sqlite3Utf8Read(&zPattern);\n        if( c==0 ) return SQLITE_NOMATCH;\n        zEscaped = zPattern;\n      }else{\n        u32 prior_c = 0;\n        int seen = 0;\n        int invert = 0;\n        c = sqlite3Utf8Read(&zString);\n        if( c==0 ) return SQLITE_NOMATCH;\n        c2 = sqlite3Utf8Read(&zPattern);\n        if( c2=='^' ){\n          invert = 1;\n          c2 = sqlite3Utf8Read(&zPattern);\n        }\n        if( c2==']' ){\n          if( c==']' ) seen = 1;\n          c2 = sqlite3Utf8Read(&zPattern);\n        }\n        while( c2 && c2!=']' ){\n          if( c2=='-' && zPattern[0]!=']' && zPattern[0]!=0 && prior_c>0 ){\n            c2 = sqlite3Utf8Read(&zPattern);\n            if( c>=prior_c && c<=c2 ) seen = 1;\n            prior_c = 0;\n          }else{\n            if( c==c2 ){\n              seen = 1;\n            }\n            prior_c = c2;\n          }\n          c2 = sqlite3Utf8Read(&zPattern);\n        }\n        if( c2==0 || (seen ^ invert)==0 ){\n          return SQLITE_NOMATCH;\n        }\n        continue;\n      }\n    }\n    c2 = Utf8Read(zString);\n    if( c==c2 ) continue;\n    if( noCase  && sqlite3Tolower(c)==sqlite3Tolower(c2) && c<0x80 && c2<0x80 ){\n      continue;\n    }\n    if( c==matchOne && zPattern!=zEscaped && c2!=0 ) continue;\n    return SQLITE_NOMATCH;\n  }\n  return *zString==0 ? SQLITE_MATCH : SQLITE_NOMATCH;\n}\n\nint main(void) {\n    char pattern[256], text[256];\n    if (!fgets(pattern, sizeof(pattern), stdin)) return 0;\n    if (!fgets(text, sizeof(text), stdin)) return 0;\n    pattern[strcspn(pattern, \"\\r\\n\")] = 0;\n    text[strcspn(text, \"\\r\\n\")] = 0;\n    int r = patternCompare((const u8*)pattern, (const u8*)text, &globInfo, '[');\n    printf(\"%s\\n\", r == SQLITE_MATCH ? \"MATCH\" : \"NOMATCH\");\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 2880,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 2545,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 2545
+          }
+        ],
+        "thoughts_token_count": 16037,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 21462,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s87_sqlite_utf8_read",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T23:13:40.572276+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Kaynak: SQLite src/utf.c, sqlite3Utf8Read() ve sqlite3Utf8Trans1[] tablosu\n   (birebir).\n   https://raw.githubusercontent.com/sqlite/sqlite/master/src/utf.c\n   Lisans: Public Domain.\n   Girdi: bir satir UTF-8 metin.\n   Cikti: metindeki her Unicode kod noktasi, ondalik olarak, bosluk ile\n   ayrilmis. */\n\nstatic const unsigned char sqlite3Utf8Trans1[] = {\n  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,\n  0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,\n  0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,\n  0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,\n  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,\n  0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,\n  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,\n  0x00, 0x01, 0x02, 0x03, 0x00, 0x01, 0x00, 0x00,\n};\n\nunsigned int sqlite3Utf8Read(\n  const unsigned char **pz\n){\n  unsigned int c;\n  c = *((*pz)++);\n  if( c>=0xc0 ){\n    c = sqlite3Utf8Trans1[c-0xc0];\n    while( (*(*pz) & 0xc0)==0x80 ){\n      c = (c<<6) + (0x3f & *((*pz)++));\n    }\n    if( c<0x80\n        || (c&0xFFFFF800)==0xD800\n        || (c&0xFFFFFFFE)==0xFFFE ){  c = 0xFFFD; }\n  }\n  return c;\n}\n\nint main(void) {\n    char line[512];\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    line[strcspn(line, \"\\r\\n\")] = 0;\n    const unsigned char *z = (const unsigned char *)line;\n    int first = 1;\n    while (*z) {\n        unsigned int c = sqlite3Utf8Read(&z);\n        if (!first) printf(\" \");\n        printf(\"%u\", c);\n        first = 0;\n    }\n    printf(\"\\n\");\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 966,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1050,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1050
+          }
+        ],
+        "thoughts_token_count": 12050,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 14066,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s88_zlib_adler32_real",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T23:15:16.567638+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Kaynak: zlib adler32.c, adler32_z()/adler32() - cekirdek algoritma.\n   https://raw.githubusercontent.com/madler/zlib/develop/adler32.c\n   Telif: Copyright (C) 1995-2011, 2016 Mark Adler. Lisans: zlib License.\n   DEGISIKLIK: SIMD/derleyiciye-ozgu DO1/DO16 acilim makrolari ve\n   NO_DIVIDE optimizasyon yolu CIKARILDI (yalniz performans icin, sonucu\n   etkilemez); BASE=65521 ve NMAX=5552 sabitleri ile \"NMAX bloklarinda\n   iki toplam biriktir, sonra mod al\" cekirdek algoritmasi BIREBIR\n   korundu (bu, s58_adler32_checksum'daki basitlestirilmis ozgun anlatimdan\n   FARKLI OLARAK, zlib'in gercek bloklama stratejisini yansitir - Kok Neden\n   A icin ayrica ilginctir cunku \"sum2\" degeri de u32 sinirlarinda tasabilir).\n   Girdi: bir satir metin (bayt dizisi olarak islenir).\n   Cikti: adler32 sonucu, ondalik (unsigned long). */\n\n#define BASE 65521U\n#define NMAX 5552\n\nstatic unsigned long adler32_z(unsigned long adler, const unsigned char *buf, size_t len) {\n    unsigned long sum2;\n    unsigned n;\n\n    sum2 = (adler >> 16) & 0xffff;\n    adler &= 0xffff;\n\n    if (len == 1) {\n        adler += buf[0];\n        if (adler >= BASE) adler -= BASE;\n        sum2 += adler;\n        if (sum2 >= BASE) sum2 -= BASE;\n        return adler | (sum2 << 16);\n    }\n\n    if (buf == NULL) return 1L;\n\n    if (len < 16) {\n        while (len--) {\n            adler += *buf++;\n            sum2 += adler;\n        }\n        if (adler >= BASE) adler -= BASE;\n        sum2 %= BASE;\n        return adler | (sum2 << 16);\n    }\n\n    while (len >= NMAX) {\n        len -= NMAX;\n        n = NMAX / 16;\n        do {\n            for (int k = 0; k < 16; k++) {\n                adler += *buf++;\n                sum2 += adler;\n            }\n        } while (--n);\n        adler %= BASE;\n        sum2 %= BASE;\n    }\n\n    if (len) {\n        while (len >= 16) {\n            len -= 16;\n            for (int k = 0; k < 16; k++) {\n                adler += *buf++;\n                sum2 += adler;\n            }\n        }\n        while (len--) {\n            adler += *buf++;\n            sum2 += adler;\n        }\n        adler %= BASE;\n        sum2 %= BASE;\n    }\n\n    return adler | (sum2 << 16);\n}\n\nint main(void) {\n    char line[4096];\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    line[strcspn(line, \"\\r\\n\")] = 0;\n    unsigned long result = adler32_z(1L, (const unsigned char *)line, strlen(line));\n    printf(\"%lu\\n\", result);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 810,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1116,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1116
+          }
+        ],
+        "thoughts_token_count": 7320,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 9246,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s89_zlib_crc32_table",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T23:16:58.040585+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Kaynak: zlib crc32.c - tablo uretim dongusu ve bayt-bazli guncelleme\n   dongusu (birebir).\n   https://raw.githubusercontent.com/madler/zlib/master/crc32.c\n   Telif: Copyright (C) 1995-2006, 2010, 2011, 2012, 2016 Mark Adler.\n   Lisans: zlib License.\n   DEGISIKLIK: Gercek zlib dosyasindaki 8-bayt-birden (braid) hizlandirma\n   ve derleme-zamani tablo secenekleri CIKARILDI; klasik POLY=0xedb88320\n   tablo uretimi ve tek-bayt guncelleme cekirdegi BIREBIR korundu.\n   Girdi: bir satir metin (bayt dizisi olarak islenir).\n   Cikti: crc32 sonucu, ondalik (unsigned long). */\n\n#define POLY 0xedb88320UL\n\nstatic unsigned long crc_table[256];\nstatic int table_ready = 0;\n\nstatic void make_crc_table(void) {\n    unsigned long c;\n    int n, k;\n    for (n = 0; n < 256; n++) {\n        c = (unsigned long)n;\n        for (k = 0; k < 8; k++) {\n            c = c & 1 ? (POLY ^ (c >> 1)) : (c >> 1);\n        }\n        crc_table[n] = c;\n    }\n    table_ready = 1;\n}\n\nstatic unsigned long crc32_impl(unsigned long crc, const unsigned char *buf, size_t len) {\n    if (!table_ready) make_crc_table();\n    crc = crc ^ 0xffffffffUL;\n    while (len >= 8) {\n        len -= 8;\n        crc = (crc >> 8) ^ crc_table[(crc ^ *buf++) & 0xff];\n        crc = (crc >> 8) ^ crc_table[(crc ^ *buf++) & 0xff];\n        crc = (crc >> 8) ^ crc_table[(crc ^ *buf++) & 0xff];\n        crc = (crc >> 8) ^ crc_table[(crc ^ *buf++) & 0xff];\n        crc = (crc >> 8) ^ crc_table[(crc ^ *buf++) & 0xff];\n        crc = (crc >> 8) ^ crc_table[(crc ^ *buf++) & 0xff];\n        crc = (crc >> 8) ^ crc_table[(crc ^ *buf++) & 0xff];\n        crc = (crc >> 8) ^ crc_table[(crc ^ *buf++) & 0xff];\n    }\n    while (len) {\n        len--;\n        crc = (crc >> 8) ^ crc_table[(crc ^ *buf++) & 0xff];\n    }\n    return crc ^ 0xffffffffUL;\n}\n\nint main(void) {\n    char line[4096];\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    line[strcspn(line, \"\\r\\n\")] = 0;\n    unsigned long result = crc32_impl(0L, (const unsigned char *)line, strlen(line));\n    printf(\"%lu\\n\", result);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 770,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1054,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1054
+          }
+        ],
+        "thoughts_token_count": 8633,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 10457,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s90_curl_urldecode",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.528078375s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+  },
+  {
+    "sample_id": "s91_redis_ll2string",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.430777507s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+  },
+  {
+    "sample_id": "s92_openssl_base64_encode",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.236504135s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+  },
+  {
+    "sample_id": "s93_libsodium_bin2hex",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.124614992s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+  },
+  {
+    "sample_id": "s94_freebsd_reallocarray",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.963013033s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}"
+  },
+  {
+    "sample_id": "s95_redis_stringmatchlen",
+    "model_id": "gemini-flash-latest",
+    "timestamp_utc": "2026-08-02T23:18:54.331557+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n#include <ctype.h>\n\n/* Kaynak: Redis src/util.c, stringmatchlen_impl()/stringmatchlen() (KEYS\n   komutunun glob eslestiricisi) - birebir.\n   https://raw.githubusercontent.com/redis/redis/unstable/src/util.c\n   Lisans: BSD-3-Clause.\n   Girdi: iki satir - once desen, sonra metin (buyuk/kucuk harf DUYARLI,\n   nocase=0).\n   Cikti: \"MATCH\" veya \"NOMATCH\". */\n\nstatic int stringmatchlen_impl(const char *pattern, int patternLen,\n        const char *string, int stringLen, int nocase, int *skipLongerMatches, int nesting)\n{\n    if (nesting > 1000) return 0;\n\n    while(patternLen && stringLen) {\n        switch(pattern[0]) {\n        case '*':\n            while (patternLen && pattern[1] == '*') {\n                pattern++;\n                patternLen--;\n            }\n            if (patternLen == 1)\n                return 1;\n            while(stringLen) {\n                if (stringmatchlen_impl(pattern+1, patternLen-1,\n                            string, stringLen, nocase, skipLongerMatches, nesting+1))\n                    return 1;\n                if (*skipLongerMatches)\n                    return 0;\n                string++;\n                stringLen--;\n            }\n            *skipLongerMatches = 1;\n            return 0;\n            break;\n        case '?':\n            string++;\n            stringLen--;\n            break;\n        case '[':\n        {\n            int not, match;\n            pattern++;\n            patternLen--;\n            not = patternLen && pattern[0] == '^';\n            if (not) {\n                pattern++;\n                patternLen--;\n            }\n            match = 0;\n            while(1) {\n                if (patternLen >= 2 && pattern[0] == '\\\\') {\n                    pattern++;\n                    patternLen--;\n                    if (pattern[0] == string[0])\n                        match = 1;\n                } else if (patternLen == 0) {\n                    pattern--;\n                    patternLen++;\n                    break;\n                } else if (pattern[0] == ']') {\n                    break;\n                } else if (patternLen >= 3 && pattern[1] == '-') {\n                    int start = pattern[0];\n                    int end = pattern[2];\n                    int c = string[0];\n                    if (start > end) {\n                        int t = start;\n                        start = end;\n                        end = t;\n                    }\n                    if (nocase) {\n                        start = tolower(start);\n                        end = tolower(end);\n                        c = tolower(c);\n                    }\n                    pattern += 2;\n                    patternLen -= 2;\n                    if (c >= start && c <= end)\n                        match = 1;\n                } else {\n                    if (!nocase) {\n                        if (pattern[0] == string[0])\n                            match = 1;\n                    } else {\n                        if (tolower((int)pattern[0]) == tolower((int)string[0]))\n                            match = 1;\n                    }\n                }\n                pattern++;\n                patternLen--;\n            }\n            if (not)\n                match = !match;\n            if (!match)\n                return 0;\n            string++;\n            stringLen--;\n            break;\n        }\n        case '\\\\':\n            if (patternLen >= 2) {\n                pattern++;\n                patternLen--;\n            }\n            /* fall through */\n        default:\n            if (!nocase) {\n                if (pattern[0] != string[0])\n                    return 0;\n            } else {\n                if (tolower((int)pattern[0]) != tolower((int)string[0]))\n                    return 0;\n            }\n            string++;\n            stringLen--;\n            break;\n        }\n        pattern++;\n        patternLen--;\n        if (stringLen == 0) {\n            while(patternLen && *pattern == '*') {\n                pattern++;\n                patternLen--;\n            }\n            break;\n        }\n    }\n    if (patternLen == 0 && stringLen == 0)\n        return 1;\n    return 0;\n}\n\nint stringmatchlen(const char *pattern, int patternLen,\n        const char *string, int stringLen, int nocase) {\n    int skipLongerMatches = 0;\n    return stringmatchlen_impl(pattern,patternLen,string,stringLen,nocase,&skipLongerMatches,0);\n}\n\nint main(void) {\n    char pattern[256], text[256];\n    if (!fgets(pattern, sizeof(pattern), stdin)) return 0;\n    if (!fgets(text, sizeof(text), stdin)) return 0;\n    pattern[strcspn(pattern, \"\\r\\n\")] = 0;\n    text[strcspn(text, \"\\r\\n\")] = 0;\n    int r = stringmatchlen(pattern, (int)strlen(pattern), text, (int)strlen(text), 0);\n    printf(\"%s\\n\", r ? \"MATCH\" : \"NOMATCH\");\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 1437,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1471,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1471
+          }
+        ],
+        "thoughts_token_count": 10396,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 13304,
+        "traffic_type": null
+      }
+    }
+  },
+  {
+    "sample_id": "s96_cjson_print_string",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.848613646s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}"
+  },
+  {
+    "sample_id": "s97_cjson_hex4_unicode",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.678242971s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}"
+  },
+  {
+    "sample_id": "s98_musl_memmem",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.564149973s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}"
+  },
+  {
+    "sample_id": "s99_musl_strsep",
+    "model_id": "gemini-flash-latest",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.391890885s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}"
   }
 ]

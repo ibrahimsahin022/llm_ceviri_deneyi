@@ -53,29 +53,74 @@
 <body>
 <h1 id="detayl-sorun-analizi-crust-cevirisinde-yasanan-tum-hatalar">Detaylı Sorun Analizi: C→Rust Çevirisinde Yaşanan Tüm Hatalar</h1>
 <p>Bu belge, makaleden <strong>bağımsız</strong>, yalnızca deneyde karşılaşılan sorunları
-derinlemesine incelemek için hazırlanmıştır. <strong>57 örneğin tamamı</strong> ele
-alınmıştır: Round 1'de başarısız olan 17 örneğin her biri (ne yapılmaya
-çalışıldı → ne oldu → neden oldu → nasıl çözüldü) ve ilk seferde geçen 40
-örneğin her biri (ne test ediliyordu → neden sorunsuz geçti → dikkat çekici
-yönü varsa), sonrasında yapılan tüm ek deneyler (release/debug, çoklu
-platform, çoklu model, kısıtlı geri bildirim, bellek güvenliği) ve bunlardan
-çıkan genel örüntüler ele alınmaktadır. Tüm sayılar gerçek harness
+derinlemesine incelemek için hazırlanmıştır. <strong>130 örneğin tamamı</strong> ele
+alınmıştır: Round 1'de başarısız olan 38 örneğin her biri (ne yapılmaya
+çalışıldı → ne oldu → neden oldu → nasıl çözüldü) ve ilk seferde geçen 92
+örneğin grup bazında analizi (ne test ediliyordu → neden sorunsuz geçti →
+dikkat çekici yönü varsa), sonrasında yapılan tüm ek deneyler (release/debug,
+çoklu platform, çoklu model, kısıtlı geri bildirim, bellek güvenliği) ve
+bunlardan çıkan genel örüntüler ele alınmaktadır. Tüm sayılar gerçek harness
 çalıştırmalarından (<code>results/*.json</code>) alınmıştır; hiçbir rakam uydurulmamıştır.</p>
 <hr />
 <h2 id="1-genel-cerceve">1. Genel Çerçeve</h2>
-<p><strong>Veri seti:</strong> 57 C programı, 229 test girdisi, 10-522 satır arası. Programlar
-dokuz kaynak/rol kategorisine ayrılır (bkz. <code>VERISETI_VE_ALGORITMALAR.md</code>).
+<p><strong>Veri seti:</strong> 130 C programı, 521 test girdisi, 10-522 satır arası (toplam
+7.618 satır C kodu). Programların örnek bazında tam kataloğu
+(algoritma/LoC/test/rol) için bkz. <code>VERISETI_VE_ALGORITMALAR.md</code>.
 <strong>Çeviri:</strong> Claude Sonnet 5, zero-shot (tek geçiş, hiçbir insan düzeltmesi
 veya derleme/test geri bildirimi olmadan).
 <strong>Değerlendirme:</strong> Diferansiyel test — C referansı ile Rust çevirisi aynı
 girdilerde çalıştırılır, çıktılar karşılaştırılır.</p>
-<p><strong>Round 1 (ham çeviri, debug modu) sonucu:</strong> 40/57 = %70.18 EA (Execution
-Accuracy). 17 örnek başarısız: 1 CE (derleme hatası), 4 RE (çalışma zamanı
-hatası/panik), 12 FE (fonksiyonel hata — derlenip çalışıyor ama çıktı yanlış).</p>
-<p>Bu 17 başarısızlığın <strong>her biri</strong> §2'de, geri kalan 40 PASS örneğin <strong>her biri</strong> §3'te tek tek ele alınmıştır.</p>
+<p><strong>Round 1 (ham çeviri, debug modu) sonucu:</strong> 92/130 = %70.77 EA (Execution
+Accuracy). 38 örnek başarısız: 1 CE (derleme hatası), 9 RE (çalışma zamanı
+hatası/panik), 28 FE (fonksiyonel hata — derlenip çalışıyor ama çıktı yanlış).
+Test-girdisi bazında: çalıştırılabilen 518 girdinin 435'i geçti (%83.98);
+başarısız 83 girdinin 23'ü RE, 60'ı FE kaynaklıdır.</p>
+<p><strong>Veri setinin üç katmanlı genişletilmesi (s58-s130, 73 yeni örnek)</strong> bu
+belgenin bu sürümünde ilk kez ele alınmaktadır ve sonuçları katmana göre
+çarpıcı biçimde farklıdır:</p>
+<table>
+<thead>
+<tr>
+<th>Katman</th>
+<th>Örnek</th>
+<th>Amaç</th>
+<th>Round 1 sonucu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>s58-s84 (27)</td>
+<td>Dokuz kök-neden kategorisinin (A-I) her birine 3'er bağımsız örnek</td>
+<td>Kategorileri anekdot olmaktan çıkarmak</td>
+<td><strong>7/27 PASS (%25.9)</strong></td>
+</tr>
+<tr>
+<td>s85-s109 (25)</td>
+<td>Gerçek açık kaynak üretim kodu (SQLite, zlib, curl, Redis, OpenSSL, libsodium, BSD/musl libc, nginx, cJSON, Apache)</td>
+<td>Dış geçerlilik</td>
+<td><strong>24/25 PASS (%96.0)</strong></td>
+</tr>
+<tr>
+<td>s110-s130 (21)</td>
+<td>Çeşitlilik, çok dosyalı yapı, pthread eşzamanlılığı</td>
+<td>Kapsam genişliği</td>
+<td><strong>21/21 PASS (%100)</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Bu tablo, belgenin geri kalanının ana tezini tek başına özetler:
+<strong>başarısızlık kodun gerçekliği/uzunluğu/karmaşıklığıyla değil, belirli bir
+semantik boşluğun o örnekte tetiklenip tetiklenmediğiyle ilişkilidir.</strong></p>
+<p>Bu 38 başarısızlığın <strong>her biri</strong> §2'de (ilk 17'si tek tek §2.1-§2.17'de,
+sonradan eklenen 21'i kategori bazında §2.18'de), 92 PASS örneğin analizi ise
+§3'te ele alınmıştır.</p>
 <hr />
-<h2 id="2-basarsz-orneklerin-tam-vaka-analizi-1717">2. Başarısız Örneklerin Tam Vaka Analizi (17/17)</h2>
+<h2 id="2-basarsz-orneklerin-tam-vaka-analizi-3838">2. Başarısız Örneklerin Tam Vaka Analizi (38/38)</h2>
 <p>Her vaka dört soruya yanıt verir: <strong>Ne yapılıyordu? → Ne oldu? → Neden oldu? → Nasıl çözüldü?</strong></p>
+<p>§2.1-§2.17, veri setinin n=57 aşamasındaki 17 başarısızlığını tek tek ele
+alır. §2.18, n=130'a genişletmede ortaya çıkan 21 yeni başarısızlığı kök-neden
+kategorisine göre gruplayarak inceler (her biri için gerçek beklenen/alınan
+çıktı farkı verilmiştir).</p>
 <h3 id="21-s09_djb2_hash-calsma-zaman-hatas-re">2.1 s09_djb2_hash — Çalışma Zamanı Hatası (RE)</h3>
 <ul>
 <li><strong>Ne yapılıyordu:</strong> djb2 karma (hash) fonksiyonu — <code>hash = hash * 33 + byte</code> formülüyle bir dizgiyi 32-bit tamsayıya indirger (17 satır, 3 test).</li>
@@ -221,12 +266,212 @@ hatası/panik), 12 FE (fonksiyonel hata — derlenip çalışıyor ama çıktı 
 <li><strong>İlginç ayrıntı:</strong> Aynı örnekteki X-Macro/token-pasting deseni (enum ve isim tablosunun tek bir listeden türetilmesi) hiçbir soruna yol açmadı — LLM bunu doğrudan bir <code>enum</code>+<code>match</code>'e sorunsuz eşledi. Yani karmaşık makro kullanımının kendisi değil, özellikle <em>yan-etkili bir argümanın çoklu genişletilmesi</em> çeviri hatasına yol açtı.</li>
 <li><strong>Kısıtlı geri bildirim:</strong> Düzeltilemedi (girdi bir komut adı + sayılardan oluşur, makro yan etkisine dair ipucu yok).</li>
 </ul>
+<h3 id="218-veri-seti-genisletmesinde-ortaya-ckan-21-yeni-basarszlk-s58-s130">2.18 Veri Seti Genişletmesinde Ortaya Çıkan 21 Yeni Başarısızlık (s58-s130)</h3>
+<p>Veri seti 57'den 130'a çıkarıldığında 21 yeni başarısızlık gözlendi. <strong>Bu 21
+başarısızlığın hiçbiri yeni bir kök neden ortaya çıkarmadı</strong> — hepsi mevcut
+dokuz kategoriden birine düştü. Bu, taksonominin bu kod sınıfı için doyuma
+ulaştığına dair en güçlü kanıttır. Aşağıda kategori bazında, her örnek için
+gerçek beklenen/alınan farkıyla birlikte ele alınmaktadır.</p>
+<h4 id="218a-kategori-a-unsigned-tasma-2-yeni-basarszlk-1-pass">2.18.A Kategori A (unsigned taşma) — 2 yeni başarısızlık, 1 PASS</h4>
+<ul>
+<li><strong>s58_rolling_hash_poly31</strong> (RE, 18 satır, 2/4 test): Polinom-31 tabanlı
+  yuvarlanan karma. Beklenen <code>3685539155</code>, alınan: <strong>çıktı yok</strong> (panik,
+  <code>attempt to multiply with overflow</code>). s09/s14 ile birebir aynı kök neden:
+  model <code>hash * 31 + b</code> ifadesini Rust'ın varsayılan (debug'da panikleyen)
+  operatörüyle yazdı.</li>
+<li><strong>s59_sdbm_hash</strong> (RE, 19 satır, 1/4 test): sdbm karma fonksiyonu
+  (<code>h = c + (h&lt;&lt;6) + (h&lt;&lt;16) - h</code>). Beklenen <code>684824882</code>, alınan: panik.
+  Buradaki ilginç ayrıntı, taşmanın çarpmadan değil <strong>kaydırma + çıkarma</strong>
+  zincirinden kaynaklanmasıdır — yani kategori A yalnızca <code>*</code> operatörüne
+  özgü değildir.</li>
+<li><strong>s60_elf_hash PASS oldu ve nedeni öğreticidir:</strong> Klasik ELF/PJW karması
+  her yinelemede üst dört biti <code>g = h &amp; 0xF0000000u; ... h &amp;= ~g;</code> ile
+  temizler; bu yüzden <code>h</code> hiçbir zaman 2²⁸'i aşmaz ve bir sonraki
+  <code>(h &lt;&lt; 4) + bayt</code> işlemi 32-bit sınırına hiç ulaşmaz. Örnek "taşmaya açık"
+  bir desen olarak tasarlanmış olsa da taşma pratikte hiç tetiklenmez.
+  Bu, kategori A'nın "unsigned aritmetik" yüzeyine değil, <strong>sonucu
+  sınırlandırılmamış</strong> aritmetiğe bağlı olduğunu gösterir.</li>
+<li><strong>Release modu notu:</strong> s58 ve s59 release'de PASS olur (taşma sarar, C ile
+  aynı sonuç) — s09/s14 ile aynı davranış.</li>
+</ul>
+<h4 id="218b-kategori-b-string-modeli-bayt-vs-karakter-1-yeni-basarszlk-2-pass">2.18.B Kategori B (string modeli: bayt vs. karakter) — 1 yeni başarısızlık, 2 PASS</h4>
+<ul>
+<li><strong>s63_palindrome_bytes</strong> (FE, 27 satır, 3/4 test): Bir metnin <strong>bayt
+  dizisi</strong> olarak palindrom olup olmadığı. 04.txt'de (çok baytlı Türkçe
+  girdi) beklenen <code>HAYIR</code>, alınan <code>EVET</code>. Neden: model <code>.chars()</code> üzerinden
+  karakter düzeyinde karşılaştırdı; girdi karakter düzeyinde palindromken
+  bayt düzeyinde değildi (UTF-8'de çok baytlı karakterlerin bayt sırası
+  tersine çevrildiğinde eşleşmez).</li>
+<li><strong>s61_utf8_byte_vs_char_count ve s62_strtok_tokenizer PASS oldu:</strong> s61'de
+  C referansının kendisi hem bayt hem karakter sayısını <strong>ayrı ayrı</strong>
+  yazdırdığı için model ayrımı yapmak zorunda kaldı ve doğru yaptı; s62'de
+  ise <code>strtok</code> sınırlayıcıları saf ASCII boşluk olduğundan bayt ve karakter
+  modelleri özdeş sonuç üretti. <strong>Örüntü:</strong> Kategori B yalnızca bayt/karakter
+  ayrımının gözlemlenebilir çıktıyı gerçekten değiştirdiği durumlarda
+  tetikleniyor.</li>
+</ul>
+<h4 id="218c-kategori-c-char-isaretliligi-3-yeni-basarszlk-0-pass">2.18.C Kategori C (char işaretliliği) — 3 yeni başarısızlık, 0 PASS</h4>
+<p>Kategorinin <strong>üç yeni örneğinin üçü de</strong> başarısız oldu; C artık beş bağımsız
+örnekle temsil edilen, en tutarlı tetiklenen kategorilerden biridir.</p>
+<ul>
+<li><strong>s64_char_minmax_signed</strong> (FE, 29 satır, 2/4 test): Bir metindeki en küçük
+  ve en büyük bayt değeri. Beklenen <code>-80 117</code>, alınan <code>97 196</code>. Model
+  baytları <code>u8</code> olarak karşılaştırdı; C'de <code>char</code> işaretli olduğundan
+  127-üstü baytlar negatiftir ve hem minimum hem maksimum değişir.</li>
+<li><strong>s65_ctype_isalpha_highbyte</strong> (FE, 24 satır, 2/4 test): <code>isalpha()</code> ile
+  harf sayımı. Beklenen <code>0 3</code>, alınan <code>6 3</code>. Burada ek bir incelik vardır:
+  C'de <code>isalpha()</code>'ya negatif bir <code>char</code> geçirmek (EOF dışında) tanımsız
+  davranıştır ve glibc/UCRT pratikte bu baytları harf saymaz; modelin
+  <code>u8</code>-tabanlı çevirisi ise 127-üstü baytları harf saydı.</li>
+<li><strong>s66_xor_checksum_signed_extend</strong> (FE, 22 satır, 4/5 test): XOR sağlama
+  toplamının işaretli genişletilmesi. Beklenen <code>4294967247</code>, alınan <code>207</code> —
+  C'de <code>char</code> işaretli olduğu için <code>(unsigned)(int)(char)0xCF</code> işlemi
+  işaret genişletmesiyle <code>4294967247</code> üretirken, Rust'ın <code>u8→u32</code>
+  sıfır-genişletmesi <code>207</code> üretti.</li>
+</ul>
+<h4 id="218d-kategori-d-ckt-bicimlendirme-g-3-yeni-basarszlk-0-pass">2.18.D Kategori D (çıktı biçimlendirme, %g) — 3 yeni başarısızlık, 0 PASS</h4>
+<p>Üçünün de başarısız olmasıyla kategori D <strong>altı bağımsız örneğe ve dört ayrı
+kod tabanına</strong> ulaştı; veri setindeki en yaygın kök nedendir.</p>
+<ul>
+<li><strong>s67_stats_stddev_format</strong> (FE, 28 satır, 2/4 test): Standart sapma.
+  Beklenen <code>2 0.816497</code>, alınan <code>2 0.816496580927726</code>.</li>
+<li><strong>s68_currency_round_format</strong> (FE, 16 satır, 2/4 test): Para birimi
+  yuvarlama. Beklenen <code>0.3</code>, alınan <code>0.30000000000000004</code> — bu vaka
+  özellikle nettir: ikili kayan nokta gösteriminin klasik artığı C'nin
+  <code>%g</code>'si tarafından (6 anlamlı basamağa yuvarlanarak) gizlenirken, Rust'ın
+  varsayılan <code>{}</code> biçimi tam hassasiyeti yazdırıp artığı açığa çıkarıyor.</li>
+<li><strong>s69_sqlite_snprintf_g</strong> (FE, 17 satır, 1/4 test): SQLite'ın <code>%g</code>
+  kullanan <code>snprintf</code> sarmalayıcısı (<strong>gerçek üretim kodu</strong>). Beklenen
+  <code>3.14286</code>, alınan <code>3.142857142857143</code>. Kategori D'nin bağımsız bir
+  dördüncü kod tabanında (SQLite) doğrulanması, bunun sistematik bir C↔Rust
+  boşluğu olduğunu bir kez daha pekiştirir.</li>
+<li><strong>Model-bağımsızlık:</strong> Gemini de bu üç örneğin <strong>üçünde birden</strong>
+  başarısızdır (üçü de CE — <code>%g</code> taklidini yazarken geçersiz Rust biçim
+  dizesi ürettiği için hiç derlenmedi). Bkz. §7.4.</li>
+</ul>
+<h4 id="218e-kategori-e-guvensiz-global-durum-0-yeni-basarszlk-3-pass">2.18.E Kategori E (güvensiz global durum) — 0 yeni başarısızlık, 3 PASS</h4>
+<p><strong>Bu, genişletmenin en beklenmedik bulgusudur.</strong> Kategoriye eklenen üç
+örneğin (<strong>s70_global_lcg_rng</strong> — global tohumlu LCG üreteç;
+<strong>s71_global_errbuf</strong> — global hata dizgesi tamponu; <strong>s72_global_log_level</strong>
+— global günlük seviyesi) <strong>üçü de ilk seferde PASS oldu.</strong> Çeviri dosyaları
+incelendiğinde model üçünde de C'ye sadık biçimde <code>static mut</code> seçmiş, ancak
+erişimleri doğru şekilde <code>unsafe { ... }</code> bloklarına sarmıştır
+(<code>translations_rust/s70_global_lcg_rng.rs</code> vb.).</p>
+<p>s50_id_generator ile birlikte kategori E'nin <strong>beş örneğinden dördü PASS</strong>
+olmuştur; yalnızca s19 başarısızdır. <strong>Sonuç:</strong> Kategori E artık sistematik
+bir C↔Rust semantik boşluğu olarak değil, <strong>modelin aynı yapısal kalıpta
+tutarsız davranmasının</strong> (5 denemede 1 kez <code>unsafe</code> sarmalamayı unutma) bir
+örneği olarak yorumlanmalıdır. Bu aynı zamanda veri setindeki tek CE
+örneğinin neden hâlâ tek olduğunu da açıklar ve makalede kategori E'nin
+"düşük öncelikli/kararsız" bir kategori olarak nitelendirilmesini gerektirir.</p>
+<h4 id="218f-kategori-f-platform-tamsay-genisligi-4-yeni-basarszlk-0-pass">2.18.F Kategori F (platform tamsayı genişliği) — 4 yeni başarısızlık, 0 PASS</h4>
+<p>Üç hedefli örnek <strong>ve</strong> hedeflenmemiş gerçek üretim kodundan bağımsız olarak
+gelen bir dördüncü örnek başarısız oldu; kategori F artık altı örnekle veri
+setinin en geniş ikinci kategorisidir.</p>
+<ul>
+<li><strong>s73_bsd_atoi_overflow</strong> (FE, 22 satır, 2/4 test): Elle yazılmış sayısal
+  ayrıştırıcı, <code>unsigned long</code> biriktirici kullanır. Beklenen <code>705032704</code>,
+  alınan <code>5000000000</code>. Aritmetik tam olarak doğrulanabilir:
+  5000000000 mod 2³² = 705032704 — yani bu ortamda 32-bit olan
+  <code>unsigned long</code> <strong>tanımlı biçimde sarar</strong> (C'de unsigned taşma UB
+  değildir), oysa <code>u64</code> seçen çeviride sarma hiç gerçekleşmez. Bu vaka
+  kategori A ile F'nin kesiştiği ilginç bir noktadır: sarma davranışı
+  doğrudur, ama <strong>hangi genişlikte</strong> saracağı platforma bağlıdır.</li>
+<li><strong>s74_platform_loop_counter</strong> (FE, 24 satır, 2/4 test): <code>LONG_MAX</code>/
+  <code>LONG_MIN</code> sınırında kırpma yapan bir çarpma (s51'in toplama yerine
+  çarpma yapan eşi). Beklenen <code>2147483647</code>, alınan <code>2500000000</code> — <code>i64</code>
+  seçen çeviri 32-bit sınırında hiç kırpmaz.</li>
+<li><strong>s75_bsd_strtoul</strong> (FE, 111 satır, 2/4 test): <strong>Gerçek BSD libc üretim
+  kodu.</strong> Beklenen <code>result=4294967295 errno=ERANGE consumed=10</code>, alınan
+  <code>result=5000000000 errno=OK consumed=10</code> — C referansı <code>ULONG_MAX</code>'e
+  sabitleyip <code>ERANGE</code> bildirirken çeviri hiç taşma bildirmiyor.</li>
+<li><strong>s103_nginx_hextoi</strong> (FE, 63 satır, 3/4 test): <strong>nginx'in gerçek
+  <code>ngx_hextoi()</code> fonksiyonu</strong> (BSD-2-Clause), hedeflenmemiş üretim kodu
+  katmanından bağımsız biçimde ortaya çıktı. Beklenen <code>-1</code> (geçersiz/taşma
+  göstergesi), alınan <code>4294967295</code>. C kodundaki <code>value &gt; cutoff</code> taşma
+  kontrolü <code>LONG_MAX/16</code>'ya dayanır; <code>long</code> 32-bit olduğunda bu eşik çok
+  daha düşüktür, <code>i64</code>/<code>u32</code> tabanlı çeviride ise kontrol hiç tetiklenmez.</li>
+<li><strong>⚠️ Platform duyarlılığı artık altı örneğe yayılmıştır:</strong> Bu dört yeni
+  örnek de (s38, s51 ile birlikte) Windows (LLP64) ile Linux (LP64)
+  arasında <strong>PASS/FAIL durumunu tam olarak yer değiştirir</strong> — Round 1'de
+  Windows'ta FAIL/Linux'ta PASS, Round 2'nin Windows'a özgü <code>i32</code>
+  düzeltmesinden sonra ise tam tersi (bkz. §6). "Hata geri bildirimiyle
+  düzeltilmiş bir çeviri evrensel olarak doğrudur" varsayımına karşı kanıt
+  böylece 2 örnekten 6 örneğe çıkmıştır.</li>
+</ul>
+<h4 id="218g-kategori-g-usize-tasmas-3-yeni-basarszlk-0-pass">2.18.G Kategori G (usize taşması) — 3 yeni başarısızlık, 0 PASS</h4>
+<ul>
+<li><strong>s76_array_shrink_countdown</strong> (RE, 26 satır, 2/4 test): Beklenen
+  <code>10 20 30</code>, alınan: panik.</li>
+<li><strong>s77_ring_buffer_index</strong> (RE, 25 satır, 1/4 test): Halka tampon indeks
+  aritmetiği; beklenen <code>3\n2\n3</code>, alınan: panik.</li>
+<li><strong>s78_sliding_window_min</strong> (RE, 30 satır, 0/4 test — <strong>hiçbir testi
+  geçmedi</strong>): Beklenen <code>2</code>, alınan: panik.</li>
+<li><strong>⚠️ Önceki bir gözlemin düzeltilmesi:</strong> §2.10'da (s40) ve §4'te, kategori
+  G'nin paniklerinin "release modunda dahi maskelenemediği" belirtilmişti —
+  çünkü s40/s52'de taşmanın hemen ardından gelen dizi erişimi Rust'ın her
+  zaman etkin sınır kontrolüne takılıyordu. <strong>Yeni üç örnek bunu kısmen
+  çürütmüştür:</strong> release modunda s78 PASS'e, <strong>s76 ve s77 ise FE'ye (sessiz
+  yanlış çıktı)</strong> dönüşür. Yani maskelenememe yalnızca taşan indeksin hemen
+  bir sınır kontrolüne çarptığı durumlarda geçerlidir; taşan değerin
+  sınırlar içinde kalabildiği veya döngünün hiç çalışmadığı durumlarda taşma
+  sessizce sarabilmektedir. <strong>Bu, kategori G'yi kategori A'dan daha
+  tehlikeli kılar:</strong> aynı hata, derleme moduna göre hem gürültülü (RE) hem
+  sessiz (FE) olabilmektedir.</li>
+</ul>
+<h4 id="218h-kategori-h-switch-fallthrough-3-yeni-basarszlk-0-pass">2.18.H Kategori H (switch fallthrough) — 3 yeni başarısızlık, 0 PASS</h4>
+<p>Üçünün de başarısız olmasıyla kategori H beş bağımsız örneğe ulaştı ve yeni
+örneklerde %100 tetiklenme oranı gösterdi.</p>
+<ul>
+<li><strong>s79_http_status_class</strong> (FE, 26 satır, 1/4 test): HTTP durum kodu sınıfı;
+  beklenen <code>7</code>, alınan <code>4</code>.</li>
+<li><strong>s80_state_machine_fallthrough</strong> (FE, 23 satır, 1/4 test): Beklenen <code>2</code>,
+  alınan <code>1</code>. <strong>Bu örnek kategoriyi genişletir:</strong> fallthrough burada
+  kümülatif sayısal birikim için değil, bir <strong>durum makinesi geçişi</strong> için
+  kullanılıyor — model bu bağlamda da düşme davranışını yeniden üretmedi.</li>
+<li><strong>s81_grade_bucket_fallthrough</strong> (FE, 25 satır, 1/4 test): Beklenen <code>4</code>,
+  alınan <code>1</code>.</li>
+</ul>
+<h4 id="218i-kategori-i-makro-coklu-degerlendirme-2-yeni-basarszlk-1-pass">2.18.I Kategori I (makro çoklu-değerlendirme) — 2 yeni başarısızlık, 1 PASS</h4>
+<ul>
+<li><strong>s82_macro_minmax_sideeffect</strong> (FE, 22 satır, <strong>0/4 test</strong>): <code>MAX</code>/<code>MIN</code>
+  makrolarına yan etkili argüman (<code>x++</code>). Beklenen <code>6 10 8</code>, alınan
+  <code>5 10 7</code> — s56 ile aynı kök neden, farklı makro ailesi.</li>
+<li><strong>s83_macro_swap_no_temp</strong> (FE, 31 satır, <strong>0/4 test</strong>) — <strong>kategoriyi yeni
+  bir yan etki türüne genişletir:</strong> Burada yan etkili olan, makro
+  argümanının <em>değeri</em> değil <strong>erişim yolunun kendisidir</strong>. C kodu
+  <code>SWAP(arr[i++], arr[1], tmp)</code> çağırır; <code>SWAP</code> gövdesinde <code>a</code> iki kez geçer
+  (<code>tmp = a</code> ve <code>a = b</code>), bu yüzden <code>i</code> <strong>iki kez artar</strong> ve ikinci atama
+  dizinin <strong>farklı bir elemanına</strong> yazar. Beklenen <code>10 10 30 40 50 / i=2</code>,
+  alınan <code>20 10 30 40 50 / i=1</code>. Bir Rust fonksiyonu argümanı bir kez
+  değerlendirdiğinden bu davranış yeniden üretilemez; yalnızca kasıtlı bir
+  <code>macro_rules!</code> ile taklit edilebilir.</li>
+<li><strong>s84_xmacro_enum_strings PASS oldu</strong> (saf X-Macro/token-pasting, enum +
+  isim tablosu üretimi). Bu, s56'da ilk kez gözlenen ayrımı <strong>üçüncü kez</strong>
+  doğrular: sorun karmaşık makro kullanımının kendisi değil, yalnızca
+  <strong>yan etkili bir argümanın çoklu genişletilmesidir.</strong></li>
+</ul>
+<h4 id="218j-bu-21-vakadan-ckan-uc-genel-sonuc">2.18.J Bu 21 vakadan çıkan üç genel sonuç</h4>
+<ol>
+<li><strong>Taksonomi doyuma ulaştı:</strong> 73 yeni örnek, dokuz kategoriye ek olarak
+   onuncu bir kök neden ortaya çıkarmadı.</li>
+<li><strong>Kategoriler eşit güçte değil:</strong> C, D, F, G, H kategorilerinin yeni
+   örneklerinde tetiklenme oranı %100 (3/3 veya 4/4) iken, A ve I'de %67
+   (2/3), B'de %33 (1/3), E'de <strong>%0</strong> (0/3). Makalede kategoriler bu
+   tetiklenme oranıyla birlikte sunulmalıdır — hepsi aynı derecede
+   sistematik değildir.</li>
+<li><strong>Gerçek üretim kodu neredeyse dokunulmamıştır:</strong> 46 örneklik
+   s85-s130 katmanından yalnızca bir örnek (s103) başarısız oldu ve o da
+   zaten bilinen bir kategoriye (F) düştü.</li>
+</ol>
 <hr />
-<h2 id="3-basarl-orneklerin-analizi-4057">3. Başarılı Örneklerin Analizi (40/57)</h2>
-<p>Yalnızca başarısızlıklar değil, ilk seferde geçen 40 örneğin her biri de
-analiz edilmiştir: ne test ediliyordu, neden sorunsuz geçti (hangi risk
+<h2 id="3-basarl-orneklerin-analizi-92130">3. Başarılı Örneklerin Analizi (92/130)</h2>
+<p>Yalnızca başarısızlıklar değil, ilk seferde geçen örnekler de analiz
+edilmiştir: ne test ediliyordu, neden sorunsuz geçti (hangi risk
 gerçekleşmedi ya da hangi tasarım tercihi C'nin sözleşmesiyle zaten
-örtüşüyordu) ve varsa dikkat çekici yönü.</p>
+örtüşüyordu) ve varsa dikkat çekici yönü. §3.1-§3.9 n=57 aşamasındaki 40
+PASS örneği tek tek ele alır; §3.10 ise genişletmeyle gelen 52 yeni PASS
+örneğini grup bazında inceler.</p>
 <h3 id="31-temel-algoritmalar-dusuk-semantik-risk-13-ornek">3.1 Temel algoritmalar — düşük semantik risk (13 örnek)</h3>
 <p>Bu grup, C↔Rust arasında bilinen bir boşluğu kasıtlı hedeflemeyen, sayısal/
 dizi tabanlı klasik algoritmalardır; PASS olmalarının nedeni basittir: girdi/
@@ -277,7 +522,7 @@ algoritmanın <strong>tamamı</strong> ilk seferde geçti (18/18 test girdisi):<
 <p><strong>Yorum:</strong> Bu 7/7 sonucu, LLM'in genel olarak klasik algoritmaları çevirmede sistematik bir zayıflığı olmadığını destekler — başarısızlıklar veri setinin kasıtlı olarak hedeflediği belirli semantik boşluklara özgüdür, rastgele bir genel yetersizlik değildir.</p>
 <h3 id="35-gercek-uretim-production-kodu-cogu-pass-69-aras-ilgili-alt-gruplar">3.5 Gerçek üretim (production) kodu — çoğu PASS (6/9 arası ilgili alt gruplar)</h3>
 <ul>
-<li><strong>s37_bsd_getopt</strong> (getopt(), 148 satır, 5 test): OpenBSD/FreeBSD'nin gerçek, ~39 yıllık komut satırı ayrıştırıcısı. Dışa açık değiştirilebilir global durum (<code>optarg</code>/<code>optind</code>/<code>optopt</code>/<code>opterr</code>) gerektirir — model bunu Rust'ta <code>static mut</code> + <code>unsafe fn</code> ile <strong>sadakatle</strong> yansıttı (bu veri setindeki 8 gerçek-<code>unsafe</code>-kullanımından biri) çünkü C kodunun kendisi bu sözleşmeyi yapısal olarak dayatıyor. İlk seferde PASS.</li>
+<li><strong>s37_bsd_getopt</strong> (getopt(), 148 satır, 5 test): OpenBSD/FreeBSD'nin gerçek, ~39 yıllık komut satırı ayrıştırıcısı. Dışa açık değiştirilebilir global durum (<code>optarg</code>/<code>optind</code>/<code>optopt</code>/<code>opterr</code>) gerektirir — model bunu Rust'ta <code>static mut</code> + <code>unsafe fn</code> ile <strong>sadakatle</strong> yansıttı (bu veri setindeki 7 gerçek-<code>unsafe</code>-kullanımından biri, bkz. §8) çünkü C kodunun kendisi bu sözleşmeyi yapısal olarak dayatıyor. İlk seferde PASS.</li>
 <li><strong>s39_bsd_heapsort</strong> (heapsort(), 143 satır, 4 test): Generic <code>void*</code> yığın sıralaması — model, çağıran kodun (<code>main()</code>) yalnızca tamsayı sıralaması ihtiyacını tanıyarak genel <code>void*</code> imzasını taklit etmek yerine güvenli, deyimsel bir Rust dizi/dilim (slice) tabanlı sıralama yazdı — <strong>hiç <code>unsafe</code> kullanmadan</strong>. İlk seferde PASS.</li>
 <li><strong>s46_musl_qsort</strong> (musl libc'nin smoothsort'u, 262 satır, 5 test): Bit-düzeyinde Leonardo-sayı kodlamasıyla çalışan, veri setindeki en karmaşık tek algoritma; genel-amaçlı <code>void*</code> imzasına gerçekten bağımlı olduğundan model burada <code>unsafe</code> kullandı (yapısal gereklilik). PASS.</li>
 <li><strong>s47_redis_sds</strong> (Redis'in SDS dinamik string kütüphanesi, 522 satır, 5 test): Veri setindeki <strong>en uzun program</strong>; başlık bilgisini (uzunluk/kapasite/tür bayrağı) pointer'ın hemen öncesinde gizli tutan, C'ye özgü bir bellek düzeni kullanır. Model bu düzeni ham pointer aritmetiğiyle yeniden üretmeyi denemek yerine tamamen güvenli bir <code>String</code> tabanlı iç temsille yeniden yapılandırdı ve gözlemlenebilir API davranışını (uzunluk/kırpma/aralık/karşılaştırma) hiç <code>unsafe</code> kullanmadan birebir korudu. İlk seferde PASS — <strong>ama bkz. §6, bu örnek Linux/Docker'da bir CRLF/stdio bulgusuyla farklı sonuç vermiştir (C referansının kendisi platforma bağlı davranıyor, Rust çevirisi değil).</strong></li>
@@ -286,7 +531,7 @@ algoritmanın <strong>tamamı</strong> ilk seferde geçti (18/18 test girdisi):<
 <ul>
 <li><strong>s41_float_bits</strong> (float→bit örüntüsü, union/type punning, 21 satır): C'nin <code>union</code> ile IEEE-754 bit-düzeyinde yeniden yorumlaması, model tarafından Rust'ın güvenli <code>to_bits()</code>/<code>from_bits()</code> fonksiyonlarıyla birebir doğru eşlendi — <code>unsafe</code> transmute'a hiç gerek kalmadı.</li>
 <li><strong>s42_bitfields</strong> (bit-alanı kırpma, 25 satır): C bit-alanlarının (bit-fields) atamada kırpma davranışı, model tarafından maskeleme/kaydırma operasyonlarıyla doğru yeniden üretildi.</li>
-<li><strong>s44_fib_memo_static</strong> (fonksiyon-lokal static memoizasyon, 29 satır): Çağrılar arasında kalıcı, değiştirilebilir durum gerektiren bir C deseni (<code>static int cache[]</code>); model bunu Rust'ta <code>static mut</code> + <code>unsafe fn</code> ile <strong>doğru ve gerekçeli</strong> biçimde yansıttı (veri setindeki 8 gerçek-<code>unsafe</code>-kullanımından biri — s19'un aksine burada durum gerçekten fonksiyon-lokal ve tek-thread varsayımına uygun tasarlandığından model haklı olarak <code>unsafe</code>'i seçti).</li>
+<li><strong>s44_fib_memo_static</strong> (fonksiyon-lokal static memoizasyon, 29 satır): Çağrılar arasında kalıcı, değiştirilebilir durum gerektiren bir C deseni (<code>static int cache[]</code>); model bunu Rust'ta <code>static mut</code> + <code>unsafe fn</code> ile <strong>doğru ve gerekçeli</strong> biçimde yansıttı (veri setindeki 7 gerçek-<code>unsafe</code>-kullanımından biri, bkz. §8 — s19'un aksine burada durum gerçekten fonksiyon-lokal ve tek-thread varsayımına uygun tasarlandığından model haklı olarak <code>unsafe</code>'i seçti).</li>
 <li><strong>s45_goto_cleanup</strong> (goto ile kaynak temizleme, 43 satır): C'nin <code>goto cleanup;</code> deseni (RAII benzeri kaynak serbest bırakma), model tarafından Rust'ın doğal kapsam-tabanlı (scope-based) temizlik mantığına (veya erken <code>return</code> + düzenli serbest bırakma) doğru biçimde yeniden yapılandırıldı — kontrol akışı farklı ama gözlemlenebilir davranış özdeş.</li>
 </ul>
 <h3 id="37-ikinci-ornek-kok-neden-testlerinden-pass-olan-15">3.7 İkinci-örnek kök neden testlerinden PASS olan (1/5)</h3>
@@ -308,6 +553,81 @@ tetiklenmediğinden</strong> kaynaklanır (bkz. §4, §10). Bu, §4'teki dokuz k
 listesinin veri setinin geri kalanına genellenebilir bir tehdit olmadığını,
 yalnızca belirli, tanımlanabilir kod kalıplarında ortaya çıktığını
 doğrulamaktadır.</p>
+<h3 id="310-genisletmeden-gelen-52-yeni-pass-ornegi-s58-s130">3.10 Genişletmeden gelen 52 yeni PASS örneği (s58-s130)</h3>
+<p>Genişletmenin 73 örneğinden 52'si ilk seferde geçti. Bu grup, önceki
+bölümdeki gözlemi çok daha büyük bir örneklemde doğrular.</p>
+<p><strong>3.10.a Hedefli katmandan geçenler (7/27):</strong> s60_elf_hash (§2.18.A),
+s61_utf8_byte_vs_char_count ve s62_strtok_tokenizer (§2.18.B),
+s70/s71/s72 global durum üçlüsü (§2.18.E) ve s84_xmacro_enum_strings
+(§2.18.I). Bunların her biri yukarıda ilgili kategori altında
+açıklanmıştır; ortak noktaları, hedeflenen semantik boşluğun o özel kod
+deseninde <strong>gözlemlenebilir çıktıyı değiştirmemesidir</strong> (maskeleme
+nedeniyle taşmanın hiç tetiklenmemesi, ASCII girdiyle bayt=karakter
+olması, modelin <code>unsafe</code>'i doğru sarması, yan etkisiz makro kullanımı).</p>
+<p><strong>3.10.b Gerçek üretim kodu katmanı (24/25 PASS — %96):</strong> Bu, veri
+setindeki en güçlü dış geçerlilik kanıtıdır. Yaygın kullanılan gerçek
+kütüphane kodu neredeyse tamamen doğru çevrilmiştir:</p>
+<ul>
+<li><strong>SQLite:</strong> <code>sqlite3_stricmp</code> (s85), <code>strglob</code> desen eşleme (s86, 185
+  satır — veri setindeki en uzun üçüncü program), UTF-8 okuyucu (s87).</li>
+<li><strong>zlib:</strong> <code>adler32</code> (s88), tablo tabanlı CRC-32 (s89) — ikisi de yoğun
+  unsigned aritmetik içermesine rağmen PASS; s88'de model <code>%</code> mod
+  aritmetiğini, s89'da ise XOR/kaydırmayı doğru korudu (kategori A'nın
+  neden yalnızca sınırlandırılmamış çarpma/toplamada tetiklendiğinin bir
+  başka kanıtı).</li>
+<li><strong>curl</strong> URL kod çözme (s90), <strong>Redis</strong> <code>ll2string</code> (s91) ve
+  <code>stringmatchlen</code> (s95, 152 satır), <strong>OpenSSL</strong> Base64 kodlama (s92),
+  <strong>libsodium</strong> <code>bin2hex</code> (s93), <strong>FreeBSD</strong> <code>reallocarray</code> (s94).</li>
+<li><strong>cJSON:</strong> dize yazdırma (s96) ve <code>\uXXXX</code> Unicode çözme (s97) — dikkat
+  çekici: cJSON'un <strong>sayı</strong> yazdırma tarafı (s48) kategori D'den başarısız
+  olurken, <strong>dize</strong> tarafı sorunsuz geçmiştir; yani başarısızlık
+  kütüphaneye değil, spesifik semantik boşluğa bağlıdır.</li>
+<li><strong>musl libc:</strong> <code>memmem</code> (s98, 158 satır — Two-Way algoritması),
+  <code>strsep</code> (s99), <code>strverscmp</code> (s100), <code>strcasestr</code> (s104), <code>memrchr</code>
+  (s105). Bunların hepsi C'de ham işaretçi aritmetiğine dayanır ve model
+  hepsini <strong>hiç <code>unsafe</code> kullanmadan</strong>, dilim/slice tabanlı güvenli Rust'a
+  çevirmiştir.</li>
+<li><strong>OpenBSD/FreeBSD libc:</strong> <code>strlcpy</code> (s101), <code>strnstr</code> (s102),
+  <code>strtonum</code> (s106), <code>timingsafe_bcmp</code> (s107) — s107 özellikle ilginçtir:
+  sabit zamanlı karşılaştırma, erken çıkış yapmayan bir döngü gerektirir
+  ve model bu güvenlik sözleşmesini (kısa devre yapmama) korumuştur.</li>
+<li><strong>nginx</strong> <code>ngx_atoi</code> (s108) ve <strong>Apache HTTP Server</strong> <code>getword</code> (s109).</li>
+<li>Tek başarısızlık: <strong>s103_nginx_hextoi</strong> (§2.18.F).</li>
+</ul>
+<p><strong>3.10.c Çeşitlilik/çok dosyalı/eşzamanlılık katmanı (21/21 PASS — %100):</strong></p>
+<ul>
+<li><strong>Çok dosyalı modüller:</strong> s110_queue_module, s111_linked_list_module —
+  <code>manifest.json</code> ile birden fazla derleme birimi; ikisi de Rust'ın <code>mod</code>
+  sistemine sorunsuz eşlendi.</li>
+<li><strong>Gerçek eşzamanlılık (3 örnek):</strong> s112_producer_consumer_threads
+  (pthread + koşul değişkeni), s113_rwlock_counter (okuma-yazma kilidi),
+  s114_simple_threadpool (iş parçacığı havuzu). Üçü de ilk seferde doğru
+  çevrildi — model <code>Arc&lt;Mutex&lt;&gt;&gt;</code>, <code>Condvar</code>, <code>RwLock</code> ve kanal
+  desenlerini doğru seçti, hiçbirinde derleme hatası veya veri yarışı
+  oluşmadı. s57 ile birlikte eşzamanlılık örnekleri artık 4/4 PASS'tır;
+  bu, "Rust'ın tip sistemi paylaşılan-durum çevirisini zorlaştırır"
+  hipotezini bu dört örnekte de doğrulamayan tutarlı bir olumsuz
+  sonuçtur (negative result).</li>
+<li><strong>Dil özellikleri:</strong> s115_bitvector_set, s116_tagged_union_variant
+  (etiketli birleşim → Rust <code>enum</code> ile doğal eşleme),
+  s117_goto_retry_loop, s118_variadic_sum (C değişken argümanlı
+  fonksiyonu → makro/dilim tabanlı yeniden yapılandırma),
+  s119_setjmp_error_handling (<code>setjmp</code>/<code>longjmp</code> → <code>Result</code> tabanlı hata
+  yayılımına yeniden yapılandırıldı — kontrol akışı tamamen farklı, ama
+  gözlemlenebilir davranış özdeş), s120_function_pointer_dispatch.</li>
+<li><strong>Klasik veri yapıları/algoritmalar:</strong> s121_recursive_descent_calc2,
+  s122_trie_insert_search, s123_avl_tree_insert (116 satır — döndürme
+  mantığı dahil), s124_graph_bfs, s125_graph_dfs_cycle,
+  s126_priority_queue_heap, s127_gauss_matrix_inverse,
+  s128_custom_tokenizer, s129_command_dispatch_table,
+  s130_qsort_callback_structs. Hepsi <code>Option&lt;Box&lt;T&gt;&gt;</code>/<code>Vec</code> tabanlı
+  güvenli Rust'a çevrildi.</li>
+</ul>
+<p><strong>Genel yorum:</strong> 52 yeni PASS örneğinin hiçbirinde kod uzunluğu, dinamik
+bellek, ham işaretçi kullanımı, çok dosyalılık veya eşzamanlılık tek
+başına başarısızlık üretmemiştir. Bu, §3.9'daki gözlemi n=130 ölçeğinde
+doğrular ve makalenin ana tezini güçlendirir: <strong>risk, kodun ölçeğinde
+değil, sayılabilir ve tanımlanabilir bir semantik boşluk kümesindedir.</strong></p>
 <hr />
 <h2 id="4-dokuz-kok-neden-ozet-tablo">4. Dokuz Kök Neden — Özet Tablo</h2>
 <table>
@@ -315,7 +635,8 @@ doğrulamaktadır.</p>
 <tr>
 <th>#</th>
 <th>Kategori</th>
-<th>Örnekler</th>
+<th>Örnekler (n=130)</th>
+<th>Sayı</th>
 <th>Tür</th>
 <th>C sözleşmesi → LLM'in seçimi</th>
 </tr>
@@ -324,28 +645,32 @@ doğrulamaktadır.</p>
 <tr>
 <td>A</td>
 <td>Unsigned taşma</td>
-<td>s09, s14</td>
+<td>s09, s14, s58, s59</td>
+<td>4</td>
 <td>RE</td>
 <td>Kasıtlı mod-2ⁿ sarma → panik-eden varsayılan aritmetik</td>
 </tr>
 <tr>
 <td>B</td>
 <td>String modeli</td>
-<td>s06, s13</td>
+<td>s06, s13, s63</td>
+<td>3</td>
 <td>FE</td>
 <td>Bayt-düzeyi işleme → <code>.chars()</code> (Unicode)</td>
 </tr>
 <tr>
 <td>C</td>
 <td>char işaretliliği</td>
-<td>s20, s49</td>
+<td>s20, s49, s64, s65, s66</td>
+<td>5</td>
 <td>FE</td>
 <td>İşaretli char (127+ negatif) → <code>u8</code>/<code>i32</code> (hep pozitif)</td>
 </tr>
 <tr>
 <td>D</td>
 <td>Çıktı biçimlendirme</td>
-<td>s15, s27, s48</td>
+<td>s15, s27, s48, s67, s68, s69</td>
+<td>6</td>
 <td>FE</td>
 <td><code>%g</code> anlamlı-basamak/üstel mantığı → varsayılan <code>{}</code></td>
 </tr>
@@ -353,36 +678,84 @@ doğrulamaktadır.</p>
 <td>E</td>
 <td>Güvensiz global durum</td>
 <td>s19</td>
+<td>1</td>
 <td>CE</td>
 <td>Değiştirilebilir global → <code>static mut</code> (unsafe gerekir)</td>
 </tr>
 <tr>
 <td>F</td>
 <td>Platform tamsayı genişliği</td>
-<td>s38, s51</td>
+<td>s38, s51, s73, s74, s75, s103</td>
+<td>6</td>
 <td>FE</td>
 <td>Platformun gerçek <code>long</code> genişliği → sabit <code>i64</code></td>
 </tr>
 <tr>
 <td>G</td>
 <td>usize taşması</td>
-<td>s40, s52</td>
+<td>s40, s52, s76, s77, s78</td>
+<td>5</td>
 <td>RE</td>
 <td>İşaretli int ile güvenli çıkarma → <code>usize</code> altında taşma</td>
 </tr>
 <tr>
 <td>H</td>
 <td>Switch fallthrough</td>
-<td>s43, s53</td>
+<td>s43, s53, s79, s80, s81</td>
+<td>5</td>
 <td>FE</td>
 <td>Kümülatif düşme → bağımsız <code>match</code> kolları</td>
 </tr>
 <tr>
 <td>I</td>
 <td>Makro çoklu-değerlendirme</td>
-<td>s56</td>
+<td>s56, s82, s83</td>
+<td>3</td>
 <td>FE</td>
 <td>Metinsel ikame (çoklu değerlendirme) → fn (tek değerlendirme)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Toplam</strong></td>
+<td><strong>38</strong></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Kategorilerin tetiklenme gücü eşit değildir.</strong> Genişletmede her kategoriye
+3'er yeni örnek eklendiğinde ortaya çıkan tetiklenme oranları, makalede
+kategorilerin yan yana ve eşit ağırlıkta sunulmasının yanıltıcı olacağını
+göstermektedir:</p>
+<table>
+<thead>
+<tr>
+<th>Kategori</th>
+<th>Yeni örneklerde tetiklenme</th>
+<th>Yorum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C, D, F, G, H</td>
+<td>3/3 (%100)</td>
+<td>Güçlü, sistematik ve tekrarlanabilir</td>
+</tr>
+<tr>
+<td>A, I</td>
+<td>2/3 (%67)</td>
+<td>Sistematik, ama koşula bağlı (maskeleme/yan etkisiz kullanım)</td>
+</tr>
+<tr>
+<td>B</td>
+<td>1/3 (%33)</td>
+<td>Yalnızca çıktı gerçekten değiştiğinde tetikleniyor</td>
+</tr>
+<tr>
+<td><strong>E</strong></td>
+<td><strong>0/3 (%0)</strong></td>
+<td><strong>Sistematik bir boşluk değil; modelin tutarsızlığı</strong></td>
 </tr>
 </tbody>
 </table>
@@ -391,15 +764,57 @@ geçerlidir ve "daha deyimsel/modern" görünen bir tercihi yansıtır — model
 kaynağın C'de gerçekten sahip olduğu bit genişliği/işaretlilik/sarma/kontrol
 akışı sözleşmesini korumak yerine, hedef dilin idiyomatik varsayılanını
 seçmiştir. Yalnızca kategori E'de aynı türden bir birebir aktarım Rust'ın tip
-güvenliği tarafından derleme aşamasında yakalanmıştır.</p>
+güvenliği tarafından derleme aşamasında yakalanmıştır — ve n=130'daki dört ek
+örnek (s50, s70, s71, s72), modelin bu aktarımı <strong>çoğunlukla doğru</strong> yaptığını
+(erişimi <code>unsafe</code> bloğuna sararak) göstermiştir; s19 kural değil istisnadır.</p>
+<p><strong>n=130'un en önemli yapısal bulgusu:</strong> 73 yeni örnek, bu dokuz kategoriye ek
+olarak <strong>onuncu bir kök neden ortaya çıkarmamıştır.</strong> Veri seti
+24→29→36→39→45→48→53→57 aşamalarında dört kez yeni kategori üretmişken
+(F, G, H, I), 57→130 gibi çok daha büyük bir sıçramada hiç yeni kategori
+üretmemesi, taksonominin bu kod sınıfı (tek dosyaya indirgenebilir, stdin/
+stdout sözleşmeli C programları) için <strong>doyuma ulaştığına</strong> dair ilk somut
+işarettir.</p>
 <hr />
 <h2 id="5-kstl-geri-bildirim-deneyi-tablo-5in-arkasndaki-tam-veri">5. Kısıtlı Geri Bildirim Deneyi (Tablo 5'in arkasındaki tam veri)</h2>
-<p>Aynı 17 başarısızlığa üç farklı ayrıntı seviyesinde geri bildirim verildi:</p>
+<p>Aynı başarısızlıklara üç farklı ayrıntı seviyesinde geri bildirim verildi.</p>
+<p><strong>n=57 (kör protokolün gerçekten uygulandığı ölçüm):</strong></p>
 <ul>
 <li><strong>Seviye A (Oracle):</strong> Tam derleyici hatası + panik metni + beklenen/alınan fark → <strong>57/57 = %100</strong></li>
-<li><strong>Seviye B (Orta/CI-benzeri):</strong> Derleyici/panik metni tam; FE için yalnızca girdi (fark yok) → <strong>49/57 = %86.0</strong></li>
-<li><strong>Seviye C (Minimal):</strong> Yalnızca gerçek başarısız test sayısı (CE hariç) → <strong>41/57 = %71.9</strong></li>
+<li><strong>Seviye B (Orta/CI-benzeri):</strong> Derleyici/panik metni tam; FE için yalnızca girdi (fark yok) → <strong>49/57 = %85.96</strong></li>
+<li><strong>Seviye C (Minimal):</strong> Yalnızca gerçek başarısız test sayısı (CE hariç) → <strong>41/57 = %71.93</strong></li>
 </ul>
+<p><strong>n=130 (kör protokolün artık tamamı üzerinde gerçekten uygulandığı ölçüm):</strong></p>
+<ul>
+<li><strong>Seviye A (Oracle):</strong> <strong>130/130 = %100.00</strong></li>
+<li><strong>Seviye B (Orta/CI-benzeri):</strong> <strong>122/130 = %93.85</strong></li>
+<li><strong>Seviye C (Minimal):</strong> <strong>114/130 = %87.69</strong></li>
+</ul>
+<blockquote>
+<p><strong>✅ Düzeltme notu (2026-08-02) — Seviye B/C kör protokolü n=130'un
+tamamında tamamlandı.</strong> Önceki bir turda bir denetim ajanı
+<code>translations_rust_levelB/</code> ve <code>translations_rust_levelC/</code> klasörlerini
+bayt düzeyinde denetleyip şunu bulmuştu: n=57 aşamasındaki <strong>17 eski
+başarısızlık</strong> için protokol doğru uygulanmıştı (Seviye B dosyaları hem
+Round 1 hem Round 2 sürümlerinden farklıydı, yani gerçek bağımsız "kör"
+düzeltme denemeleriydi), ancak <strong>s58-s130 arasında eklenen 21 yeni
+başarısızlık</strong> için Seviye B/C'de "düzeltilmiş" görünen her örneğin
+dosyası Round 2'nin oracle düzeltmesiyle bayt düzeyinde özdeşti (Seviye
+B'de 15, Seviye C'de 8 örnek) — yani bu 21 örnek için kısıtlı bilgiyle
+bağımsız bir düzeltme denemesi hiç yapılmamış, doğrudan oracle yanıtı
+kopyalanmıştı. Bu, o turdaki B (%89.23) ve C (%77.69) sayılarını yapay
+biçimde şişiriyordu.</p>
+<p>Sorun giderildi: bu 21 örneğin Seviye B ve Seviye C çevirileri sıfırdan,
+gerçekten kısıtlı bilgiyle (oracle dosyasına hiç bakılmadan) yeniden
+yazıldı ve harness her iki klasör üzerinde yeniden çalıştırıldı.
+<strong>Sonuç: 21 yeni başarısızlığın tamamı (21/21) hem Seviye B'de hem
+Seviye C'de kısıtlı bilgiyle düzeltilebilmiştir.</strong> B/C'deki düşüş
+tamamen n=57 aşamasından kalan 17 eski başarısızlıktan kaynaklanır ve
+oradaki sayılar (Seviye B'de 9/17, Seviye C'de 1/17 düzeltilmiştir)
+hiç değişmemiştir. Ayrıntı için bkz. <code>MODIFICATIONS.md</code> — "Seviye B/C
+Kör Protokol Düzeltmesi" girdisi.</p>
+</blockquote>
+<p>Aşağıdaki gerekçe analizi, protokolün doğru uygulandığı <strong>n=57 ölçümüne</strong>
+aittir:</p>
 <p><strong>Seviye B'de düzeltilen 9 örnek:</strong> s19 (CE), s09/s14/s40/s52 (RE — panik metni
 tasma türünü açıkça belirtti), s06/s13/s20/s49 (FE — girdideki çok baytlı
 Türkçe karakterler ilgili semantik boşluğu tahmin etmeye yetti).</p>
@@ -411,6 +826,18 @@ ilgili kök nedene dair gözlemlenebilir bir ipucu taşımıyordu.</p>
 veya girdinin görünür karakter özellikleri) yine de ilgili semantik
 kategoriye işaret etmesi; düzeltilemeyenlerin ortak özelliği ise sınırlı
 bilginin kategoriyi ayırt edici hiçbir iz taşımamasıdır.</p>
+<p><strong>Yeni örneklerde örüntü tekrarlanmadı — 21 yeni başarısızlığın tamamı
+düzeltildi:</strong> n=130'da Seviye B'de düzeltilemeyen 8 örneğin tamamı n=57
+aşamasından kalan eski başarısızlıklardır (s15/s27/s48, s38/s51, s43/s53,
+s56 — n=57 ölçümüyle birebir aynı sekizli); <strong>21 yeni başarısızlığın
+(s58-s130 arası) tamamı hem Seviye B'de hem Seviye C'de gerçekten kısıtlı
+bilgiyle düzeltilebilmiştir.</strong> Bu, n=57'de gözlenen "belirli kategoriler
+kısıtlı bilgiyle düzeltilemez" örüntüsünün yeni örneklerde aynı biçimde
+tekrarlanmadığını gösterir — olası bir açıklama, yeni 21 örneğin çoğunun
+(s85-s130 katmanı) gerçek üretim kodundan alınmış, göreli olarak daha
+uzun/bağlamsal programlar olması ve bu bağlamın kısıtlı geri bildirimle
+birlikte modele kategoriyi tahmin etmek için daha fazla ipucu sunmasıdır;
+bu yorum doğrulanmamış bir varsayımdır, sistematik olarak test edilmemiştir.</p>
 <hr />
 <h2 id="6-coklu-platform-analizi-windows-llp64-vs-linuxdocker-lp64">6. Çoklu Platform Analizi (Windows LLP64 vs Linux/Docker LP64)</h2>
 <p>Windows: MSYS2/UCRT64 gcc 16.1.0 + rustc 1.97.1, <code>long</code>=32-bit.
@@ -429,33 +856,93 @@ genişliğinden kaynaklandığını netleştirir).</p>
 <tbody>
 <tr>
 <td>Round 1 — debug</td>
-<td>%70.18 (40/57)</td>
-<td>%71.93 (41/57)</td>
-<td>+1.75 puan</td>
+<td>%70.77 (92/130)</td>
+<td>%74.62 (97/130)</td>
+<td>+3.85 puan</td>
 </tr>
 <tr>
 <td>Round 1 — release</td>
-<td>%73.68 (42/57)</td>
-<td>%75.44 (43/57)</td>
-<td>+1.76 puan</td>
+<td>%74.62 (97/130)</td>
+<td>%78.46 (102/130)</td>
+<td>+3.84 puan</td>
 </tr>
 <tr>
 <td>Round 2 — iyileştirilmiş</td>
-<td>%100.00 (57/57)</td>
-<td><strong>%94.74 (54/57)</strong></td>
-<td><strong>−5.26 puan</strong></td>
+<td>%100.00 (130/130)</td>
+<td><strong>%94.62 (123/130)</strong></td>
+<td><strong>−5.38 puan</strong></td>
 </tr>
 </tbody>
 </table>
-<p><em>(2026-07-30 itibarıyla veri setinin tamamı — s56/s57 dahil 57 örnek —
-üzerinde yeniden çalıştırıldı; ilk ölçüm 55 örnekle yapılmıştı. Yeni eklenen
-s56/s57 iki platformda da aynı sonucu verdi, platforma duyarlı üç örnek
-değişmedi.)</em></p>
-<p><strong>s38_bsd_strtol ve s51_long_clamp (Round 2, "düzeltilmiş"):</strong> Windows için
+<p>(Veri setinin tamamı — 130 örnek — her iki platformda yeniden çalıştırıldı.
+Genişletmeyle birlikte platforma duyarlı örnek sayısı 3'ten <strong>7'ye</strong>
+çıkmıştır.)</p>
+<p><strong>Platforma göre farklılaşan 7 örnek:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Örnek</th>
+<th>Kategori</th>
+<th>Round 1 (Win → Linux)</th>
+<th>Round 2 (Win → Linux)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>s38_bsd_strtol</td>
+<td>F</td>
+<td>FE → pass</td>
+<td>pass → FE</td>
+</tr>
+<tr>
+<td>s51_long_clamp</td>
+<td>F</td>
+<td>FE → pass</td>
+<td>pass → FE</td>
+</tr>
+<tr>
+<td>s73_bsd_atoi_overflow</td>
+<td>F</td>
+<td>FE → pass</td>
+<td>pass → FE</td>
+</tr>
+<tr>
+<td>s74_platform_loop_counter</td>
+<td>F</td>
+<td>FE → pass</td>
+<td>pass → FE</td>
+</tr>
+<tr>
+<td>s75_bsd_strtoul</td>
+<td>F</td>
+<td>FE → pass</td>
+<td>pass → FE</td>
+</tr>
+<tr>
+<td>s103_nginx_hextoi</td>
+<td>F</td>
+<td>FE → pass</td>
+<td>pass → FE</td>
+</tr>
+<tr>
+<td>s47_redis_sds</td>
+<td>(CRLF/stdio)</td>
+<td>pass → FE</td>
+<td>pass → FE</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Kategori F'nin altı örneği (Round 2, "düzeltilmiş"):</strong> Windows için
 yazılan <code>i32</code> düzeltmesi, Linux'ta <code>long</code> gerçekten 64-bit olduğundan artık
-<strong>yanlış</strong> sonuç üretiyor — iki platform arasında PASS/FAIL durumu tam olarak
-yer değiştirdi. Bu, "iyileştirilmiş" bir çevirinin evrensel değil platforma
-özgü olabileceğinin doğrudan kanıtıdır.</p>
+<strong>yanlış</strong> sonuç üretiyor — bu altı örneğin her birinde iki platform arasında
+PASS/FAIL durumu tam olarak yer değiştiriyor. Bu, "iyileştirilmiş" bir
+çevirinin evrensel değil platforma özgü olabileceğinin doğrudan kanıtıdır ve
+<strong>n=130 ile bu kanıt 2 örnekten 6 örneğe çıkarak anekdot olmaktan tamamen
+çıkmıştır.</strong> Özellikle s103_nginx_hextoi kayda değerdir: bu örnek veri
+setinin hedefli bölümünden değil, hedeflenmemiş gerçek üretim kodu
+katmanından (nginx) gelmiştir — yani platforma özgü düzeltme sorunu,
+kasıtlı olarak kurgulanmış bir senaryo değil, gerçek kodda kendiliğinden
+ortaya çıkan bir olgudur.</p>
 <p><strong>s47_redis_sds (beklenmedik yön):</strong> Fark <code>long</code> genişliğinden değil,
 <strong>C referansının kendisinin</strong> platforma bağlı davranmasından kaynaklanıyor:
 test girdisi <code>05.txt</code> CRLF (<code>\r\n</code>) satır sonu içeriyor; Windows'un CRT'si
@@ -469,25 +956,109 @@ yaşamıyor — yani burada <strong>asıl "kırılan" taraf C referansıdır, Ru
 değil</strong>. Test dosyası kasıtlı olarak düzeltilmedi çünkü bu gerçek ve
 tekrarlanabilir bir bulgu.</p>
 <hr />
-<h2 id="7-coklu-model-analizi-google-gemini-5757-tam-olcum">7. Çoklu Model Analizi (Google Gemini, 57/57 TAM ölçüm)</h2>
-<p>Gemini (<code>gemini-flash-latest</code>) ile 57 örneğin <strong>tamamı</strong> gerçek API
-çağrısıyla çevrildi (ücretsiz katmanın günlük kota sınırı nedeniyle ölçüm
-birden fazla gün boyunca kademeli olarak tamamlanmıştır, 2026-07-22 ile
-2026-07-26 arasında — kota her sıfırlandığında bir sonraki grup
-çevrilerek; son 3 örnek — s55, s56, s57 — kota sıfırlandıktan sonraki bir
-oturumda tamamlanmıştır); nihai EA = <strong>%89.47 (51/57)</strong>, Claude'un tam
-veri setindeki EA'sı ise <strong>%70.18 (40/57)</strong>'dir. <strong>Gemini ham sayı olarak
-Claude'dan yüksek bir doğruluk göstermiştir</strong> ve bu fark, iki model AYNI
-57 program üzerinde ölçüldüğü için eşleştirilmiş (paired) bir tasarıma
-uygun <strong>McNemar testiyle</strong> sınandığında istatistiksel olarak anlamlıdır
-(yalnızca Claude'un başarısız olduğu 14 örnek vs. yalnızca Gemini'nin
-başarısız olduğu 3 örnek; McNemar kesin iki-yönlü <strong>p=0.013</strong>,
-<code>harness/stats_report.py</code> ile hesaplanmıştır) — ama aşağıdaki kategori
-kırılımı ve vaka analizleri, bu genel anlamlılığın "Gemini genel olarak
-daha iyi bir model" anlamına gelmediğini, aksine model×kod-kategorisi
-etkileşiminin belirleyici olduğunu ve genel farkın yönünü kategoriye göre
-değiştirdiğini göstermektedir.</p>
-<h3 id="71-karslastrma-tablosu-57-ornegin-tamam">7.1 Karşılaştırma Tablosu (57 örneğin tamamı)</h3>
+<h2 id="7-coklu-model-analizi-gemini-claude-haiku-n130">7. Çoklu Model Analizi (Gemini + Claude Haiku, n=130)</h2>
+<p>Veri seti n=130'a genişletildikten sonra üç model aynı programlar üzerinde,
+aynı zero-shot istemle ölçülmüştür:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Kapsam</th>
+<th>EA (örnek)</th>
+<th>EA %</th>
+<th>CE</th>
+<th>RE</th>
+<th>FE</th>
+<th>NT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Sonnet 5 (referans, Round 1)</td>
+<td>130/130</td>
+<td>92/130</td>
+<td>%70.77</td>
+<td>1</td>
+<td>9</td>
+<td>28</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Claude Haiku</td>
+<td>130/130</td>
+<td>94/130</td>
+<td>%72.31</td>
+<td>8</td>
+<td>5</td>
+<td>23</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Google Gemini (<code>gemini-flash-latest</code>)</td>
+<td><strong>99/130 (KISMİ)</strong></td>
+<td>86/99</td>
+<td>%86.87</td>
+<td>9</td>
+<td>0</td>
+<td>4</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>⚠️ Gemini kapsamı kısmidir ve bu bölümdeki Gemini'ye ilişkin tüm
+karşılaştırmalar geçicidir.</strong> Google AI Studio ücretsiz katmanının günlük
+kota sınırı (20 istek/gün/model) nedeniyle 130 örneğin yalnızca 99'u
+çevrilebilmiştir; kalan 31 örnek (s80-s84, s85-s99, s120-s130) kota
+sıfırlandıkça kademeli olarak tamamlanmaktadır. Gemini'nin %86.87'si bu 99
+örneklik alt küme üzerinden hesaplanmıştır ve diğer iki modelin tam-kapsam
+sayılarıyla <strong>doğrudan karşılaştırılamaz</strong>. Aşağıdaki §7.1-§7.5 vaka
+analizleri, n=57 aşamasındaki TAM Gemini ölçümüne dayanır ve o örnekler
+için hâlâ geçerlidir; §7.6 ise genişletmeyle gelen yeni gözlemleri
+özetler.</p>
+</blockquote>
+<p><strong>Sessiz hata oranı modele göre çarpıcı biçimde değişiyor — bu, çalışmanın
+en aktarılabilir bulgularından biridir:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Başarısızlık</th>
+<th>Derlemede yakalanan (CE)</th>
+<th>Derlenip geçen (sessiz veya gürültülü)</th>
+<th>Sessizlik oranı</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Sonnet 5</td>
+<td>38</td>
+<td>1</td>
+<td>37</td>
+<td><strong>%97.4</strong></td>
+</tr>
+<tr>
+<td>Claude Haiku</td>
+<td>36</td>
+<td>8</td>
+<td>28</td>
+<td>%77.8</td>
+</tr>
+<tr>
+<td>Gemini</td>
+<td>13</td>
+<td>9</td>
+<td>4</td>
+<td><strong>%30.8</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Yani Gemini daha yüksek ham doğruluk gösterse de, <strong>hatalarının çoğu
+derleyici tarafından yakalanan türdendir</strong>; Claude Sonnet 5'in hataları ise
+neredeyse tamamen derleyiciden kaçan sessiz semantik hatalardır. Bir CI
+hattında bu iki hata profilinin pratik riski taban tabana zıttır — yüksek EA,
+düşük risk anlamına gelmez. Claude Haiku ise iki uç arasında yer alır.</p>
+<h3 id="71-karslastrma-tablosu-n57-asamasndaki-tam-gemini-olcumu">7.1 Karşılaştırma Tablosu (n=57 aşamasındaki tam Gemini ölçümü)</h3>
 <table>
 <thead>
 <tr>
@@ -789,7 +1360,7 @@ başarısızdır (FE) — bu yüzden Gemini'ye özgü değil, §7.4'te ele alın
 <strong>tek gerçekten model-bağımsız kör nokta</strong> olduğunu güçlü biçimde
 doğrular: 3 bağımsız kod tabanının (kendi yazdığımız iki örnek + cJSON)
 3'ünde de, iki farklı modelin ikisi de aynı temel hataya düşmüştür.</p>
-<h3 id="75-genel-yorum-5757-tam-veriyle">7.5 Genel yorum (57/57 tam veriyle)</h3>
+<h3 id="75-genel-yorum-n57-tam-veriyle">7.5 Genel yorum (n=57 tam veriyle)</h3>
 <p>Tam veri seti üzerinde dört farklı model-etkileşim türü gözlenmiştir:
 (a) <strong>ortak</strong> C↔Rust semantik boşluğu — Kategori D, üç bağımsız kod
 tabanında iki modelin de aynı kör noktaya düşmesi (§7.4); (b) <strong>model-özgü,
@@ -813,86 +1384,231 @@ kod-üretim tarzının o kod deseninde tesadüfen doğru sonuç vermesi
 olabilir. Bu, çoklu-model karşılaştırmalarının toplam EA rakamlarını
 yüzeysel biçimde sıralamak yerine, hem kategori bazında kırılımı hem de
 altta yatan kod-üretim tercihlerini incelemesi gerektiğini göstermektedir.</p>
+<h3 id="76-genisletmenin-n130-coklu-model-acsndan-getirdigi-yeni-bulgular">7.6 Genişletmenin (n=130) çoklu model açısından getirdiği yeni bulgular</h3>
+<p><strong>(a) Kategori D artık kesin biçimde model-bağımsız bir kör noktadır.</strong>
+Kategoriye eklenen üç yeni örneğin (s67, s68, s69) <strong>üçünde de Gemini
+başarısızdır</strong> — üçü de CE, çünkü Gemini <code>%g</code> davranışını taklit etmeye
+çalışırken geçersiz Rust biçim dizesi/söz dizimi üretmiştir (s27 ve s48'de
+gözlenen örüntünün birebir tekrarı). Claude ise aynı üç örnekte FE
+üretmiştir. Kategori D böylece <strong>altı örnek, dört bağımsız kod tabanı ve iki
+model boyunca</strong> doğrulanmıştır: iki model de her seferinde başarısız olur,
+yalnızca yüzeysel hata türü (Claude FE, Gemini CE) değişir. Bu, veri
+setindeki tek gerçekten model-bağımsız C↔Rust boşluğudur.</p>
+<p><strong>(b) Gemini'nin kategori F "üstünlüğü" bir tesadüfmüş.</strong> Önceki turlarda
+Gemini, <code>long</code> tipini <code>std::os::raw::c_long</code> ile çevirerek s38 ve s51'i
+taşınabilir biçimde geçmiş, bu §7.2'de "daha doğru bir çözüm" olarak
+raporlanmıştı. Yeni eklenen <strong>s103_nginx_hextoi</strong>'de ise Gemini de Claude
+ile aynı hataya düşmüştür (FE) — yani <code>c_long</code> tercihi modelin tutarlı
+biçimde uyguladığı bir kural değil, örneğe bağlı bir tercihtir. Bu, §7.2'nin
+sonundaki "bu, Gemini'nin bu boşlukları anladığı anlamına gelmez" uyarısını
+doğrudan doğrulayan yeni bir kanıttır.</p>
+<p><strong>(c) Gemini eşzamanlılıkta ve çok dosyalı kodda zayıf.</strong> Gemini'nin yeni
+başarısızlıkları arasında <strong>s112_producer_consumer_threads</strong> (CE) ve
+<strong>s110_queue_module</strong> (FE) bulunmaktadır — Claude her ikisini de ilk
+seferde geçmiştir. Bu, §7.2b'de gözlenen "uzun/karmaşık gerçek kodda Claude
+üstün" örüntüsünün çok dosyalı ve eşzamanlı koda da uzandığını gösterir.</p>
+<p><strong>(d) Claude Haiku: katman-eşleştirilmiş üçüncü model.</strong> Haiku 130/130 tam
+kapsamda ölçülmüş ve EA = <strong>%72.31 (94/130)</strong> elde etmiştir — yani ham
+doğrulukta Claude Sonnet 5 ile neredeyse aynıdır (%70.77). Ancak <strong>hata
+profili belirgin biçimde farklıdır:</strong> Haiku 8 CE üretirken Sonnet 5 yalnızca
+1 CE üretmiştir. Haiku'nun CE'leri ağırlıklı olarak veri setinin en
+karmaşık/uzun örneklerindedir (s25_linked_list_ops, s37_bsd_getopt,
+s71_global_errbuf, s75_bsd_strtoul, s87_sqlite_utf8_read,
+s111_linked_list_module, s112_producer_consumer_threads,
+s130_qsort_callback_structs). Ayrıca Haiku, Sonnet 5'in sorunsuz geçtiği
+bazı <strong>temel</strong> örneklerde de başarısızdır (s01_sum, s07_bubble_sort,
+s08_binary_search, s12_matrix_mult, s17_determinant, s21_matrix_transpose) —
+yani Haiku'nun hataları kök-neden kategorilerine değil, genel kod-üretim
+güvenilirliğine bağlıdır. Bu, aynı aileden iki model arasında bile hata
+profilinin kategorik olarak farklılaşabildiğini gösterir ve "EA tek başına
+model seçimi için yeterli bir ölçüt değildir" sonucunu güçlendirir.</p>
+<p><strong>(e) McNemar testi geçicidir.</strong> <code>results/stats_report.md</code>'de raporlanan
+McNemar sonucu (ortak değerlendirilen 78 örnek; ikisi de PASS 43, ikisi de
+FAIL 7, yalnızca Claude FAIL 25, yalnızca Gemini FAIL 3, kesin iki-yönlü
+p&lt;0.0001) <strong>Gemini'nin kısmi kapsamı nedeniyle nihai değildir.</strong> Ortak örnek
+sayısı (78), Gemini'nin kalan 31 örneği tamamlandığında artacak ve testin
+tüm hücreleri değişecektir. <strong>Bu analiz, Gemini tamamlandığında yeniden
+hesaplanıp güncellenmelidir.</strong></p>
 <hr />
 <h2 id="8-bellek-guvenligi-ve-unsafe-kullanm">8. Bellek Güvenliği ve <code>unsafe</code> Kullanımı</h2>
-<p>114 çeviriden (57 örnek × Round 1/Round 2; çok dosyalı üç örnek gerçek
-dosya sayısını 122'ye çıkarır) <code>unsafe</code>/ham işaretçi kullanımı için
-taranmıştır: yalnızca <strong>8'i</strong> (4 örnek × 2 tur: s37_bsd_getopt,
-s44_fib_memo_static, s46_musl_qsort, s50_id_generator) gerçek <code>unsafe</code>
-kullanıldı — dördü de C kodunun kendisinin yapısal olarak dayattığı bir
-gerekliliği yansıtır:
-- <strong>s37 (getopt):</strong> <code>optarg</code>/<code>optind</code>/<code>optopt</code>/<code>opterr</code> — çağıran kod
-  tarafından okunması beklenen, dışa açık değiştirilebilir global durum.
-- <strong>s44 (fonksiyon-lokal static memoizasyon):</strong> Çağrılar arasında kalıcı,
-  değiştirilebilir durum gerektirir.
-- <strong>s46 (musl smoothsort):</strong> Genel-amaçlı <code>void*</code> imzasına dayanan bit-düzeyi
-  byte-pointer aritmetiği.
-- <strong>s50 (id_generator, Kategori E'nin 2. örneği):</strong> s19 ile aynı
+<p>Round 1'in 130 çevirisinin tamamı <code>unsafe</code>/ham işaretçi kullanımı için
+taranmıştır: yalnızca <strong>7'si (%5.4)</strong> gerçek <code>unsafe</code> kullanmıştır —
+yedisi de C kodunun kendisinin yapısal olarak dayattığı bir gerekliliği
+yansıtır:</p>
+<ul>
+<li><strong>s37 (getopt):</strong> <code>optarg</code>/<code>optind</code>/<code>optopt</code>/<code>opterr</code> — çağıran kod
+  tarafından okunması beklenen, dışa açık değiştirilebilir global durum.</li>
+<li><strong>s44 (fonksiyon-lokal static memoizasyon):</strong> Çağrılar arasında kalıcı,
+  değiştirilebilir durum gerektirir.</li>
+<li><strong>s46 (musl smoothsort):</strong> Genel-amaçlı <code>void*</code> imzasına dayanan bit-düzeyi
+  byte-pointer aritmetiği.</li>
+<li><strong>s50 (id_generator, Kategori E'nin 2. örneği):</strong> s19 ile aynı
   <code>static mut</code> yapısı, ama bu kez erişim doğru biçimde <code>unsafe</code> bloğuna
-  sarılmış (§3.7) — modelin <code>unsafe</code> ekleme davranışının aynı kalıpta bile
-  tutarlı olmadığının kanıtı.</p>
-<p><strong>Daha çarpıcı bulgu:</strong> Ham <code>void*</code> işaretçi aritmetiğine yapısal olarak
-bağımlı <code>heapsort()</code> (s39_bsd_heapsort) ve veri setindeki en karmaşık
-bellek-düzenine sahip Redis'in SDS string kütüphanesi (s47_redis_sds) —
-ikisi de gerçek üretim kodu — model tarafından <strong>hiç <code>unsafe</code> kullanılmadan</strong>,
-tamamen güvenli/deyimsel Rust'a (sırasıyla dilim/slice tabanlı sıralama,
-<code>String</code> tabanlı iç temsil) çevrildi ve ilk seferde PASS oldu. Bağlı liste
-(s25), BST (s28), hash tablosu (s29) gibi C'de <code>malloc</code>/ham işaretçilerle
-kurulan veri yapıları da tutarlı biçimde <code>Option&lt;Box&lt;T&gt;&gt;</code> deseniyle güvenli
-Rust'a çevrildi.</p>
+  sarılmış (§3.7).</li>
+<li><strong>s70 (global LCG üreteç), s71 (global hata tamponu), s72 (global günlük
+  seviyesi) — YENİ, kategori E'nin 3-5. örnekleri:</strong> Üçünde de model yine
+  <code>static mut</code> seçmiş ve erişimleri doğru biçimde <code>unsafe { ... }</code>
+  bloklarına sarmıştır; üçü de ilk seferde PASS olmuştur.</li>
+</ul>
+<p><strong>Bu, <code>unsafe</code> konusundaki yorumu tersine çeviren önemli bir bulgudur:</strong>
+Kategori E'nin beş örneğinden dördünde (s50, s70, s71, s72) model <code>unsafe</code>'i
+<strong>doğru kullandığı için başarılı</strong> olmuş, yalnızca s19'da kullanmayı
+unuttuğu için derleme hatası almıştır. Yani bu veri setinde <code>unsafe</code>
+kullanımı bir risk göstergesi değil, C'nin global-durum sözleşmesinin doğru
+tanınmasının göstergesidir; asıl anomali <code>unsafe</code>'in <strong>kullanılmadığı</strong> tek
+vakadır (s19). Round 2'de s19 bu durumu <code>&amp;mut i32</code> parametresine
+dönüştüren, <code>unsafe</code> içermeyen güvenli bir tasarımla çözmüştür (dosyadaki
+tek <code>unsafe</code> geçişi bir yorum satırıdır).</p>
+<p><strong>Daha çarpıcı bulgu (n=130'da çok daha geniş kanıtla):</strong> Ham işaretçi
+aritmetiğine yapısal olarak bağımlı çok sayıda gerçek üretim kodu örneği
+model tarafından <strong>hiç <code>unsafe</code> kullanılmadan</strong>, tamamen güvenli/deyimsel
+Rust'a çevrildi ve ilk seferde PASS oldu:</p>
+<ul>
+<li><code>heapsort()</code> (s39_bsd_heapsort, generic <code>void*</code>) ve Redis'in SDS string
+  kütüphanesi (s47_redis_sds, pointer-öncesi gizli başlık düzeni).</li>
+<li>Yeni üretim kodu katmanının klasik pointer-yoğun libc fonksiyonları:
+  musl <code>memmem</code> (s98, Two-Way algoritması), <code>strsep</code> (s99), <code>strcasestr</code>
+  (s104), <code>memrchr</code> (s105), OpenBSD/FreeBSD <code>strlcpy</code> (s101), <code>strnstr</code>
+  (s102), SQLite <code>strglob</code> (s86) — hepsi dilim/slice tabanlı güvenli
+  indekslemeyle çevrildi.</li>
+<li>Dinamik veri yapıları: bağlı liste (s25, s111), BST (s28), hash tablosu
+  (s29), trie (s122), AVL ağacı (s123), öncelik kuyruğu (s126) — hepsi
+  tutarlı biçimde <code>Option&lt;Box&lt;T&gt;&gt;</code>/<code>Vec</code> deseniyle güvenli Rust'a çevrildi.</li>
+<li>Gerçek eşzamanlılık: s57, s112, s113, s114 — <code>Arc&lt;Mutex&lt;&gt;&gt;</code>, <code>Condvar</code>,
+  <code>RwLock</code> desenleriyle, hiç <code>unsafe</code> kullanmadan.</li>
+</ul>
 <p><strong>Sonuç:</strong> <code>unsafe</code> kullanımı kodun karmaşıklığından değil, C kodunun dışa
 açık davranış sözleşmesinin doğasından (harici mutable durum, fonksiyon ömrü
 boyunca kalıcı durum, generic <code>void*</code> imzası) etkileniyor.</p>
 <hr />
 <h2 id="9-istatistiksel-bulgular">9. İstatistiksel Bulgular</h2>
+<blockquote>
+<p><strong>⚠️ Bu bölümün ana bulgusu n=130'da TERSİNE DÖNMÜŞTÜR.</strong> n=57'de hem
+Mann-Whitney (kod uzunluğu) hem Fisher (işaretçi kullanımı) testi anlamsız
+çıkıyordu; n=130'da her ikisi de anlamlıdır. Aşağıda hem yeni sayılar hem de
+bu tersine dönüşün neden <strong>nedensel bir bulgu değil, veri seti tasarımının
+yarattığı bir karıştırıcı</strong> olduğu açıklanmaktadır.</p>
+</blockquote>
 <ul>
-<li><strong>Kod uzunluğu ile başarı ilişkisi:</strong> Mann-Whitney U testi, PASS (n=40) ve
-  FAIL (n=17) gruplarının LoC dağılımları arasında istatistiksel olarak
-  anlamlı bir fark bulamadı (U=287.0, p=0.359). Rank-biserial etki büyüklüğü
-  r=0.156 (küçük etki).</li>
-<li><strong>Duyarlılık analizi (post-hoc/gözlemlenen güç yerine önerilen):</strong>
-  Bootstrap-tabanlı gerçekleşen güç (achieved power, α=0.05, 5000 tekrar)
-  yalnızca <strong>%15.0</strong>'tır, ama bu ölçüt p-değerinin tekdüze bir dönüşümüdür
-  ve bağımsız bilgi taşımaz (Hoenig &amp; Heisey 2001, "The Abuse of Power").
-  Bunun yerine hesaplanan duyarlılık analizi: n(FAIL)=17, n(PASS)=40,
-  α=0.05 ile %80 güçte saptanabilecek en küçük etki büyüklüğü, anlamlılığı
-  ölçmek için kullanılan AYNI Mann-Whitney U istatistiğinden ampirik
-  rank-biserial formülüyle (r=1-2U/(n1·n2), normal/AUC yaklaşık dönüşümü
-  değil) hesaplandığında rank-biserial |r|≈0.46'dır (U'nun bağ düzeltmeli
-  standart sapması üzerinden).
-  Gözlemlenen
-  r=0.156 bu eşiğin belirgin altındadır — veri seti bu büyüklükte küçük-orta
-  etkileri saptayacak güce sahip değildir; "anlamlı fark yok" sonucu kesin
-  bir ilişkisizlik kanıtı değil, düşük güçle tutarlı bir gözlem olarak
-  okunmalıdır (<code>harness/stats_report.py</code> ile hesaplanmıştır).</li>
-<li><strong>p-değerinin istikrarsızlığı:</strong> Veri seti n=36→39→45→48→53→57'ye
-  büyüdükçe p-değeri 0.076 → 0.187 → 0.169 → 0.273 → 0.337 → 0.359 olarak
-  dalgalandı — küçük örneklemlerde p-değerinin ne denli oynak olabileceğinin
-  doğrudan, kendi verimizden bir kanıtı.</li>
-<li><strong>İşaretçi kullanımı ile başarı ilişkisi:</strong> Fisher'in kesin testi, işaretçi
-  kullanımı ile PASS/FAIL arasında anlamlı bir ilişki bulamadı (tablo=
-  [[23,7],[17,10]], olasılık oranı=1.93, p=0.385, %95 GA=[0.61, 6.11] —
-  aralığın 1.0'ı içermesi anlamsızlığı doğrular).</li>
-<li><strong>Betimsel örüntü (n=57 üzerinden, <code>harness/stats_report.py</code> ile
-  yeniden hesaplandı):</strong> Ortalama LoC PASS=67.0/FAIL=59.8, medyan LoC
-  PASS=34.5/FAIL=27.0. FAIL grubunun string-fonksiyonu kullanım oranı
-  (%47.1) PASS grubundan (%37.5) yüksek; FAIL grubunda hiç
-  <code>malloc</code>/<code>calloc</code> kullanılmıyor (%0.0 vs PASS'te %22.5) — dinamik bellek
-  yönetimi arıza riskini artırmıyor, aksine düşürüyor gibi görünüyor (küçük
-  örneklemde ön bulgu). İşaretçi kullanımı PASS'te %57.5, FAIL'de %41.2.</li>
-<li><strong>Model karşılaştırması (McNemar):</strong> Claude ve Gemini AYNI 57 program
-  üzerinde ölçüldüğünden, genel EA farkının anlamlılığı eşleştirilmiş
-  (paired) bir tasarıma uygun McNemar testiyle sınanmıştır: yalnızca
-  Claude'un başarısız olduğu 14 örnek vs. yalnızca Gemini'nin başarısız
-  olduğu 3 örnek üzerinden McNemar kesin iki-yönlü <strong>p=0.013</strong> — genel fark
-  istatistiksel olarak anlamlıdır, ama §7'deki kategori kırılımı bu farkın
-  yönünün kategoriye göre değiştiğini göstermektedir.</li>
+<li><strong>Kod uzunluğu ile başarı ilişkisi (n=130):</strong> Mann-Whitney U testi,
+  PASS (n=92) ve FAIL (n=38) gruplarının LoC dağılımları arasında
+  istatistiksel olarak <strong>anlamlı</strong> bir fark bulmuştur: <strong>U=924.0, p&lt;0.0001</strong>,
+  rank-biserial etki büyüklüğü <strong>r=0.471 (orta etki)</strong>. Farkın yönü
+  sezgiye ve literatüre zıttır: <strong>başarısız örnekler daha kısadır</strong>
+  (aşağıdaki betimsel tabloya bakınız). n=57'de aynı test anlamsızdı
+  (U=287.0, p=0.359, r=0.156).</li>
+<li><strong>⚠️ Bu anlamlılık nedensel değildir — karıştırıcı değişken (confounder):</strong>
+  İlişkinin kaynağı doğrudan veri setinin katman yapısıdır. Kök-neden
+  kategorilerini derinleştirmek için eklenen <strong>s58-s84 katmanı kasıtlı olarak
+  kısa</strong> programlardan oluşur (16-44 satır) ve büyük çoğunluğu başarısızdır
+  (20/27 FAIL); buna karşılık <strong>s85-s130 katmanı uzun</strong> gerçek üretim/
+  çeşitlilik kodundan oluşur ve neredeyse tamamı geçer (45/46 PASS).
+  Dolayısıyla ölçülen ilişki "kısa kod çevirmek daha zordur" değil,
+  <strong>"hataya özel tasarlanmış örneklerimiz kısadır"</strong> demektir. Makalede bu
+  sonuç, karıştırıcı açıkça belirtilmeden raporlanmamalıdır; aksi hâlde
+  literatürdeki "kod büyüdükçe hata artar" (FLUORINE) savını çürüttüğü
+  biçiminde yanlış okunabilir. Doğru ifade: <em>bu veri setinde LoC ile başarı
+  arasında gözlenen ilişki örnekleme tasarımının bir yan ürünüdür ve nedensel
+  bir yorum taşımaz.</em></li>
+<li><strong>İşaretçi kullanımı ile başarı ilişkisi (n=130):</strong> Fisher'in kesin testi
+  de artık <strong>anlamlıdır</strong>: tablo=[[69, 13], [23, 25]], <strong>olasılık oranı=5.77,
+  p&lt;0.0001, %95 GA=[2.54, 13.09]</strong> (aralık 1.0'ı içermiyor). İşaretçi
+  kullanan kod belirgin biçimde daha çok geçmektedir (PASS'te %75.0, FAIL'de
+  %34.2). <strong>Bu da aynı karıştırıcının bir yansımasıdır:</strong> işaretçi kullanan
+  kod ağırlıklı olarak uzun gerçek üretim kodudur (libc fonksiyonları, veri
+  yapıları), hedefli kısa örnekler ise nadiren işaretçi kullanır. n=57'de bu
+  test anlamsızdı (odds=1.93, p=0.385).
+  &gt; <strong>Not (<code>results/stats_report.md</code>'de düzeltilmesi gereken bir tutarsızlık):</strong>
+  &gt; <code>stats_report.md</code>'deki Fisher bölümünde yer alan "Güven aralığının 1.0'i
+  &gt; içermesi, ilişkinin istatistiksel olarak anlamlı olmadığını doğrular"
+  &gt; cümlesi ile duyarlılık analizindeki "Gözlemlenen r=0.156" ifadesi,
+  &gt; n=57'den kalan <strong>eskimiş şablon metinlerdir</strong> ve güncel sayılarla
+  &gt; çelişmektedir (GA=[2.54, 13.09] 1.0'ı içermez; gözlenen r=0.471'dir).
+  &gt; Bu cümleler <code>harness/stats_report.py</code> içinde sabit metin olarak
+  &gt; gömülüdür ve düzeltilmelidir.</li>
+<li><strong>EA bootstrap %95 güven aralıkları (n=130, sabit seed=42, 5000 tekrar):</strong>
+  Round 1 debug %70.77 [%63.08, %78.46]; Round 1 release %74.62
+  [%66.92, %82.31]; Round 2 %100.00 [%100.00, %100.00]. Genişletme,
+  aralıkları n=57'ye göre belirgin biçimde daraltmıştır (n=57'de Round 1
+  aralığı yaklaşık ±13 puandı, şimdi ±7.7 puan) — örneklem büyütmenin
+  amaçlanan asıl kazanımı budur.</li>
+<li><strong>Güç ve duyarlılık analizi (n=130):</strong> Bootstrap-tabanlı gerçekleşen güç
+  artık <strong>%98.9</strong>'dur (n=57'de %15.0 idi). Ancak bu ölçüt p-değerinin
+  tekdüze bir dönüşümüdür ve bağımsız bilgi taşımaz (Hoenig &amp; Heisey 2001,
+  "The Abuse of Power"). Bunun yerine hesaplanan duyarlılık analizi:
+  n(FAIL)=38, n(PASS)=92, α=0.05 ile %80 güçte saptanabilecek en küçük etki
+  büyüklüğü, anlamlılığı ölçmek için kullanılan AYNI Mann-Whitney U
+  istatistiğinden ampirik rank-biserial formülüyle (r=1−2U/(n1·n2)) 
+  hesaplandığında <strong>|r|≈0.31</strong>'dir (n=57'de |r|≈0.46 idi). Gözlemlenen
+  r=0.471 bu eşiğin <strong>üzerindedir</strong> — yani veri seti artık bu büyüklükteki
+  etkileri saptayacak güce sahiptir. Örneklem büyütmenin istatistiksel güç
+  açısından hedefine ulaştığı nokta budur.</li>
+<li><strong>p-değerinin istikrarsızlığı (tarihsel kayıt):</strong> Veri seti
+  n=36→39→45→48→53→57'ye büyüdükçe p-değeri 0.076 → 0.187 → 0.169 → 0.273 →
+  0.337 → 0.359 olarak dalgalanmış, ardından n=130'da &lt;0.0001'e düşmüştür.
+  Bu dizi, küçük örneklemlerde p-değerinin ne denli oynak olabileceğinin
+  doğrudan, kendi verimizden bir kanıtıdır — ve son sıçrama, örneklem
+  bileşimi değiştiğinde p-değerinin ne kadar sert biçimde değişebileceğini
+  gösterir.</li>
+</ul>
+<p><strong>Betimsel kod özellikleri (n=130, <code>harness/stats_report.py</code> ile yeniden
+hesaplandı):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Özellik</th>
+<th>PASS (n=92)</th>
+<th>FAIL (n=38)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ortalama LoC</td>
+<td>64.9</td>
+<td>43.3</td>
+</tr>
+<tr>
+<td>Medyan LoC</td>
+<td>53.0</td>
+<td>25.0</td>
+</tr>
+<tr>
+<td>İşaretçi kullanımı</td>
+<td>%75.0</td>
+<td>%34.2</td>
+</tr>
+<tr>
+<td>malloc/calloc</td>
+<td>%17.4</td>
+<td>%0.0</td>
+</tr>
+<tr>
+<td>String fonksiyonu</td>
+<td>%51.1</td>
+<td>%42.1</td>
+</tr>
+</tbody>
+</table>
+<p>FAIL grubunda <strong>hiç</strong> <code>malloc</code>/<code>calloc</code> kullanılmaması (%0.0 vs PASS'te
+%17.4) n=57'deki gözlemin n=130'da da korunduğunu gösterir — dinamik
+bellek yönetimi arıza riskini artırmıyor, aksine (yine karıştırıcı
+etkisiyle) düşürüyor gibi görünüyor.</p>
+<p><strong>Model karşılaştırması:</strong></p>
+<ul>
+<li><strong>McNemar testi — GEÇİCİ:</strong> <code>harness/stats_report.py</code>
+  çıktısına göre ortak değerlendirilen 78 örnek üzerinden: ikisi de PASS 43,
+  ikisi de FAIL 7, yalnızca Claude FAIL 25, yalnızca Gemini FAIL 3; McNemar
+  kesin iki-yönlü <strong>p&lt;0.0001</strong>. <strong>⚠️ Bu analiz nihai değildir:</strong> Gemini
+  yalnızca 99/130 örnekte ölçülebildiğinden ortak örnek sayısı (78) kısmi
+  kapsamın bir sonucudur ve <strong>Gemini'nin kalan 31 örneği tamamlandığında
+  testin tüm hücreleri yeniden hesaplanmalıdır.</strong> §7'deki kategori kırılımı
+  ayrıca bu farkın yönünün kategoriye göre değiştiğini göstermektedir.</li>
 </ul>
 <hr />
 <h2 id="10-ekstra-analiz-zaman-icinde-bulgularn-evrimi">10. Ekstra Analiz: Zaman İçinde Bulguların Evrimi</h2>
-<p>Veri seti kademeli olarak genişletildikçe (24→29→36→39→45→48→53→57 örnek),
-kök neden kategorilerinin <strong>4'ü (F, G, H, I) başlangıçta hiç öngörülmemiş,
-sonradan ortaya çıkan bulgulardır</strong>:</p>
+<p>Veri seti kademeli olarak genişletildikçe (24→29→36→39→45→48→53→57→130
+örnek), kök neden kategorilerinin <strong>4'ü (F, G, H, I) başlangıçta hiç
+öngörülmemiş, sonradan ortaya çıkan bulgulardır</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -942,46 +1658,105 @@ sonradan ortaya çıkan bulgulardır</strong>:</p>
 <td>çok dosya + makro + eşzamanlılık</td>
 <td><strong>Kategori I</strong> (makro çoklu-değerlendirme, s56)</td>
 </tr>
+<tr>
+<td>s58-s84</td>
+<td>27 kök-neden derinleştirme (kategori başına 3'er)</td>
+<td><strong>Yeni kategori YOK.</strong> Kategori E'nin aslında sistematik olmadığı ortaya çıktı (0/3 tetiklenme); C/D/F/G/H %100 tetiklendi</td>
+</tr>
+<tr>
+<td>s85-s109</td>
+<td>25 gerçek açık kaynak üretim kodu</td>
+<td><strong>Yeni kategori YOK.</strong> Yalnızca 1 başarısızlık (s103), o da mevcut kategori F'ye düştü</td>
+</tr>
+<tr>
+<td>s110-s130</td>
+<td>21 çeşitlilik/çok dosyalı/eşzamanlılık</td>
+<td><strong>Yeni kategori YOK.</strong> 21/21 PASS; eşzamanlılık örnekleri 4/4 PASS</td>
+</tr>
 </tbody>
 </table>
-<p>Bu, veri setinin başlangıçta "bilinen" boşlukları hedefleyerek tasarlanmış
-olsa da, <strong>gerçek dünya kodu eklendikçe önceden tahmin edilemeyen yeni hata
-modlarının ortaya çıkmaya devam ettiğini</strong> gösterir — 9 kategoriden 4'ü
-tasarım aşamasında yoktu.</p>
+<p>Bu tablo iki ayrı dönemi gösterir. <strong>İlk dönemde (24→57)</strong> veri seti
+büyüdükçe önceden tahmin edilemeyen yeni hata modları ortaya çıkmaya devam
+etti — 9 kategoriden 4'ü tasarım aşamasında yoktu. <strong>İkinci dönemde
+(57→130)</strong> ise, veri seti iki katından fazlasına çıkmasına ve tamamen yeni
+kod tabanları (SQLite, zlib, curl, OpenSSL, libsodium, nginx, Apache) ile
+tamamen yeni program sınıfları (gerçek eşzamanlılık, <code>setjmp</code>/<code>longjmp</code>,
+değişken argümanlı fonksiyonlar, AVL/trie/graf algoritmaları) eklenmesine
+rağmen <strong>onuncu bir kök neden ortaya çıkmadı.</strong></p>
+<p><strong>Bu, çalışmanın en önemli yapısal bulgularından biridir:</strong> taksonomi, bu kod
+sınıfı (tek dosyaya indirgenebilir, stdin/stdout sözleşmeli C programları)
+için <strong>doyuma (saturation) ulaşmış görünmektedir.</strong> Aynı dönemde ikinci bir
+düzeltme de gerekmiştir: kategori E, üç yeni örneğinin de geçmesiyle
+sistematik bir C↔Rust boşluğu olmaktan çıkıp <strong>modelin tutarsızlığına bağlı
+bir istisna</strong> olarak yeniden sınıflandırılmalıdır (§2.18.E).</p>
 <hr />
 <h2 id="11-genel-ckarmlar">11. Genel Çıkarımlar</h2>
 <ol>
-<li><strong>Sessiz hata oranı çok yüksek:</strong> 17 başarısızlığın 16'sı (%94.1)
+<li><strong>Sessiz hata oranı çok yüksek:</strong> 38 başarısızlığın 37'si (%97.4)
    derleyiciden hiçbir uyarı almadan geçti — yalnızca derleme başarısına
-   dayanan bir kabul kriteri bu hataların hiçbirini yakalayamaz.</li>
+   dayanan bir kabul kriteri bu hataların hiçbirini yakalayamaz. İki
+   katmanlı okuma: 28'i (%73.7) gerçekten sessizdir (FE), 9'u (%23.7)
+   gürültülü RE'dir, yalnızca 1'i (%2.6) CE'dir.</li>
 <li><strong>Tek bir örüntü, dokuz görünümü açıklıyor:</strong> Sekiz kategoride model,
    C kaynağının gerçek bit-düzeyi/kontrol-akışı sözleşmesini korumak yerine
    Rust'ın "daha temiz" görünen varsayılanını seçiyor.</li>
-<li><strong>Düzeltmeler kırılgan olabilir:</strong> Aynı düzeltme (i32 kullanımı) bir
-   platformda (Windows) doğru, başka bir platformda (Linux) yanlış olabilir.
-   Bir düzeltmenin dar test girdileriyle doğrulanması (s15→s27 vakası) bile
+<li><strong>Taksonomi doyuma ulaştı — ve bir kategori yeniden sınıflandırılmalı:</strong>
+   Veri setinin 57'den 130'a çıkarılması, tamamen yeni kod tabanları ve
+   program sınıfları eklenmesine rağmen <strong>onuncu bir kök neden ortaya
+   çıkarmadı</strong> (§10). Buna karşılık kategori E (güvensiz global durum),
+   üç yeni örneğinin de geçmesiyle sistematik bir boşluk olmaktan çıkıp
+   <strong>modelin tutarsızlığına bağlı bir istisna</strong> olarak yeniden
+   yorumlanmalıdır (5 örnekte 4 PASS, §2.18.E).</li>
+<li><strong>Düzeltmeler kırılgan olabilir — kanıt artık 6 örnekte:</strong> Aynı düzeltme
+   (<code>i32</code> kullanımı) bir platformda (Windows) doğru, başka bir platformda
+   (Linux) yanlış olabilir; bu artık kategori F'nin <strong>altı örneğinin
+   tamamında</strong> doğrulanmıştır ve bunlardan biri (s103_nginx_hextoi)
+   hedeflenmemiş gerçek üretim kodundan kendiliğinden gelmiştir. Ayrıca bir
+   düzeltmenin dar test girdileriyle doğrulanması (s15→s27 vakası) bile
    yetersiz kalabilir.</li>
-<li><strong>Geri bildirim zenginliği belirleyici:</strong> Aynı 17 hatanın düzeltilme oranı,
-   verilen bilginin ayrıntısına göre %100'den %71.9'a kadar değişebiliyor —
-   gerçek bir CI/CD ortamındaki geri bildirim kalitesi, iyileştirme
-   döngüsünün pratikteki etkinliğini doğrudan belirler.</li>
-<li><strong><code>unsafe</code> kullanımı isteğe bağlı değil, sözleşmeye bağlı:</strong> Model, C
-   kodunun kendisi gerektirmediği sürece hiç <code>unsafe</code> kullanmıyor — karmaşık
-   bellek düzenlerini bile güvenli soyutlamalarla yeniden yapılandırabiliyor.</li>
+<li><strong>Derleme modu hatayı sessizleştirebilir:</strong> Release modunda kategori
+   G'nin iki örneği (s76, s77) PASS'e değil <strong>FE'ye</strong> dönüşür — gürültülü
+   bir çökme sessiz bir yanlış sonuca dönüşür. Yani release modu yalnızca
+   "hatayı gizlemez", bazı durumlarda <strong>riski artırır</strong> (§2.18.G).</li>
+<li><strong>Geri bildirim zenginliği belirleyici:</strong> Hataların düzeltilme oranı,
+   verilen bilginin ayrıntısına göre %100'den %71.9'a kadar değişebiliyor
+   (n=57 kör protokolü) — gerçek bir CI/CD ortamındaki geri bildirim
+   kalitesi, iyileştirme döngüsünün pratikteki etkinliğini doğrudan
+   belirler. n=130'da da aynı yönlü düşüş gözlenir (%100→%93.85→%87.69);
+   kör protokol artık n=130'un tamamında gerçekten uygulanmıştır, bu
+   sayılar gerçek ölçümdür (§5, düzeltme notu).</li>
+<li><strong><code>unsafe</code> kullanımı isteğe bağlı değil, sözleşmeye bağlı — ve doğru
+   kullanımı bir başarı göstergesidir:</strong> Model, C kodunun kendisi
+   gerektirmediği sürece hiç <code>unsafe</code> kullanmıyor (130 çeviriden yalnızca
+   7'si); karmaşık bellek düzenlerini ve pointer-yoğun libc fonksiyonlarını
+   bile güvenli soyutlamalarla yeniden yapılandırabiliyor. Kategori E'de ise
+   asıl anomali <code>unsafe</code>'in <strong>kullanılmadığı</strong> tek vakadır (s19) — diğer
+   dördünde model <code>unsafe</code>'i doğru kullandığı için başarılı olmuştur (§8).</li>
 <li><strong>Bulgular tek modele özgü olabilir; "en iyi model" tek boyutlu bir soru
-   değildir:</strong> Gemini ile 57/57 tam karşılaştırma, bazı hataların modeller
-   arası ortak (Kategori D, sistematik C↔Rust boşluğu — §7.4), bazılarının
-   modele özgü (Gemini'nin E0499 ödünç hatası — §7.3) olduğunu gösteriyor.
-   Daha da önemlisi: Gemini, Claude'un ikinci bağımsız örnekte de tekrar
-   kaçırdığı 5 kategoride (§7.2) tekdüze biçimde daha dayanıklı, ama en
-   uzun/karmaşık gerçek üretim kodu üçlüsünde (musl/Redis/cJSON, §7.2b)
-   tekdüze biçimde daha kırılgandır — "model A modelden B'den daha iyidir"
-   sorusunun yanıtı, kod tabanının niteliğine göre değişir.</li>
+   değildir:</strong> Üç modelli karşılaştırma, bazı hataların modeller arası ortak
+   (Kategori D — altı örnek, dört kod tabanı, iki model boyunca doğrulanmış
+   tek gerçekten model-bağımsız boşluk, §7.4/§7.6a), bazılarının modele özgü
+   (Gemini'nin E0499 ödünç hatası — §7.3) olduğunu gösteriyor. Daha da
+   önemlisi <strong>hata profili EA'dan daha belirleyicidir:</strong> Gemini daha yüksek
+   ham doğruluk gösterse de hatalarının %69'u derlemede yakalanır, Claude
+   Sonnet 5'in hatalarının ise yalnızca %2.6'sı — bir CI hattında bu iki
+   profilin pratik riski taban tabana zıttır. Aynı aileden Claude Haiku
+   bile (%72.31 EA, Sonnet 5'e çok yakın) tamamen farklı bir hata profili
+   (8 CE, temel algoritmalarda hatalar) sergilemektedir.</li>
+<li><strong>İstatistiksel sonuçlar örnekleme tasarımına duyarlıdır:</strong> n=130'da hem
+   Mann-Whitney (kod uzunluğu) hem Fisher (işaretçi kullanımı) testi anlamlı
+   hale gelmiştir, ancak bu <strong>nedensel bir bulgu değil, veri setinin katman
+   yapısının yarattığı bir karıştırıcıdır</strong> (kısa hedefli örnekler çoğunlukla
+   başarısız, uzun gerçek kod örnekleri neredeyse tamamen başarılı). Bu tür
+   kıyaslama veri setlerinde istatistiksel ilişkiler, örneklerin nasıl
+   seçildiği açıkça belirtilmeden yorumlanmamalıdır (§9).</li>
 </ol>
 <hr />
 <p><em>Kaynaklar: <code>results/results_round1.json</code>, <code>results/results_round2*.json</code>,
-<code>results/results_gemini.json</code>, <code>results/platform_comparison.md</code>,
+<code>results/results_gemini.json</code>, <code>results/results_haiku.json</code>,
+<code>results/results_round1_linux.json</code>, <code>results/platform_comparison.md</code>,
 <code>results/model_comparison.md</code>, <code>results/stats_report.md</code>,
+<code>results/VERISETI_VE_ALGORITMALAR.md</code> (örnek bazında tam katalog),
 <code>translations_rust_refined/*.rs</code> (IYILESTIRME yorumları),
 <code>translations_rust__gemini/*.rs</code>, <code>MODIFICATIONS.md</code>.</em></p>
 </body>

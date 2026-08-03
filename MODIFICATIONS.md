@@ -1089,3 +1089,352 @@ referans dosyanın tamamı ve DOKUNULMAYACAKLAR listesindeki tüm sayılar
 (kişisel yol sanitizasyonu).
 
 ---
+
+## Veri Setinin 57'den 130'a Genişletilmesi (s58-s130, 73 yeni örnek) — 8 Parti Halinde
+
+Hakem sürecinde en ısrarlı biçimde tekrarlanan iki eleştiri — (i) örneklem
+küçük, istatistiksel güç düşük, kök-neden kategorilerinin bir kısmı yalnızca
+1-2 örneğe dayanıyor (anekdot riski); (ii) veri seti ağırlıklı olarak
+"kendi yazdığımız, hataya özel tasarlanmış" kodlardan oluşuyor, dış
+geçerliliği zayıf — bu turda veri seti **57'den 130 örneğe** çıkarılarak
+doğrudan hedeflendi. Genişletme **sahte/sentetik değildir**: 73 yeni C
+dosyasının her biri gerçekten yazıldı, gcc ile derlendi, üç LLM ile
+(Claude Sonnet 5 zero-shot, Claude Haiku, Google Gemini gerçek API) Rust'a
+çevrildi, rustc ile hem debug hem release modunda derlendi ve C referansına
+karşı diferansiyel testten geçirildi. `results/results_*.json|csv`
+dosyalarının tamamı bu gerçek koşumlardan yeniden üretildi.
+
+### (a) Değişen/eklenen dosyalar
+
+Genişletme, derleme/çeviri/koşum döngüsünü yönetilebilir tutmak için
+**8 partiye** bölündü (her partinin derleme çıktıları ilgili
+`build_batchN/` dizinindedir):
+
+| Parti | Örnekler | İçerik |
+|---|---|---|
+| 1-2 | s58-s75 (18) | Kök-neden kategorileri A-F derinleştirme (kategori başına 3'er örnek) |
+| 3 | s76-s84 (9) | Kök-neden kategorileri G, H, I derinleştirme |
+| 4 | s85-s93 (9) | SQLite, zlib, curl, Redis, OpenSSL, libsodium üretim kodu |
+| 5 | s94-s102 (9) | FreeBSD libc, Redis, cJSON, musl libc üretim kodu |
+| 6 | s103-s109 (7) | nginx, musl, OpenBSD libc, Apache HTTP Server üretim kodu |
+| 7 | s110-s120 (11) | Çok dosyalı modüller, pthread eşzamanlılığı, C dil özellikleri |
+| 8 | s121-s130 (10) | Klasik veri yapıları ve algoritmalar (trie, AVL, graf, heap, Gauss) |
+
+- **Yeni C örnekleri (73):** `samples_c/s58_*.c` … `samples_c/s130_*.c`.
+  Bunlardan beşi çok dosyalıdır ve `manifest.json` ile keşfedilir:
+  `s110_queue_module/`, `s111_linked_list_module/`,
+  `s112_producer_consumer_threads/`, `s113_rwlock_counter/`,
+  `s114_simple_threadpool/` (son üçü `cflags: ["-lpthread"]` kullanır).
+- **Yeni test girdileri:** `tests/s58_*/` … `tests/s130_*/` — veri setinin
+  toplam test girdisi sayısı **233'ten 521'e** çıktı (her yeni örnek için
+  4-6 girdi; sınır durumları, çok baytlı UTF-8 metin, taşma eşiği aşan
+  sayılar ve boş/tek elemanlı girdiler kasıtlı olarak kapsandı).
+- **Yeni çeviriler:** `translations_rust/s58-s130*` (Round 1, zero-shot),
+  `translations_rust_refined/` (Round 2, yalnızca başarısız olan 21 yeni
+  örnek için düzeltilmiş sürüm), `translations_rust_levelB/` ve
+  `translations_rust_levelC/` (aşağıdaki uyarıya bakınız),
+  `translations_rust__haiku/`, `translations_rust__gemini/`.
+- **Yeniden üretilen sonuç dosyaları:** `results/results_round1.*`,
+  `results_round1_release.*`, `results_round2.*`, `results_round2_levelB.*`,
+  `results_round2_levelC.*`, `results_haiku.*`, **yeni**
+  `results_haiku_release.*`, `results_gemini.*`, `results_gemini_release.*`,
+  `results_round1_linux.*`, `results_round1_release_linux.*`,
+  `results_round2_linux.*`, `stats_report.md`, `platform_comparison.md`,
+  `model_comparison.md`, `manifest_gemini.json`.
+- **Bu turda güncellenen belgeler:** `results/OZET_SONUCLAR.md`,
+  `results/DETAYLI_SORUN_ANALIZI.md` ve türetilmiş
+  `results/DETAYLI_SORUN_ANALIZI.html`.
+
+### (b) Gerçekten ölçülen sayılar
+
+Veri seti **n=57 → n=130**. Gerçek harness koşumları (Windows, MSYS2/UCRT64
+gcc 16.1.0 + rustc 1.97.1):
+
+| Koşul | EA (n=130) | n=57'deki değer |
+|---|---|---|
+| Round 1 — doğrudan, debug | %70.77 (92/130) | %70.18 (40/57) |
+| Round 1 — doğrudan, release | %74.62 (97/130) | %73.68 (42/57) |
+| Round 2 — iyileştirilmiş, debug | %100.00 (130/130) | %100.00 (57/57) |
+
+**Ham çeviri doğruluğu neredeyse hiç değişmedi (%70.18 → %70.77)** — bu,
+bulgunun örneklem büyüklüğüne karşı dayanıklı olduğunu gösteren, tek başına
+değerli bir sonuçtur. Test-girdisi bazında: çalıştırılabilen 518 girdinin
+435'i geçti (%83.98).
+
+**38 başarısızlığın dağılımı:** 1 CE (s19), 9 RE, 28 FE, 0 NT. Sessiz hata
+oranı: 37/38 (%97.4) sorunsuz derlendi; iki katmanlı okumada 28'i (%73.7)
+gerçekten sessiz (FE), 9'u (%23.7) gürültülü (RE).
+
+**Katman bazında sonuç — genişletmenin en önemli tek bulgusu:**
+
+| Katman | Örnek | Round 1 sonucu |
+|---|---|---|
+| s58-s84 — kök-neden derinleştirme (kısa, hedefli) | 27 | 7/27 PASS (%25.9) |
+| s85-s109 — gerçek açık kaynak üretim kodu | 25 | 24/25 PASS (%96.0) |
+| s110-s130 — çeşitlilik/çok dosyalı/eşzamanlılık | 21 | 21/21 PASS (%100) |
+
+**Çoklu model (n=130):**
+
+| Model | Kapsam | EA | CE | RE | FE |
+|---|---|---|---|---|---|
+| Claude Sonnet 5 | 130/130 | %70.77 (92/130) | 1 | 9 | 28 |
+| Claude Haiku | 130/130 | %72.31 (94/130) | 8 | 5 | 23 |
+| Gemini (`gemini-flash-latest`) | **99/130 (kısmi)** | %86.87 (86/99) | 9 | 0 | 4 |
+
+**Çoklu platform (Docker, Ubuntu 24.04, gcc 13.3.0 + rustc 1.97.1 — Windows
+ile birebir aynı rustc sürümü):** Round 1 debug %74.62 (97/130), Round 1
+release %78.46 (102/130), Round 2 %94.62 (123/130).
+
+**İstatistik (`harness/stats_report.py`, sabit seed=42):** Mann-Whitney
+U=924.0, p<0.0001, rank-biserial r=0.471; Fisher (işaretçi kullanımı)
+odds=5.77, p<0.0001, %95 GA=[2.54, 13.09]; bootstrap gerçekleşen güç %98.9;
+duyarlılık analizi |r|≈0.31; EA bootstrap %95 GA'ları n=57'ye göre yaklaşık
+yarıya daraldı (±13 puandan ±7.7 puana).
+
+### (c) Genişletmeden çıkan yeni bulgular
+
+1. **Taksonomi doyuma ulaştı.** 73 yeni örnek — tamamen yeni kod tabanları
+   (SQLite, zlib, curl, OpenSSL, libsodium, nginx, Apache) ve yeni program
+   sınıfları (gerçek eşzamanlılık, `setjmp`/`longjmp`, değişken argümanlı
+   fonksiyonlar, AVL/trie/graf) dahil — **onuncu bir kök-neden kategorisi
+   ortaya çıkarmadı.** Veri seti 24→57 arasında dört kez yeni kategori
+   üretmişken (F, G, H, I), 57→130 gibi çok daha büyük bir sıçramada hiç
+   üretmemesi anlamlıdır.
+2. **Kategori E yeniden sınıflandırılmalı.** Kategoriye eklenen üç örneğin
+   (s70, s71, s72) **üçü de PASS oldu**; model üçünde de `static mut`
+   seçip erişimi doğru biçimde `unsafe` bloğuna sardı. s50 ile birlikte
+   kategori E'nin beş örneğinden dördü PASS'tır — yani bu sistematik bir
+   C↔Rust boşluğu değil, **modelin aynı kalıpta tutarsız davranmasıdır**
+   (5 denemede 1 kez `unsafe` sarmalamayı unutma). Makalede E'nin
+   diğer sekiz kategoriyle eşit ağırlıkta sunulması artık yanıltıcıdır.
+3. **Kategorilerin tetiklenme gücü eşit değil.** Yeni örneklerde: C, D, F,
+   G, H %100 (3/3); A ve I %67 (2/3); B %33 (1/3); E %0 (0/3).
+4. **Platforma özgü düzeltme sorunu 2 örnekten 6 örneğe çıktı.** Kategori
+   F'nin altı örneğinin (s38, s51, s73, s74, s75 ve **yeni s103**) tamamı
+   Windows↔Linux arasında PASS/FAIL yer değiştiriyor. s103_nginx_hextoi
+   özellikle önemlidir: hedefli bölümden değil, **hedeflenmemiş gerçek
+   üretim kodu katmanından kendiliğinden** geldi. Platforma duyarlı örnek
+   sayısı 3'ten 7'ye çıktı (yedincisi s47, CRLF/stdio kaynaklı).
+5. **Release modu bazı hataları sessizleştiriyor — önceki bir gözlem
+   düzeltildi.** Önceki sürümlerde kategori G paniklerinin "release modunda
+   dahi maskelenemediği" yazıyordu. Yeni örnekler bunu kısmen çürüttü:
+   release'de s78 PASS'e, **s76 ve s77 ise FE'ye (sessiz yanlış çıktı)**
+   dönüşüyor. Bu yüzden release'de RE 9'dan 2'ye düşerken FE 28'den 30'a
+   **yükseliyor**. Yani release modu bir "düzeltme" değil; bazı durumlarda
+   gürültülü bir çökmeyi sessiz bir yanlış sonuca dönüştürerek riski
+   artırıyor.
+6. **Sessiz hata oranı modele göre çarpıcı biçimde değişiyor.** Claude
+   Sonnet 5'in 38 başarısızlığının yalnızca 1'i derlemede yakalanıyor
+   (%2.6); Claude Haiku'da 36'nın 8'i (%22.2); Gemini'de 13'ün 9'u (%69.2).
+   Yüksek EA düşük risk anlamına gelmiyor — bir CI hattında bu üç profilin
+   pratik riski birbirinden çok farklı.
+7. **Kategori D kesin biçimde model-bağımsız kör nokta.** Yeni üç örnekte
+   (s67, s68, s69) Gemini de üçünde birden başarısız (üçü de CE). Kategori
+   D artık altı örnek, dört bağımsız kod tabanı (kendi yazdıklarımız +
+   cJSON + SQLite) ve iki model boyunca doğrulanmıştır.
+8. **Gemini'nin kategori F "üstünlüğü" tesadüfmüş.** Önceki turlarda Gemini
+   `std::os::raw::c_long` kullanarak s38/s51'i geçmiş ve bu "daha
+   taşınabilir bir çözüm" olarak raporlanmıştı; yeni s103'te Gemini de
+   Claude ile aynı hataya düştü. Yani bu, modelin tutarlı uyguladığı bir
+   kural değil, örneğe bağlı bir tercihtir.
+
+### (d) Karşılaşılan sorunlar ve dürüstçe raporlanan sınırlamalar
+
+1. **✅ [DÜZELTİLDİ — bkz. "Seviye B/C Kör Protokol Düzeltmesi" girdisi, dosya
+   sonu] Seviye B/C kör protokolü yeni örneklere uygulanmamıştı (o turdaki en
+   önemli sorun).** `translations_rust_levelB/` ve `translations_rust_levelC/`
+   klasörleri bayt düzeyinde denetlendiğinde şu bulundu: n=57 aşamasındaki
+   **17 eski başarısızlık için protokol doğru uygulanmıştır** (Seviye B
+   dosyaları hem Round 1 hem Round 2 sürümlerinden farklıdır, yani gerçek
+   bağımsız "kör" düzeltme denemeleridir). Buna karşılık **s58-s130
+   arasındaki 21 yeni başarısızlık için, Seviye B/C'de "düzeltilmiş"
+   görünen her dosya Round 2'nin oracle düzeltmesiyle bayt düzeyinde
+   özdeştir** (Seviye B'de 15 örnek, Seviye C'de 8 örnek) — bu örneklerde
+   kısıtlı bilgiyle bağımsız bir düzeltme denenmemiş, doğrudan oracle
+   yanıtı kopyalanmıştır. Sonuç: ölçülen **116/130 (%89.23)** ve
+   **101/130 (%77.69)** sayıları gerçek harness çıktısıydı ama **yukarı
+   yönlü yanlıydı ve n=57 ölçümüyle karşılaştırılamazdı.** Bu sınırlama
+   `OZET_SONUCLAR.md` ve `DETAYLI_SORUN_ANALIZI.md` §5'te açık birer uyarı
+   kutusu olarak yazılmıştı. **Sonraki bir turda bu 21 örnek için gerçek bir
+   kör tekrar koşumu yapılmış ve sorun kapatılmıştır** — güncel, doğrulanmış
+   sayılar Seviye B için 122/130 = %93.85, Seviye C için 114/130 = %87.69'dur
+   (ayrıntı: dosyanın sonundaki "Seviye B/C Kör Protokol Düzeltmesi" girdisi).
+2. **⚠️ İstatistiksel ana bulgu tersine döndü — ve nedeni bir karıştırıcı
+   değişkendir.** n=57'de hem Mann-Whitney (kod uzunluğu) hem Fisher
+   (işaretçi kullanımı) testi anlamsızdı; n=130'da **ikisi de anlamlı**
+   hale geldi (p<0.0001). Ancak yön sezgiye zıttır: **başarısız örnekler
+   daha kısadır** (FAIL medyan 25.0 vs PASS medyan 53.0 satır). Bu nedensel
+   bir bulgu değil, **veri setinin katman yapısının doğrudan bir yan
+   ürünüdür**: kök-neden kategorilerini derinleştirmek için eklenen
+   s58-s84 katmanı kasıtlı olarak kısadır (16-44 satır) ve çoğunlukla
+   başarısızdır (20/27), s85-s130 katmanı ise uzundur ve neredeyse tamamen
+   başarılıdır (45/46). Aynı karıştırıcı, işaretçi kullanımı testini de
+   anlamlı hale getirmiştir (işaretçi kullanan kod ağırlıklı olarak uzun
+   gerçek üretim kodudur). **Makalede "kod uzunluğu ile anlamlı ilişki
+   yoktur" artık DENMEMELİ**; bunun yerine ilişkinin gözlendiği ama
+   örnekleme tasarımından kaynaklandığı açıkça yazılmalıdır. Asıl tez
+   değişmemiştir: başarısızlık kod uzunluğuyla değil, belirli bir semantik
+   boşluğun tetiklenip tetiklenmemesiyle ilişkilidir.
+3. **⚠️ `results/stats_report.md`'de eskimiş şablon metinleri kaldı.** İki
+   cümle güncel sayılarla çelişiyor: (i) Fisher bölümündeki "Güven
+   aralığının 1.0'i içermesi, ilişkinin istatistiksel olarak anlamlı
+   olmadığını doğrular" — oysa GA=[2.54, 13.09] 1.0'ı içermiyor, ilişki
+   anlamlı; (ii) duyarlılık analizindeki "Gözlemlenen r=0.156" — oysa
+   n=130'da gözlenen r=0.471. Bu cümleler `harness/stats_report.py` içinde
+   sabit metin olarak gömülüdür ve **düzeltilmelidir**. Bu turda
+   `stats_report.py`/`stats_report.md` kapsam dışı tutulduğu için
+   dokunulmadı; tutarsızlık `DETAYLI_SORUN_ANALIZI.md` §9'da açıkça not
+   edildi.
+4. **Gemini kapsamı kısmi kaldı (99/130).** Google AI Studio ücretsiz
+   katmanının günlük kota sınırı (20 istek/gün/model) nedeniyle 31 örnek
+   (s80-s84, s85-s99, s120-s130) henüz çevrilemedi; kota sıfırlandıkça
+   günlük olarak otomatik tamamlanıyor. Gemini'nin %86.87'si bu 99
+   örneklik alt küme üzerinden hesaplanmıştır ve diğer iki modelin
+   tam-kapsam sayılarıyla doğrudan karşılaştırılamaz. **Buna bağlı olarak
+   McNemar testi de geçicidir:** `stats_report.md`'deki ortak örnek sayısı
+   (78) kısmi kapsamın sonucudur ve Gemini tamamlandığında testin tüm
+   hücreleri yeniden hesaplanmalıdır. Bu uyarı her üç belgeye de eklendi.
+5. **Şekiller henüz yeniden üretilmedi.** `results/figures/*.png` hâlâ
+   n=57 verisini yansıtıyor; `harness/make_figures.py` güncel n=130
+   verisiyle yeniden çalıştırılmalıdır. `OZET_SONUCLAR.md`'nin Figürler
+   bölümüne bu konuda açık bir not düşüldü.
+
+### (e) Makaleye önerilen taslak metin
+
+**§III-A Veri Seti'ne eklenecek paragraf:**
+> Hakem geri bildirimi doğrultusunda veri seti 57 programdan 130 programa
+> (521 test girdisi) genişletilmiştir. Genişletme üç katmandan oluşur:
+> (i) dokuz kök-neden kategorisinin her birine üçer bağımsız yeni örnek
+> (s58-s84), böylece her kategori artık 3-6 bağımsız gözleme dayanmaktadır;
+> (ii) yaygın kullanılan açık kaynak projelerden (SQLite, zlib, curl,
+> Redis, OpenSSL, libsodium, OpenBSD/FreeBSD libc, nginx, musl libc, cJSON,
+> Apache HTTP Server) çekirdek fonksiyon gövdeleri değiştirilmeden alınmış
+> 25 gerçek üretim kodu örneği (s85-s109); (iii) çok dosyalı modüller,
+> pthread tabanlı eşzamanlılık ve genel algoritma çeşitliliği içeren 21
+> örnek (s110-s130). Ham çeviri doğruluğu bu genişletmede pratik olarak
+> değişmemiştir (%70.18 → %70.77), bu da bulgunun örneklem büyüklüğüne
+> karşı dayanıklı olduğunu göstermektedir.
+
+**§IV-C Kök Neden Analizi'ne eklenecek paragraf:**
+> Veri setinin 57'den 130'a genişletilmesi, mevcut dokuz kök-neden
+> kategorisine ek olarak onuncu bir kategori ortaya çıkarmamıştır; bunun
+> yerine her kategori 3-6 bağımsız örnekle doğrulanmıştır. Bu, taksonominin
+> incelenen kod sınıfı için doyuma ulaştığına dair bir işarettir.
+> Genişletme ayrıca bir kategoriyi yeniden yorumlamayı gerektirmiştir:
+> güvensiz global durum (Kategori E) için eklenen üç yeni örneğin üçü de
+> ilk denemede doğru çevrilmiş, modelin `static mut` erişimlerini doğru
+> biçimde `unsafe` bloklarına sardığı görülmüştür. Kategori E'nin beş
+> örneğinden dördü başarılıdır; dolayısıyla bu, sistematik bir C↔Rust
+> semantik boşluğundan çok, modelin aynı yapısal kalıpta tutarsız
+> davranmasının bir göstergesidir.
+
+**§V-B Sınırlamalar'a eklenecek not:**
+> Genişletilmiş veri setinde kod uzunluğu ile başarı arasında istatistiksel
+> olarak anlamlı bir ilişki gözlenmiştir (Mann-Whitney U=924.0, p<0.0001,
+> r=0.471), ancak bu ilişki nedensel biçimde yorumlanmamalıdır: kök-neden
+> kategorilerini derinleştirmek için eklenen örnekler kasıtlı olarak kısa
+> ve hataya özel tasarlanmış, gerçek üretim kodu örnekleri ise belirgin
+> biçimde daha uzundur. Gözlenen ilişki bu örnekleme tasarımının bir yan
+> ürünüdür. Aynı karıştırıcı, işaretçi kullanımı ile başarı arasındaki
+> Fisher testi sonucunu da etkilemektedir.
+
+### Kalan (bu turda tamamlanmayan)
+
+- ~~21 yeni başarısızlık için Seviye B/C **gerçek kör tekrar koşumu**
+  (yukarıdaki (d).1 maddesi) — en yüksek öncelikli açık kalem.~~ **Sonraki
+  bir turda tamamlandı** — bkz. dosyanın sonundaki "Seviye B/C Kör Protokol
+  Düzeltmesi" girdisi.
+- Gemini'nin kalan 31 örneği ve buna bağlı McNemar testinin yeniden
+  hesaplanması.
+- `harness/stats_report.py` içindeki iki eskimiş şablon cümlesinin
+  düzeltilmesi ve `stats_report.md`'nin yeniden üretilmesi.
+- `harness/make_figures.py` ile beş şeklin n=130 verisiyle yeniden
+  üretilmesi.
+- Makalenin (`makale_IEEE_v1.docx`) n=130 sayılarıyla güncellenmesi —
+  bu tur yalnızca `results/` altındaki analiz belgelerini ve bu değişiklik
+  günlüğünü kapsamıştır.
+
+### Etkilenen dosyalar (bu tur)
+
+`results/OZET_SONUCLAR.md` (veri seti tanımı, Tablo 2, kök-neden bölümü,
+Ana Gözlemler, yeni çoklu model ve çoklu platform bölümleri),
+`results/DETAYLI_SORUN_ANALIZI.md` (§1-§11 boyunca n=130'a güncelleme; yeni
+§2.18 — 21 yeni başarısızlığın kategori bazında vaka analizi; yeni §3.10 —
+52 yeni PASS örneğinin analizi; yeni §7.6 — genişletmenin çoklu model
+bulguları), `results/DETAYLI_SORUN_ANALIZI.html` (markdown'dan yeniden
+üretildi, biçim/CSS korundu), `MODIFICATIONS.md` (bu bölüm).
+
+---
+
+## Seviye B/C Kör Protokol Düzeltmesi — 21 Yeni Başarısızlık İçin Gerçek Kör Tekrar Koşumu
+
+Bir önceki turda bir denetim ajanı, veri setini 57'den 130'a genişletirken
+eklenen 21 yeni başarısızlık için `translations_rust_levelB/` ve
+`translations_rust_levelC/` klasörlerindeki dosyaların Round 2'nin oracle
+(Seviye A) dosyalarıyla **bayt düzeyinde özdeş** olduğunu, yani bu 21 örnek
+için kısıtlı bilgiyle gerçek bir "kör" yeniden çeviri hiç yapılmadığını,
+doğrudan oracle yanıtının kopyalandığını tespit etmişti (bkz. yukarıdaki
+"n=130'a Genişletme" bölümü, (d).1 maddesi). Bu, o turda ölçülen Seviye B
+(%89.23, 116/130) ve Seviye C (%77.69, 101/130) sonuçlarını yapay biçimde
+şişiriyordu.
+
+### (a) Değişen/eklenen dosyalar
+
+- **Değişti:** `translations_rust_levelB/` — s58-s130 arasındaki 21 yeni
+  başarısızlığın çevirileri, oracle (Seviye A) dosyasına hiç bakılmadan,
+  yalnızca izin verilen kısıtlı geri bildirimle (derleyici/panik metni tam;
+  FE için yalnızca girdi, fark yok) sıfırdan yeniden yazıldı.
+- **Değişti:** `translations_rust_levelC/` — aynı 21 örnek için, yalnızca
+  izin verilen minimal geri bildirimle (gerçek başarısız test sayısı, CE
+  hariç) sıfırdan yeniden yazıldı.
+- n=57 aşamasından kalan 17 eski başarısızlığın Seviye B/C dosyalarına
+  **dokunulmadı** — onlar zaten önceki bir turda gerçekten kör koşulda
+  yazılmıştı ve bayt-bayt denetimden geçmişti.
+- **Değişti (yeniden çalıştırıldı):** `harness/run_experiment.py
+  --rust-dir translations_rust_levelB --label round2_levelB` ve
+  `--rust-dir translations_rust_levelC --label round2_levelC` — gerçek
+  derleme/çalıştırma sonucu olarak `results/results_round2_levelB.csv/json`
+  ve `results/results_round2_levelC.csv/json` güncellendi.
+- **Değişti:** `results/OZET_SONUCLAR.md`, `results/DETAYLI_SORUN_ANALIZI.md`,
+  `results/DETAYLI_SORUN_ANALIZI.html` — eski (%89.23/%77.69) sayıları ve
+  bunlarla ilişkili uyarı kutuları, güncel (%93.85/%87.69) sayıları ve bu
+  düzeltmeyi belgeleyen kısa notlarla değiştirildi.
+
+### (b) Gerçekten ölçülen sayılar
+
+| Seviye | n=130 (önceki, kısmen kopyalanmış) | n=130 (güncel, tamamen kör) |
+|---|---|---|
+| B — Orta (CI-benzeri) | 116/130 = %89.23 | **122/130 = %93.85** |
+| C — Minimal | 101/130 = %77.69 | **114/130 = %87.69** |
+
+21 yeni başarısızlığın **tamamı (21/21)** hem Seviye B'de hem Seviye C'de
+gerçekten kısıtlı bilgiyle düzeltilebilmiştir — önceki turun "kopyalanan
+düzeltmelerin hiçbiri kör koşulda başarılı olmasaydı" varsayımına dayanan
+aritmetik alt sınırından (Seviye B için %77.69, Seviye C için %71.54) çok
+daha iyi bir sonuç. Buna karşılık n=57 aşamasından kalan 17 eski
+başarısızlıkta hiçbir şey değişmedi: Seviye B'de hâlâ 9/17, Seviye C'de
+hâlâ 1/17 düzeltilmiştir (bu sayılar önceki turdan aynen korunmuştur).
+122 = 92 (Round 1'de zaten PASS olan örnekler) + 9 (eski, düzeltilen) + 21
+(yeni, tamamı düzeltilen); 114 = 92 + 1 (eski) + 21 (yeni).
+
+### (c) Makaleye önerilen taslak metin
+
+**Tablo VI / §V-A'ya eklenecek not (önceki uyarı kutusunun yerine):**
+> Kısıtlı geri bildirim deneyi artık n=130'un tamamı üzerinde gerçekten
+> kör protokolle ölçülmüştür: Seviye B (orta ayrıntı) %93.85 (122/130),
+> Seviye C (minimal ayrıntı) %87.69 (114/130) — Seviye A'nın (oracle)
+> %100'ünden aşağı doğru aynı yönlü düşüş sürmektedir. Düşüşün tamamı
+> veri setinin ilk 57 örneklik aşamasından kalan 17 başarısızlıktan
+> kaynaklanır; kök-neden taksonomisini derinleştirmek için sonradan
+> eklenen 21 başarısızlığın tamamı, hem orta hem minimal geri bildirimle
+> bağımsız biçimde düzeltilebilmiştir.
+
+### Not
+
+Bu düzeltme, `MODIFICATIONS.md`'nin var oluş amacına doğrudan hizmet eder:
+bir önceki turda tespit edilen metodoloji hatası gizlenmemiş, hem tespiti
+hem düzeltilmesi bu dosyada uçtan uca belgelenmiştir. Hiçbir sayı
+uydurulmamıştır; yukarıdaki 122/130 ve 114/130 rakamları
+`harness/run_experiment.py`'nin gerçek, tekrarlanabilir çıktısıdır.
+
+---

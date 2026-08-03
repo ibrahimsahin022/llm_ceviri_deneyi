@@ -1,0 +1,5 @@
+4
+I cat
+I car
+S cat
+S dog

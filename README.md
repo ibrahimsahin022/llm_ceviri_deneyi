@@ -3,26 +3,31 @@
 Bu proje, **eski kodların büyük dil modelleriyle (LLM) yeni bir dile çevrilirken
 oluşan sessiz semantik hataları** deneysel olarak ölçmek için hazırlanmış,
 çalıştırılabilir bir test ortamıdır. Makalenin "Yöntem" ve "Bulgular" bölümlerinin
-verisi bu ortamdan üretilir. Proje **57 C programı** ve **233 test girdisi**
-içerir (24 temel algoritma; 5 daha uzun özgün program; Rosetta Code'dan [4] 7
-algoritma; OpenBSD/FreeBSD libc'sinden [5] 3 üretim fonksiyonu; musl/Redis/cJSON'dan
-[6,7,8] 3 uzun üretim kodu; hedeflenmemiş boşlukları kapsayan 6 özgün program;
-beş kök-neden kategorisinin bağımsız 2. örnekleri (5 program); çok dosyalı/
-eşzamanlı yapı test eden 3 program; karmaşık makro kullanımını test eden 1
-program — tam katalog `results/VERISETI_VE_ALGORITMALAR.md`'dedir).
+verisi bu ortamdan üretilir. Proje **130 C programı** ve **521 test girdisi**
+içerir: orijinal 57 örneğin (24 temel algoritma; 5 daha uzun özgün program;
+Rosetta Code'dan [4] 7 algoritma; OpenBSD/FreeBSD libc'sinden [5] 3 üretim
+fonksiyonu; musl/Redis/cJSON'dan [6,7,8] 3 uzun üretim kodu; hedeflenmemiş
+boşlukları kapsayan 6 özgün program; beş kök-neden kategorisinin bağımsız 2.
+örnekleri; çok dosyalı/eşzamanlı yapı test eden 3 program; karmaşık makro
+kullanımını test eden 1 program) üzerine, mevcut A–I kök-neden kategorilerini
+derinleştiren ve gerçek açık kaynak (SQLite, zlib, curl, Redis, OpenSSL,
+libsodium, OpenBSD/FreeBSD, nginx, musl, cJSON, Apache) üretim kodundan alınan
+73 yeni örnek (s58–s130) eklenmiştir — tam katalog `results/VERISETI_VE_ALGORITMALAR.md`'dedir.
 
-Deney **iki bağımsız model** üzerinde gerçek, otomatik ölçüm içerir: Claude
-Sonnet 5 (57/57, EA=%70.18) ve Google Gemini (57/57, EA=%89.47, gerçek API
-çağrısıyla — bkz. `harness/translators/`). Ayrıca **çok dosyalı kod** (bkz.
-`samples_c/s54_stack_module/`, `s55_config_parser/`, `s57_shared_counter_threads/`)
-ve **çoklu platform** (Windows/LLP64 + Docker/Linux/LP64, bkz. `Dockerfile`,
-`harness/compare_platforms.py`) boyutlarını da kapsar — ayrıntı ve gerçek
-ölçülmüş sayılar için `MODIFICATIONS.md`'e bakın.
+Deney **üç bağımsız model** üzerinde gerçek, otomatik ölçüm içerir: Claude
+Sonnet 5 (130/130, EA=%70.77), Claude Haiku (130/130, EA=%72.31) ve Google
+Gemini (gerçek API çağrısıyla, günlük 20 istek/gün kota sınırı nedeniyle kademeli
+tamamlanıyor — bkz. `harness/translators/`). Ayrıca **çok dosyalı kod** (bkz.
+`samples_c/s54_stack_module/`, `s55_config_parser/`, `s57_shared_counter_threads/`,
+`s110_queue_module/`, `s111_linked_list_module/`, `s112_producer_consumer_threads/`,
+`s113_rwlock_counter/`, `s114_simple_threadpool/`) ve **çoklu platform**
+(Windows/LLP64 + Docker/Linux/LP64, bkz. `Dockerfile`, `harness/compare_platforms.py`)
+boyutlarını da kapsar — ayrıntı ve gerçek ölçülmüş sayılar için `MODIFICATIONS.md`'e bakın.
 
 Sonuç dosyaları (`results/` altında):
 - `OZET_SONUCLAR.md` — makaleye hazır bulgular + hata analizi.
 - `VERISETI_VE_ALGORITMALAR.md` — kullanılan model/araçlar, veri seti kartı ve her programın algoritması.
-- `DETAYLI_SORUN_ANALIZI.md` / `.html` — 57 örneğin tamamının vaka analizi.
+- `DETAYLI_SORUN_ANALIZI.md` / `.html` — 130 örneğin tamamının vaka analizi.
 - `stats_report.md` — bootstrap GA, Mann-Whitney duyarlılık analizi, Fisher GA, McNemar testi (üreten betik: `harness/stats_report.py`).
 - `platform_comparison.md` — Windows/LLP64 vs Linux/LP64 karşılaştırması (üreten betik: `harness/compare_platforms.py`).
 - `model_comparison.md` — Claude vs Gemini karşılaştırma tablosu (üreten betik: `harness/compare_models.py`).
@@ -42,12 +47,13 @@ Sonuç dosyaları (`results/` altında):
 llm_ceviri_deneyi/
 ├── samples_c/                  # Kaynak (referans) C programları — tekil .c dosyaları
 │                                #   veya çok dosyalı örnekler icin alt klasor (manifest.json ile)
-├── tests/<ornek>/*.txt          # Her örnek için test girdileri (233 dosya, 57 örnek)
+├── tests/<ornek>/*.txt          # Her örnek için test girdileri (521 dosya, 130 örnek)
 ├── translations_rust/           # Claude Sonnet 5 cevirileri (Round 1 — dogrudan)
 ├── translations_rust_refined/   # Claude, Round 2 — Seviye A/oracle geri bildirim
 ├── translations_rust_levelB/    # Claude, Round 2 — Seviye B (orta ayrintili geri bildirim)
 ├── translations_rust_levelC/    # Claude, Round 2 — Seviye C (minimal geri bildirim)
-├── translations_rust__gemini/   # Google Gemini cevirileri (57/57, gercek API cagrisi)
+├── translations_rust_haiku/     # Claude Haiku cevirileri (130/130, Agent tool ile zero-shot)
+├── translations_rust__gemini/   # Google Gemini cevirileri (gercek API cagrisi, gunluk kota nedeniyle kademeli)
 ├── translations_rust__gpt4o/    # (bos - API anahtari yok, bkz. asagida)
 ├── translations_rust__deepseek/ # (bos - API anahtari yok, bkz. asagida)
 ├── harness/
@@ -123,22 +129,24 @@ ve ikisini karşılaştıran bir tablo üretir. `translations_rust__gpt4o/` ve
 aşağıdaki "Çoklu-model" bölümü) bu iki model için `[atlandi] ... bulunamadi`
 mesajı görürsünüz — bu **beklenen bir durumdur, hata değildir.**
 
-**Beklenen çıktı** (`results/model_comparison.md`, gerçek ölçüm):
+**Beklenen çıktı** (`results/model_comparison.md`, gerçek ölçüm — Gemini günlük
+20 istek/gün kota sınırı nedeniyle şu an kısmi kapsamda, kalan örnekler
+otomatik günlük tamamlanmaktadır):
 
-| Model | Kapsam | EA (örnek) | EA % | CE | RE | FE | NT |
+| Model | Kapsam (degerlendirilen/toplam 130) | EA (örnek) | EA % | CE | RE | FE | NT |
 |---|---|---|---|---|---|---|---|
-| claude-sonnet-5 (referans, round1) | 57/57 | 40/57 | %70.18 | 1 | 4 | 12 | 0 |
-| gemini | 57/57 | 51/57 | %89.47 | 4 | 0 | 2 | 0 |
+| claude-sonnet-5 (referans, round1) | 130/130 | 92/130 | %70.77 | 1 | 9 | 28 | 0 |
+| gemini | 99/130 [KISMI - kota/hata nedeniyle eksik] | 86/99 | %86.87 | 9 | 0 | 4 | 0 |
 
 ## Makaledeki ana sayılar nerede üretiliyor?
 
 | Makaledeki değer | Üreten dosya |
 |---|---|
-| Tablo III (40/57, 42/57, 57/57 — üç koşul) | `harness/run_experiment.py` (3 ayrı `--label` koşusu) |
+| Tablo III (92/130, 97/130, 130/130 — üç koşul) | `harness/run_experiment.py` (3 ayrı `--label` koşusu) |
 | Tablo IV (betimsel özellikler) + Mann-Whitney/Fisher/bootstrap/McNemar | `harness/stats_report.py` → `results/stats_report.md` |
-| Tablo VII (model × kategori kırılımı, 40/51) | `harness/compare_models.py` → `results/model_comparison.md` |
+| Tablo VII (model × kategori kırılımı) | `harness/compare_models.py` → `results/model_comparison.md` |
 | Şekil 1-5 | `harness/make_figures.py` → `results/figures/*.png` |
-| Platform farkı (Round 2: %100→%94.74, 54/57) | `harness/compare_platforms.py` → `results/platform_comparison.md` |
+| Platform farkı (Round 2: %100→%94.62, 123/130) | `harness/compare_platforms.py` → `results/platform_comparison.md` |
 | Gemini çağrı kaydı (istem, zaman damgası, parametreler) | `harness/generate_translations.py` → `results/manifest_gemini.json` |
 
 ## Tam koşu (üç koşul + figürler + istatistikler)
@@ -166,11 +174,16 @@ python harness/compare_platforms.py        # Windows vs Linux karsilastirmasi
 ```
 
 **Not:** Bu Docker tekrarı ilk olarak veri seti 55 örnekken (s56 ve s57
-eklenmeden önce) yapılmıştı; 2026-07-30'da s56/s57 dahil **57 örneğin
-tamamı** üzerinde yeniden çalıştırıldı ve `results/platform_comparison.md`
-artık `n=57` üzerindendir (Round 2 Linux: %94.74, 54/57). Yeni eklenen
-s56/s57 iki platformda da aynı sonucu verdi; platforma duyarlı üç örnek
-(s38, s51, s47) değişmedi.
+eklenmeden önce) yapılmıştı; 2026-07-30'da s56/s57 dahil 57 örneğin tamamı
+üzerinde, 2026-08-01'de ise veri seti 130 örneğe (s58–s130) genişledikten
+sonra tekrar çalıştırıldı ve `results/platform_comparison.md` artık `n=130`
+üzerindendir (Round 2 Linux: %94.62, 123/130). Yeni eklenen 73 örnekten
+biri (s103_nginx_hextoi — `long` genişliği, Windows'ta 32-bit / Linux'ta
+64-bit) platforma duyarlı çıktı ve mevcut s38/s51/s73/s74/s75 (aynı kök
+neden) ile aynı kalıba katıldı; ayrıca s47_redis_sds'de CRLF test girdisi
+kaynaklı, C referansının kendisinin platformlar arası taşınabilir olmadığını
+gösteren ayrı bir bulgu tekrar gözlemlendi (bkz. `results/platform_comparison.md`
+"Yorum" bölümü).
 
 ## Çoklu-model çeviri üretme (Gemini/GPT-4o/DeepSeek)
 
@@ -183,7 +196,9 @@ python harness/compare_models.py
 Her çağrının tam istemi (prompt), model kimliği, zaman damgası ve sampling
 parametreleri `results/manifest_<model>.json` içine kaydedilir (Gemini için:
 `temperature=0.2`, `top_p=1.0`, model kimliği `gemini-flash-latest`, gerçek
-erişim tarihleri 2026-07-22 – 2026-07-25). GPT-4o ve DeepSeek adaptörleri
+erişim tarihleri 2026-07-22 – devam ediyor; ücretsiz katmanın günde 20
+istek/model kotası nedeniyle 130 örneğin tamamı tek günde çevrilememiş,
+kalan örnekler günlük olarak tamamlanmaktadır). GPT-4o ve DeepSeek adaptörleri
 yazılmıştır (`harness/translators/`) ama API anahtarı olmadığından hiç
 çalıştırılmamıştır — bu, makalenin §V-B (Sınırlamalar) bölümünde açıkça
 belirtilmiştir.

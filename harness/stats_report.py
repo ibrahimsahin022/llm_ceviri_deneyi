@@ -229,6 +229,18 @@ def main():
         pooled = np.array(pass_locs + fail_locs, dtype=float)
         pooled_sigma = float(pooled.std(ddof=1))
         mde_delta, mde_r = minimum_detectable_effect(n1, n2, pooled_sigma)
+        above_threshold = abs(r_eff) >= mde_r
+        verdict = (
+            f"Gozlemlenen r={r_eff:.3f} bu esigin {'uzerindedir' if above_threshold else 'belirgin altindadir'} "
+            + (
+                "- veri seti bu buyuklukteki etkiyi saptayacak guce sahiptir; anlamli fark "
+                "bulgusu dusuk-guc kaynakli bir yanilgi olarak okunmamalidir."
+                if above_threshold else
+                "- veri seti bu buyuklukte kucuk-orta etkileri saptayacak guce "
+                "sahip degildir; 'anlamli fark yok' sonucu bu nedenle kesin bir iliskisizlik "
+                "kaniti degil, dusuk guçle tutarli bir gozlem olarak okunmalidir."
+            )
+        )
         lines.append(
             f"- **Duyarlilik analizi (onerilen, post-hoc guc yerine):** n(FAIL)={n1}, "
             f"n(PASS)={n2}, alpha=0.05 ile %80 guçte saptanabilecek en kucuk etki "
@@ -236,10 +248,7 @@ def main():
             f"istatistiginden ampirik rank-biserial formuluyle (r=1-2U/(n1*n2), normal/AUC "
             f"yaklasik donusumu degil) hesaplandiginda rank-biserial |r|≈{mde_r:.2f}'dir "
             f"(LoC olceginde ≈{mde_delta:.0f} satirlik bir ortalama farka denk gelir, "
-            f"pooled sigma={pooled_sigma:.1f}). Gozlemlenen r=0.156 bu esigin belirgin "
-            f"altindadir - veri seti bu buyuklukte kucuk-orta etkileri saptayacak guce "
-            f"sahip degildir; 'anlamli fark yok' sonucu bu nedenle kesin bir iliskisizlik "
-            f"kaniti degil, dusuk guçle tutarli bir gozlem olarak okunmalidir.\n"
+            f"pooled sigma={pooled_sigma:.1f}). {verdict}\n"
         )
 
     # ---- 3) Betimsel kod ozellikleri (Tablo VII) ----

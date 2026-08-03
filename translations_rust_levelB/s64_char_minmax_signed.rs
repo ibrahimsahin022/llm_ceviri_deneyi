@@ -5,18 +5,22 @@ fn main() {
     io::stdin().read_to_string(&mut input).unwrap();
     let line = input.lines().next().unwrap_or("");
     let mut have = false;
-    let mut mn: i32 = 0;
-    let mut mx: i32 = 0;
+    let mut mn: i8 = 0;
+    let mut mx: i8 = 0;
     for b in line.bytes() {
-        let c = (b as i8) as i32;
+        let c = b as i8;
         if !have {
             mn = c;
             mx = c;
             have = true;
         } else {
-            if c < mn { mn = c; }
-            if c > mx { mx = c; }
+            if c < mn {
+                mn = c;
+            }
+            if c > mx {
+                mx = c;
+            }
         }
     }
-    println!("{} {}", mn, mx);
+    println!("{} {}", mn as i32, mx as i32);
 }

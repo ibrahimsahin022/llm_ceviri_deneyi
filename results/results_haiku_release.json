@@ -1,0 +1,4136 @@
+{
+  "label": "haiku_release",
+  "rust_dir": "translations_rust_haiku",
+  "release": true,
+  "total_samples": 130,
+  "passed_samples": 94,
+  "execution_accuracy_pct": 72.31,
+  "sample_category_counts": {
+    "compilation_error": 8,
+    "non_termination": 0,
+    "runtime_error": 5,
+    "functional_error": 23,
+    "pass": 94
+  },
+  "case_category_counts": {
+    "compilation_error": 0,
+    "non_termination": 0,
+    "runtime_error": 9,
+    "functional_error": 60,
+    "pass": 421
+  },
+  "total_cases": 490,
+  "results": [
+    {
+      "id": "s01_sum",
+      "loc_c": 16,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "15",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "5",
+          "got": "0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1000000000",
+          "got": "1000000000"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "4000000000",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s02_gcd",
+      "loc_c": 19,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "12",
+          "got": "12"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "100",
+          "got": "100"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "12",
+          "got": "12"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s03_factorial",
+      "loc_c": 14,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "120",
+          "got": "120"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "2432902008176640000",
+          "got": "2432902008176640000"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "6227020800",
+          "got": "6227020800"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s04_fibonacci",
+      "loc_c": 16,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "55",
+          "got": "55"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "12586269025",
+          "got": "12586269025"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "2880067194370816120",
+          "got": "2880067194370816120"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s05_count_primes",
+      "loc_c": 22,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "4",
+          "got": "4"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "25",
+          "got": "25"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "168",
+          "got": "168"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s06_reverse_string",
+      "loc_c": 19,
+      "category": "runtime_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "aynud abahrem",
+          "got": "aynud abahrem"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "321CBAcba",
+          "got": "321CBAcba"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "a",
+          "got": "a"
+        },
+        {
+          "input": "04.txt",
+          "category": "runtime_error",
+          "expected": "�ßŶñğħ�",
+          "got": "",
+          "stderr": "thread 'main' (7720) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s06_reverse_string.rs:15:46:"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s07_bubble_sort",
+      "loc_c": 26,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "1 2 3 4 5",
+          "got": ""
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "1 1 3 4 5 9",
+          "got": ""
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "42",
+          "got": "42"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "-7 -3 -2 -1",
+          "got": ""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s08_binary_search",
+      "loc_c": 22,
+      "category": "runtime_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "runtime_error",
+          "expected": "3",
+          "got": "",
+          "stderr": "thread 'main' (9356) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s08_binary_search.rs:37:13:"
+        },
+        {
+          "input": "02.txt",
+          "category": "runtime_error",
+          "expected": "-1",
+          "got": "",
+          "stderr": "thread 'main' (5784) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s08_binary_search.rs:37:13:"
+        },
+        {
+          "input": "03.txt",
+          "category": "runtime_error",
+          "expected": "0",
+          "got": "",
+          "stderr": "thread 'main' (11392) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s08_binary_search.rs:37:13:"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s09_djb2_hash",
+      "loc_c": 17,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "261238937",
+          "got": "261238937"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "2704141334",
+          "got": "2704141334"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "2546203896",
+          "got": "2546203896"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s100_musl_strverscmp",
+      "loc_c": 44,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s101_freebsd_strlcpy",
+      "loc_c": 49,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "dst=hell ret=11",
+          "got": "dst=hell ret=11"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "dst=hi ret=2",
+          "got": "dst=hi ret=2"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "dst= ret=5",
+          "got": "dst= ret=5"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "dst= ret=5",
+          "got": "dst= ret=5"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s102_freebsd_strnstr",
+      "loc_c": 47,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "6",
+          "got": "6"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s103_nginx_hextoi",
+      "loc_c": 63,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "6699",
+          "got": "6699"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "-1",
+          "got": "4294967295"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s104_musl_strcasestr",
+      "loc_c": 32,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "6",
+          "got": "6"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s105_musl_memrchr",
+      "loc_c": 37,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "5",
+          "got": "5"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "2",
+          "got": "2"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s106_openbsd_strtonum",
+      "loc_c": 68,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "value=42 err=yok",
+          "got": "value=42 err=yok"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "value=0 err=invalid",
+          "got": "value=0 err=invalid"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "value=0 err=too large",
+          "got": "value=0 err=too large"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "value=0 err=too small",
+          "got": "value=0 err=too small"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "value=50 err=yok",
+          "got": "value=50 err=yok"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s107_openbsd_timingsafe_bcmp",
+      "loc_c": 37,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s108_nginx_atoi",
+      "loc_c": 47,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "12345",
+          "got": "12345"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s109_apache_getword",
+      "loc_c": 55,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "apple\nbanana\ncherry",
+          "got": "apple\nbanana\ncherry"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "the\nquick\nfox",
+          "got": "the\nquick\nfox"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "single",
+          "got": "single"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "a\nb\nc\nd",
+          "got": "a\nb\nc\nd"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s10_caesar_cipher",
+      "loc_c": 23,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "Khoor Zruog",
+          "got": "Khoor Zruog"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "bcdYZA",
+          "got": "bcdYZA"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "abc",
+          "got": "abc"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s110_queue_module",
+      "loc_c": 75,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "OK\nOK\n1\nOK\n2\n3\nsize=0",
+          "got": "OK\nOK\n1\nOK\n2\n3\nsize=0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "EMPTY\nsize=0",
+          "got": "EMPTY\nsize=0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "OK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nFULL\n1\nsize=7",
+          "got": "OK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nFULL\n1\nsize=7"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "OK\nOK\nOK\nsize=3",
+          "got": "OK\nOK\nOK\nsize=3"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s111_linked_list_module",
+      "loc_c": 91,
+      "category": "compilation_error",
+      "cases": [],
+      "compile_error": "error[E0506]: cannot assign to `*current` because it is borrowed\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s111_linked_list_module\\list.rs:32:17\n   |\n30 |         while let Some(ref mut node) = current {\n   |                        ------------ `*current` is borrowed here\n31 |             if node.value == value {\n32 |                 *current = node.next.take();\n   |                 ^^^^^^^^\n   |                 |\n   |                 `*current` is assigned to here but it was already borrowed\n   |                 borrow later used here\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0506`.\n",
+      "notes": ""
+    },
+    {
+      "id": "s112_producer_consumer_threads",
+      "loc_c": 97,
+      "category": "compilation_error",
+      "cases": [],
+      "compile_error": "error[E0502]: cannot borrow `buf` as immutable because it is also borrowed as mutable\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s112_producer_consumer_threads\\buffer.rs:43:18\n   |\n43 |         buf.data[buf.in_idx] = value;\n   |         ---------^^^--------\n   |         |        |\n   |         |        immutable borrow occurs here\n   |         mutable borrow occurs here\n   |         mutable borrow later used here\n   |\nhelp: try adding a local storing this...\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s112_producer_consumer_threads\\buffer.rs:43:18\n   |\n43 |         buf.data[buf.in_idx] = value;\n   |                  ^^^^^^^^^^\nhelp: ...and then using that local here\n  --> C:\\Users",
+      "notes": ""
+    },
+    {
+      "id": "s113_rwlock_counter",
+      "loc_c": 69,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "4000",
+          "got": "4000"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "5000",
+          "got": "5000"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s114_simple_threadpool",
+      "loc_c": 73,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "55",
+          "got": "55"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "2870",
+          "got": "2870"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s115_bitvector_set",
+      "loc_c": 45,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1\n0\ncount=1",
+          "got": "1\n0\ncount=1"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1\ncount=2",
+          "got": "1\ncount=2"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1\n1\ncount=2",
+          "got": "1\n1\ncount=2"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s116_tagged_union_variant",
+      "loc_c": 68,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "12\n12\ntotal=24",
+          "got": "12\n12\ntotal=24"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "75\ntotal=75",
+          "got": "75\ntotal=75"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1\n4\n0\ntotal=5",
+          "got": "1\n4\n0\ntotal=5"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s117_goto_retry_loop",
+      "loc_c": 35,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "attempts=4 final=12",
+          "got": "attempts=4 final=12"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "attempts=0 final=10",
+          "got": "attempts=0 final=10"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "attempts=5 final=5",
+          "got": "attempts=5 final=5"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "attempts=1000000 final=1000000",
+          "got": "attempts=1000000 final=1000000"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s118_variadic_sum",
+      "loc_c": 52,
+      "category": "runtime_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "runtime_error",
+          "expected": "60",
+          "got": "",
+          "stderr": "thread 'main' (19736) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s118_variadic_sum.rs:20:44:"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "42",
+          "got": "42"
+        },
+        {
+          "input": "04.txt",
+          "category": "runtime_error",
+          "expected": "0",
+          "got": "",
+          "stderr": "thread 'main' (14748) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s118_variadic_sum.rs:20:44:"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s119_setjmp_error_handling",
+      "loc_c": 46,
+      "category": "runtime_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "runtime_error",
+          "expected": "20\nERROR\n25\nprocessed=2",
+          "got": "",
+          "stderr": "thread 'main' (6184) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s119_setjmp_error_handling.rs:24:44:"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "ERROR\nprocessed=0",
+          "got": "ERROR\nprocessed=0"
+        },
+        {
+          "input": "03.txt",
+          "category": "runtime_error",
+          "expected": "10\n5\nERROR\n20\nprocessed=3",
+          "got": "",
+          "stderr": "thread 'main' (19080) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s119_setjmp_error_handling.rs:24:44:"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s11_collatz",
+      "loc_c": 17,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "8",
+          "got": "8"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "111",
+          "got": "111"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "118",
+          "got": "118"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s120_function_pointer_dispatch",
+      "loc_c": 63,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "5\n4\n12\nDIVZERO",
+          "got": "5\n4\n12\nDIVZERO"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "5",
+          "got": "5"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0\n0\n6",
+          "got": "0\n0\n6"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s121_recursive_descent_calc2",
+      "loc_c": 85,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s122_trie_insert_search",
+      "loc_c": 66,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "YES\nNO",
+          "got": "YES\nNO"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "YES\nYES\nNO",
+          "got": "YES\nYES\nNO"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "NO\nYES",
+          "got": "NO\nYES"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s123_avl_tree_insert",
+      "loc_c": 116,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "1 3 4 5 8",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "1 2 3 4 5 6 7",
+          "got": "0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "42",
+          "got": "42"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "10 20 30 40 50 60",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s124_graph_bfs",
+      "loc_c": 56,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0 1 2 3 4",
+          "got": "0 1 2 3 4"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0 1",
+          "got": "0 1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s125_graph_dfs_cycle",
+      "loc_c": 51,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "CYCLE",
+          "got": "CYCLE"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "NOCYCLE",
+          "got": "NOCYCLE"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "CYCLE",
+          "got": "CYCLE"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s126_priority_queue_heap",
+      "loc_c": 79,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "3\n5\n8\nsize=0",
+          "got": "3\n5\n8\nsize=0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "EMPTY\n1\nsize=0",
+          "got": "EMPTY\n1\nsize=0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1\n0\n2\nsize=2",
+          "got": "1\n0\n2\nsize=2"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s127_gauss_matrix_inverse",
+      "loc_c": 54,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0.5000 0.0000 \n0.0000 0.5000",
+          "got": "0.5000 0.0000 \n0.0000 0.5000"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "-2.0000 1.0000 \n1.5000 -0.5000",
+          "got": "-2.0000 1.0000 \n1.5000 -0.5000"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "SINGULAR",
+          "got": "SINGULAR"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0.5000 0.0000 0.0000 \n0.0000 0.5000 0.0000 \n0.0000 0.0000 0.5000",
+          "got": "0.5000 0.0000 0.0000 \n0.0000 0.5000 0.0000 \n0.0000 0.0000 0.5000"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s128_custom_tokenizer",
+      "loc_c": 75,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "BRACE:{\nSTRING:a\nCOLON::\nNUMBER:1\nCOMMA:,\nSTRING:b\nCOLON::\nBOOL:true\nBRACE:}",
+          "got": "BRACE:{\nSTRING:a\nCOLON::\nNUMBER:1\nCOMMA:,\nSTRING:b\nCOLON::\nBOOL:true\nBRACE:}"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "BRACKET:[\nNUMBER:1\nCOMMA:,\nNUMBER:2\nCOMMA:,\nNUMBER:3\nBRACKET:]",
+          "got": "BRACKET:[\nNUMBER:1\nCOMMA:,\nNUMBER:2\nCOMMA:,\nNUMBER:3\nBRACKET:]"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "BRACE:{\nSTRING:x\nCOLON::\nNULL:null\nCOMMA:,\nSTRING:y\nCOLON::\nBOOL:false\nBRACE:}",
+          "got": "BRACE:{\nSTRING:x\nCOLON::\nNULL:null\nCOMMA:,\nSTRING:y\nCOLON::\nBOOL:false\nBRACE:}"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s129_command_dispatch_table",
+      "loc_c": 59,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "15\n30",
+          "got": "15\n30"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "70",
+          "got": "70"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s12_matrix_mult",
+      "loc_c": 36,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "19 22\n43 50",
+          "got": ""
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "58 64\n139 154",
+          "got": ""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s130_qsort_callback_structs",
+      "loc_c": 58,
+      "category": "compilation_error",
+      "cases": [],
+      "compile_error": "error[E0502]: cannot borrow `input` as mutable because it is also borrowed as immutable\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s130_qsort_callback_structs.rs:25:9\n   |\n12 |     let parts: Vec<&str> = input.split_whitespace().collect();\n   |                            ----- immutable borrow occurs here\n...\n25 |         input.clear();\n   |         ^^^^^^^^^^^^^ mutable borrow occurs here\n...\n36 |     if mode == \"NAME\" {\n   |        ---- immutable borrow later used here\n\nerror[E0502]: cannot borrow `input` as mutable because it is also borrowed as immutable\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s130_qsort_callback_structs.rs:26:31\n   |\n12 |     let parts: Vec<&str> = input.",
+      "notes": ""
+    },
+    {
+      "id": "s13_word_count",
+      "loc_c": 19,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "2 12",
+          "got": "2 12"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "4 19",
+          "got": "4 19"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "3 20",
+          "got": "3 17"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "5 10",
+          "got": "5 10"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s14_fnv_hash",
+      "loc_c": 17,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1335831723",
+          "got": "1335831723"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "22495912",
+          "got": "22495912"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "2924308450",
+          "got": "2924308450"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s15_float_avg",
+      "loc_c": 17,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "2",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "2.33333",
+          "got": "0"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "1.5",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "1.25",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s16_rle_encode",
+      "loc_c": 22,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "a3b2c1",
+          "got": "a3b2c1"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "a1b1c1d1e1f1",
+          "got": "a1b1c1d1e1f1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "w10",
+          "got": "w10"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s17_determinant",
+      "loc_c": 35,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "-2",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "-306",
+          "got": "0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "42",
+          "got": "42"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "24",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s18_expr_eval",
+      "loc_c": 88,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "14",
+          "got": "14"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "20",
+          "got": "20"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "5",
+          "got": "5"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-10",
+          "got": "-10"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "14",
+          "got": "14"
+        },
+        {
+          "input": "06.txt",
+          "category": "pass",
+          "expected": "9",
+          "got": "9"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s19_global_counter",
+      "loc_c": 21,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1\n2\n3",
+          "got": "1\n2\n3"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1\n2\n3\n4\n5",
+          "got": "1\n2\n3\n4\n5"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s20_char_sum",
+      "loc_c": 17,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "532",
+          "got": "532"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "444",
+          "got": "444"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "-307",
+          "got": "6"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s21_matrix_transpose",
+      "loc_c": 20,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "1 4\n2 5\n3 6",
+          "got": "0 0\n0 0\n0 0"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "1 3\n2 4",
+          "got": "0 0\n0 0"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "7\n8\n9",
+          "got": "0\n0\n0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s22_gray_code",
+      "loc_c": 10,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "7",
+          "got": "7"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "128",
+          "got": "128"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "540",
+          "got": "540"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s23_histogram",
+      "loc_c": 18,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "e:1\nh:1\nl:2\no:1",
+          "got": "e:1\nh:1\nl:2\no:1"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "a:2\nb:3\nc:1",
+          "got": "a:2\nb:3\nc:1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "b:1\nc:1\ne:1\nf:1\nh:1\ni:1\nk:1\nn:1\no:2\nq:1\nr:1\nt:1\nu:1\nw:1\nx:1",
+          "got": "b:1\nc:1\ne:1\nf:1\nh:1\ni:1\nk:1\nn:1\no:2\nq:1\nr:1\nt:1\nu:1\nw:1\nx:1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s24_roman",
+      "loc_c": 19,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "MCMXCIV",
+          "got": "MCMXCIV"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "IV",
+          "got": "IV"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "MMXXIII",
+          "got": "MMXXIII"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "MMMDCCCLXXXVIII",
+          "got": "MMMDCCCLXXXVIII"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s25_linked_list_ops",
+      "loc_c": 87,
+      "category": "compilation_error",
+      "cases": [],
+      "compile_error": "error[E0716]: temporary value dropped while borrowed\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s25_linked_list_ops.rs:14:28\n   |\n13 |             while cur.next.is_some() {\n   |                   -------- borrow later used here\n14 |                 cur = &mut cur.next.as_mut().unwrap();\n   |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^- temporary value is freed at the end of this statement\n   |                            |\n   |                            creates a temporary value which is freed while still in use\n   |\n   = note: consider using a `let` binding to create a longer lived value\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0716`.\n",
+      "notes": ""
+    },
+    {
+      "id": "s26_rpn_calculator",
+      "loc_c": 69,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "7",
+          "got": "7"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "14",
+          "got": "14"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "5",
+          "got": "5"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-10",
+          "got": "-10"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "-3",
+          "got": "-3"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s27_csv_stats",
+      "loc_c": 73,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "total=45\navg=5\nmin=1 max=9\nrow0=6\nrow1=9\nrow2=30",
+          "got": "total=45\navg=5\nmin=1 max=9\nrow0=6\nrow1=9\nrow2=30"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "total=100\navg=100\nmin=100 max=100\nrow0=100",
+          "got": "total=100\navg=100\nmin=100 max=100\nrow0=100"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "total=2\navg=0.285714\nmin=-5 max=10\nrow0=2\nrow1=0",
+          "got": "total=2\navg=0.2857142857142857\nmin=-5 max=10\nrow0=2\nrow1=0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s28_bst_traversal",
+      "loc_c": 80,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "1 3 4 5 8\ncount=5 height=3",
+          "got": "count=0 height=0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "42\ncount=1 height=1",
+          "got": "42\ncount=1 height=1"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "1 2 2 2 2 3\ncount=6 height=5",
+          "got": "count=0 height=0"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "3 5 7 10 12 15 20\ncount=7 height=3",
+          "got": "count=0 height=0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s29_hashtable_cmds",
+      "loc_c": 141,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "OK\nOK\n1\nOK\nNOT_FOUND",
+          "got": "OK\nOK\n1\nOK\nNOT_FOUND"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "NOT_FOUND\nOK\n100",
+          "got": "NOT_FOUND\nOK\n100"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "OK\nOK\n10\nNOT_FOUND",
+          "got": "OK\nOK\n10\nNOT_FOUND"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s30_luhn_check",
+      "loc_c": 34,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "ok",
+          "got": "ok"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "not ok",
+          "got": "not ok"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "not ok",
+          "got": "not ok"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "ok",
+          "got": "ok"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s31_soundex",
+      "loc_c": 71,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "E460",
+          "got": "E460"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "G200",
+          "got": "G200"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "P236",
+          "got": "P236"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "A261",
+          "got": "A261"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s32_levenshtein",
+      "loc_c": 50,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "3",
+          "got": "3"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "2",
+          "got": "2"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "3",
+          "got": "3"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s33_knapsack",
+      "loc_c": 71,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "weight=10 value=13",
+          "got": "weight=10 value=13"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "weight=5 value=7",
+          "got": "weight=5 value=7"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "weight=0 value=0",
+          "got": "weight=0 value=0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s34_hanoi",
+      "loc_c": 27,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "Move disk from pole 1 to pole 3",
+          "got": "Move disk from pole 1 to pole 3"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "Move disk from pole 1 to pole 2\nMove disk from pole 1 to pole 3\nMove disk from pole 2 to pole 3",
+          "got": "Move disk from pole 1 to pole 2\nMove disk from pole 1 to pole 3\nMove disk from pole 2 to pole 3"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "Move disk from pole 1 to pole 3\nMove disk from pole 1 to pole 2\nMove disk from pole 3 to pole 2\nMove disk from pole 1 to pole 3\nMove disk from pole 2 to pole 1\nMove disk from pole 2 to pole 3\nMove dis",
+          "got": "Move disk from pole 1 to pole 3\nMove disk from pole 1 to pole 2\nMove disk from pole 3 to pole 2\nMove disk from pole 1 to pole 3\nMove disk from pole 2 to pole 1\nMove disk from pole 2 to pole 3\nMove dis"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "Move disk from pole 1 to pole 3\nMove disk from pole 1 to pole 2\nMove disk from pole 3 to pole 2\nMove disk from pole 1 to pole 3\nMove disk from pole 2 to pole 1\nMove disk from pole 2 to pole 3\nMove dis",
+          "got": "Move disk from pole 1 to pole 3\nMove disk from pole 1 to pole 2\nMove disk from pole 3 to pole 2\nMove disk from pole 1 to pole 3\nMove disk from pole 2 to pole 1\nMove disk from pole 2 to pole 3\nMove dis"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s35_lcs",
+      "loc_c": 67,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "len=4 lcs=BCBA",
+          "got": "len=4 lcs=BCBA"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "len=4 lcs=ello",
+          "got": "len=4 lcs=ello"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "len=3 lcs=abc",
+          "got": "len=3 lcs=abc"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "len=0 lcs=",
+          "got": "len=0 lcs="
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s36_crc32",
+      "loc_c": 61,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "414FA339",
+          "got": "414FA339"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "3610A686",
+          "got": "3610A686"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "261DAEE5",
+          "got": "261DAEE5"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s37_bsd_getopt",
+      "loc_c": 148,
+      "category": "compilation_error",
+      "cases": [],
+      "compile_error": "error[E0502]: cannot borrow `state` as mutable because it is also borrowed as immutable\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s37_bsd_getopt.rs:69:17\n   |\n67 |             let mut chars = state.place.chars();\n   |                             ----- immutable borrow occurs here\n68 |             if let Some(c) = chars.next() {\n69 |                 state.optopt = c as i32;\n   |                 ^^^^^ mutable borrow occurs here\n70 |                 state.place = chars.collect();\n   |                               ----- immutable borrow later used here\n\nerror[E0502]: cannot borrow `state` as mutable because it is also borrowed as immutable\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku",
+      "notes": ""
+    },
+    {
+      "id": "s38_bsd_strtol",
+      "loc_c": 154,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "result=123 errno=OK consumed=3\nresult=26 errno=OK consumed=4\nresult=-42 errno=OK consumed=3\nresult=0 errno=OK consumed=0\nresult=42 errno=OK consumed=2",
+          "got": "result=123 errno=OK consumed=3\nresult=0 errno=OK consumed=0\nresult=-42 errno=OK consumed=2\nresult=0 errno=OK consumed=0\nresult=42 errno=OK consumed=2"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "result=2147483647 errno=ERANGE consumed=11\nresult=-2147483648 errno=ERANGE consumed=12",
+          "got": "result=2147483647 errno=ERANGE consumed=11\nresult=-2147483648 errno=ERANGE consumed=11"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "result=0 errno=OK consumed=1\nresult=511 errno=OK consumed=3\nresult=10 errno=OK consumed=4",
+          "got": "result=0 errno=OK consumed=1\nresult=511 errno=OK consumed=3\nresult=10 errno=OK consumed=4"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "result=15 errno=OK consumed=3",
+          "got": "result=15 errno=OK consumed=2"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s39_bsd_heapsort",
+      "loc_c": 143,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "1 2 3 4 5",
+          "got": ""
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "7",
+          "got": "7"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "1 2 3 4 5 6 7 8",
+          "got": ""
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "-8 -3 -1 0 2 5",
+          "got": ""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s40_diff_sum",
+      "loc_c": 27,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "14",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "-13",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s41_float_bits",
+      "loc_c": 21,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1065353216",
+          "got": "1065353216"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1078523331",
+          "got": "1078523331"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "3223322624",
+          "got": "3223322624"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s42_bitfields",
+      "loc_c": 25,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1 7 15",
+          "got": "1 7 15"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1 1 1",
+          "got": "1 1 1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0 0 0",
+          "got": "0 0 0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1 7 15",
+          "got": "1 7 15"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s43_switch_fallthrough",
+      "loc_c": 25,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "3",
+          "got": "3"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "7",
+          "got": "7"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "15",
+          "got": "15"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s44_fib_memo_static",
+      "loc_c": 29,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "55",
+          "got": "55"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "6765",
+          "got": "6765"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s45_goto_cleanup",
+      "loc_c": 43,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "-1 -999",
+          "got": "-1 -999"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0 0",
+          "got": "0 0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0 30",
+          "got": "0 30"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0 14850",
+          "got": "0 14850"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s46_musl_qsort",
+      "loc_c": 262,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "",
+          "got": ""
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "42",
+          "got": "42"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "1 1 3 4 5",
+          "got": ""
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "0 1 2 3 4 5 6 7 8 9",
+          "got": ""
+        },
+        {
+          "input": "05.txt",
+          "category": "functional_error",
+          "expected": "-469 -469 -468 -460 -445 -430 -424 -422 -405 -388 -362 -345 -341 -269 -266 -198 -173 -163 -156 -131 -93 -91 -57 -46 -30 -24 -18 -10 18 28 40 50 57 61 97 100 102 134 147 149 213 222 230 233 266 280 297",
+          "got": ""
+        },
+        {
+          "input": "06.txt",
+          "category": "functional_error",
+          "expected": "7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7",
+          "got": ""
+        },
+        {
+          "input": "07.txt",
+          "category": "functional_error",
+          "expected": "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16",
+          "got": ""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s47_redis_sds",
+      "loc_c": 522,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "LEN=15 STR=  Hello World  \nLEN=11 STR=Hello World\nLEN=11 STR=HELLO WORLD",
+          "got": "LEN=15 STR=  Hello World  \nLEN=11 STR=Hello World\nLEN=11 STR=HELLO WORLD"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "LEN=7 STR=Merhaba\nLEN=14 STR=Merhaba, Dunya\nLEN=14 STR=merhaba, dunya\nLEN=14 STR=merhaba, dunya",
+          "got": "LEN=7 STR=Merhaba\nLEN=14 STR=Merhaba, Dunya\nLEN=14 STR=merhaba, dunya\nLEN=14 STR=merhaba, dunya"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "LEN=3 STR=abc\nCMP=-1",
+          "got": "LEN=3 STR=abc\nCMP=-1"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "LEN=0 STR=\nLEN=14 STR=filled-in-text",
+          "got": "LEN=0 STR=\nLEN=14 STR=filled-in-text"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "LEN=5 STR=start\nLEN=45 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nLEN=295 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+          "got": "LEN=5 STR=start\nLEN=45 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nLEN=295 STR=startxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+        },
+        {
+          "input": "06.txt",
+          "category": "pass",
+          "expected": "LEN=14 STR=xxHelloWorldyy\nLEN=10 STR=HelloWorld\nLEN=5 STR=World\nCMP=0\nLEN=4 STR=same\nCMP=0",
+          "got": "LEN=14 STR=xxHelloWorldyy\nLEN=10 STR=HelloWorld\nLEN=5 STR=World\nCMP=0\nLEN=4 STR=same\nCMP=0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s48_cjson_number",
+      "loc_c": 389,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "3.14\n100\n-42\n0\n7",
+          "got": "3.14\n100\n-42\n0\n7"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "10000000000\n1e-10\n2500\n-1.5e-05",
+          "got": "10000000000\n0.0000000001\n2500\n-0.000015"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0.1\n0.2\n0.3\n1",
+          "got": "0.1\n0.2\n0.3\n1"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "1.79769313486232e+308\n2.2250738585072014e-308\n0",
+          "got": "17976931348623157081452742373170435679807056752584499659891747680315726078002853876058955863276687817154045895351438246423432132688946418276846754670353751698604991057655128207624549009038932894407586"
+        },
+        {
+          "input": "05.txt",
+          "category": "functional_error",
+          "expected": "123456789.123456\n99999999999999.9\n1e-06\n3\n-3",
+          "got": "123456789.123456001281738\n99999999999999.90625\n0.000001\n3\n-3"
+        },
+        {
+          "input": "06.txt",
+          "category": "functional_error",
+          "expected": "2147483647\n2147483648\nPARSE_ERROR\n12\n4.94065645841247e-324",
+          "got": "2147483647\n2147483648\nPARSE_ERROR\nPARSE_ERROR\n0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s49_negative_byte_count",
+      "loc_c": 27,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "11 0",
+          "got": "11 0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "12 12",
+          "got": "12 12"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1 0",
+          "got": "1 0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0 0",
+          "got": "0 0"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "38 8",
+          "got": "38 8"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s50_id_generator",
+      "loc_c": 30,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1000",
+          "got": "1000"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1000\n1001\n1002\n1003\n1004",
+          "got": "1000\n1001\n1002\n1003\n1004"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "",
+          "got": ""
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1000\n1001\n1002\n1003\n1004\n1005\n1006\n1007\n1008\n1009",
+          "got": "1000\n1001\n1002\n1003\n1004\n1005\n1006\n1007\n1008\n1009"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s51_long_clamp",
+      "loc_c": 33,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "10",
+          "got": "10"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "2147483647",
+          "got": "2147483647"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "-2147483648",
+          "got": "-2147483648"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "1000000000",
+          "got": "1000000000"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s52_window_sum",
+      "loc_c": 33,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "12",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "30",
+          "got": "0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "10",
+          "got": "0"
+        },
+        {
+          "input": "05.txt",
+          "category": "functional_error",
+          "expected": "9",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s53_tax_bracket",
+      "loc_c": 31,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "100",
+          "got": "100"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "300",
+          "got": "300"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "700",
+          "got": "700"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "1500",
+          "got": "1500"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s54_stack_module",
+      "loc_c": 95,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "OK\nOK\n20\n20\n1\n10",
+          "got": "OK\nOK\n20\n20\n1\n10"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "EMPTY\nEMPTY",
+          "got": "EMPTY\nEMPTY"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "OK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK",
+          "got": "OK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK\nOK"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "OK\nOK\n3\n5\nEMPTY\nOK\n7\n1",
+          "got": "OK\nOK\n3\n5\nEMPTY\nOK\n7\n1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s55_config_parser",
+      "loc_c": 112,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "test\n8080\nNOT_FOUND",
+          "got": "test\n8080\nNOT_FOUND"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "value with spaces\nval2",
+          "got": "value with spaces\nval2"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "NOT_FOUND",
+          "got": "NOT_FOUND"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "localhost\n9090",
+          "got": "localhost\n9090"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "",
+          "got": ""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s56_macro_table",
+      "loc_c": 97,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "add(20,10)=30\nm=21 x=22",
+          "got": "add(20,10)=30\nm=20 x=21"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "sub(20,10)=10\nm=21 x=22",
+          "got": "sub(20,10)=10\nm=20 x=21"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "mul(3,4)=12\nm=10 x=4",
+          "got": "mul(3,4)=12\nm=10 x=4"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "div(10,0)=0\nm=10 x=11",
+          "got": "div(10,0)=0\nm=10 x=11"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "add(-5,-5)=-10\nm=10 x=-4",
+          "got": "add(-5,-5)=-10\nm=10 x=-4"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s57_shared_counter_threads",
+      "loc_c": 71,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "4000",
+          "got": "4000"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "5000",
+          "got": "5000"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "16000",
+          "got": "16000"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s58_rolling_hash_poly31",
+      "loc_c": 18,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "99162322",
+          "got": "99162322"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "3685539155",
+          "got": "3685539155"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "97",
+          "got": "97"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1974998638",
+          "got": "1974998638"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s59_sdbm_hash",
+      "loc_c": 19,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "684824882",
+          "got": "684824882"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "87711571",
+          "got": "87711571"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "353698304",
+          "got": "353698304"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s60_elf_hash",
+      "loc_c": 23,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "7258927",
+          "got": "7258927"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "226560517",
+          "got": "226560517"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "120",
+          "got": "120"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "32666646",
+          "got": "32666646"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s61_utf8_byte_vs_char_count",
+      "loc_c": 23,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "5 5",
+          "got": "5 5"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "9 8",
+          "got": "9 8"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "9 7",
+          "got": "9 7"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0 0",
+          "got": "0 0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s62_strtok_tokenizer",
+      "loc_c": 25,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0: the\n1: quick\n2: brown\n3: fox",
+          "got": "0: the\n1: quick\n2: brown\n3: fox"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0: single",
+          "got": "0: single"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0: a\n1: b\n2: c\n3: d\n4: e",
+          "got": "0: a\n1: b\n2: c\n3: d\n4: e"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0: merhaba\n1: dünya\n2: nasılsın",
+          "got": "0: merhaba\n1: dünya\n2: nasılsın"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s63_palindrome_bytes",
+      "loc_c": 27,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "EVET",
+          "got": "EVET"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "HAYIR",
+          "got": "HAYIR"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "EVET",
+          "got": "EVET"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "HAYIR",
+          "got": "HAYIR"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s64_char_minmax_signed",
+      "loc_c": 29,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "101 111",
+          "got": "101 111"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "65 122",
+          "got": "65 122"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "-80 117",
+          "got": "-80 117"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-97 -59",
+          "got": "-97 -59"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s65_ctype_isalpha_highbyte",
+      "loc_c": 24,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "10 3",
+          "got": "10 3"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "6 0",
+          "got": "6 0"
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "7 4",
+          "got": "8 4"
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "0 3",
+          "got": "6 4"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s66_xor_checksum_signed_extend",
+      "loc_c": 22,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "98",
+          "got": "98"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "7",
+          "got": "7"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "26",
+          "got": "26"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "38",
+          "got": "38"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "4294967247",
+          "got": "4294967247"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s67_stats_stddev_format",
+      "loc_c": 28,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "2 0.816497",
+          "got": ""
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "4.32 3.00693",
+          "got": ""
+        },
+        {
+          "input": "03.txt",
+          "category": "functional_error",
+          "expected": "10 0",
+          "got": ""
+        },
+        {
+          "input": "04.txt",
+          "category": "functional_error",
+          "expected": "1.5 0.5",
+          "got": ""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s68_currency_round_format",
+      "loc_c": 16,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "59.97",
+          "got": "59.97"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0.3",
+          "got": "0.3"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "201",
+          "got": "201"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "23.331",
+          "got": "23.331"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s69_sqlite_snprintf_g",
+      "loc_c": 17,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "3.14286",
+          "got": "3.14286"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0.333333",
+          "got": "0.333333"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "12.5",
+          "got": "12.5"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "3.14159",
+          "got": "3.14159"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s70_global_lcg_rng",
+      "loc_c": 25,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "16838\n5758\n10113\n17515\n31051",
+          "got": "16838\n5758\n10113\n17515\n31051"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "19081\n17033\n15269",
+          "got": "19081\n17033\n15269"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "21468",
+          "got": "21468"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "26728\n12758\n16183\n2239",
+          "got": "26728\n12758\n16183\n2239"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s71_global_errbuf",
+      "loc_c": 39,
+      "category": "compilation_error",
+      "cases": [],
+      "compile_error": "error[E0599]: no method named `lines` found for struct `StdinLock<'a>` in the current scope\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s71_global_errbuf.rs:38:30\n   |\n38 |     for line in stdin.lock().lines() {\n   |                 -----        ^^^^^ method not found in `StdinLock<'static>`\n   |                 |\n   |                 method `lines` is available on `&Stdin`\n   |\n  --> /rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library\\std\\src\\io\\mod.rs:2700:7\n   |\n   = note: the method is available for `StdinLock<'static>` here\n   |\n   = help: items from traits can only be used if the trait is in scope\nhelp: trait `BufRead` which provides `lines` is implemented but not in scope; perhaps you want to import it\n   |\n 1 + use std::io:",
+      "notes": ""
+    },
+    {
+      "id": "s72_global_log_level",
+      "loc_c": 31,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "[DEBUG] baslangic\n[INFO] bilgi mesaji\n[WARN] uyari mesaji\n[ERROR] hata mesaji",
+          "got": "[DEBUG] baslangic\n[INFO] bilgi mesaji\n[WARN] uyari mesaji\n[ERROR] hata mesaji"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "[INFO] bilgi mesaji\n[WARN] uyari mesaji\n[ERROR] hata mesaji",
+          "got": "[INFO] bilgi mesaji\n[WARN] uyari mesaji\n[ERROR] hata mesaji"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "[WARN] uyari mesaji\n[ERROR] hata mesaji",
+          "got": "[WARN] uyari mesaji\n[ERROR] hata mesaji"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "[ERROR] hata mesaji",
+          "got": "[ERROR] hata mesaji"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s73_bsd_atoi_overflow",
+      "loc_c": 22,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "12345",
+          "got": "12345"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "705032704",
+          "got": "705032704"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "4294967295",
+          "got": "4294967295"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s74_platform_loop_counter",
+      "loc_c": 24,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "20000",
+          "got": "20000"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "2147483647",
+          "got": "2147483647"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "2147483647",
+          "got": "2147483647"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s75_bsd_strtoul",
+      "loc_c": 111,
+      "category": "compilation_error",
+      "cases": [],
+      "compile_error": "error[E0308]: mismatched types\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s75_bsd_strtoul.rs:17:19\n   |\n17 | fn get_errno() -> i32 {\n   |    ---------      ^^^ expected `i32`, found `()`\n   |    |\n   |    implicitly returns `()` as its body has no tail or `return` expression\n...\n20 |     });\n   |       - help: remove this semicolon to return this value\n\nerror[E0599]: no method named `lines` found for struct `StdinLock<'a>` in the current scope\n   --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s75_bsd_strtoul.rs:138:30\n    |\n138 |     for line in stdin.lock().lines() {\n    |                 -----        ^^^^^ method not found in `StdinLock<'static>`\n    |                 |\n    |        ",
+      "notes": ""
+    },
+    {
+      "id": "s76_array_shrink_countdown",
+      "loc_c": 26,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "4 5",
+          "got": "4 5"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "",
+          "got": ""
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "10 20 30",
+          "got": "10 20 30"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "",
+          "got": ""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s77_ring_buffer_index",
+      "loc_c": 25,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1\n2\n3",
+          "got": "1\n2\n3"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "3\n2\n3",
+          "got": "3\n2\n3"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1\n2\n1\n0\n4",
+          "got": "1\n2\n1\n0\n4"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0\n0\n0",
+          "got": "0\n0\n0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s78_sliding_window_min",
+      "loc_c": 30,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "2",
+          "got": "2"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "3",
+          "got": "3"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s79_http_status_class",
+      "loc_c": 26,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "7",
+          "got": "7"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "15",
+          "got": "15"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "3",
+          "got": "3"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s80_state_machine_fallthrough",
+      "loc_c": 23,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "2",
+          "got": "2"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "3",
+          "got": "3"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "4",
+          "got": "4"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s81_grade_bucket_fallthrough",
+      "loc_c": 25,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "4",
+          "got": "4"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "2",
+          "got": "2"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "4",
+          "got": "4"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s82_macro_minmax_sideeffect",
+      "loc_c": 22,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "6 10 8",
+          "got": "6 10 8"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "5 12 13",
+          "got": "5 12 13"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0 2 3",
+          "got": "0 2 3"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-2 3 0",
+          "got": "-2 3 0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s83_macro_swap_no_temp",
+      "loc_c": 31,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "10 10 30 40 50 \ni=2",
+          "got": "10 10 30 40 50 \ni=2"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1 1 3 \ni=2",
+          "got": "1 1 3 \ni=2"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0 0 2 3 4 5 6 7 8 9 \ni=2",
+          "got": "0 0 2 3 4 5 6 7 8 9 \ni=2"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "7 7 \ni=2",
+          "got": "7 7 \ni=2"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s84_xmacro_enum_strings",
+      "loc_c": 44,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "4",
+          "got": "4"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s85_sqlite_stricmp",
+      "loc_c": 65,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "25",
+          "got": "25"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s86_sqlite_strglob",
+      "loc_c": 185,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "MATCH",
+          "got": "MATCH"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "MATCH",
+          "got": "MATCH"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "NOMATCH",
+          "got": "NOMATCH"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "MATCH",
+          "got": "MATCH"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "MATCH",
+          "got": "MATCH"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s87_sqlite_utf8_read",
+      "loc_c": 54,
+      "category": "compilation_error",
+      "cases": [],
+      "compile_error": "error[E0308]: mismatched types\n  --> C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s87_sqlite_utf8_read.rs:3:31\n   |\n 3 |   const UTF8_TRANS1: [u8; 32] = [\n   |  ____________________--------___^\n   | |                    |\n   | |                    expected because of the type of the constant\n 4 | |     0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,\n 5 | |     0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,\n 6 | |     0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,\n...  |\n11 | |     0x00, 0x01, 0x02, 0x03, 0x00, 0x01, 0x00, 0x00,\n12 | | ];\n   | |_^ expected an array with a size of 32, found one with a size of 64\n   |\nhelp: consider specifying the actual array length\n   |\n 3 - const UTF8_TRANS1: [u8; 32] = [\n 3 + const UTF8_TRANS1: [u8; 64] = ",
+      "notes": ""
+    },
+    {
+      "id": "s88_zlib_adler32_real",
+      "loc_c": 86,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "300286872",
+          "got": "300286872"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "103547413",
+          "got": "103547413"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "6422626",
+          "got": "6422626"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1160644372",
+          "got": "1160644372"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s89_zlib_crc32_table",
+      "loc_c": 61,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "3421780262",
+          "got": "3421780262"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "907060870",
+          "got": "907060870"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "3904355907",
+          "got": "3904355907"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "3074782430",
+          "got": "3074782430"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s90_curl_urldecode",
+      "loc_c": 82,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "a b+c",
+          "got": "a b+c"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "hello world",
+          "got": "hello world"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "no_encoding_here",
+          "got": "no_encoding_here"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "100%done",
+          "got": "100%done"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s91_redis_ll2string",
+      "loc_c": 71,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "-9223372036854775808",
+          "got": "-9223372036854775808"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "9223372036854775807",
+          "got": "9223372036854775807"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "42",
+          "got": "42"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s92_openssl_base64_encode",
+      "loc_c": 60,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "TWFu",
+          "got": "TWFu"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "aGVsbG8=",
+          "got": "aGVsbG8="
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "YWI=",
+          "got": "YWI="
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "YQ==",
+          "got": "YQ=="
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s93_libsodium_bin2hex",
+      "loc_c": 58,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "616263",
+          "got": "616263"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "68656c6c6f",
+          "got": "68656c6c6f"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "61",
+          "got": "61"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "74657374313233",
+          "got": "74657374313233"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s94_freebsd_reallocarray",
+      "loc_c": 40,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "OK size=8000",
+          "got": "OK size=8000"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "OVERFLOW",
+          "got": "OVERFLOW"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "OK size=0",
+          "got": "OK size=0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "OK size=0",
+          "got": "OK size=0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s95_redis_stringmatchlen",
+      "loc_c": 152,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "MATCH",
+          "got": "MATCH"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "MATCH",
+          "got": "NOMATCH"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "NOMATCH",
+          "got": "NOMATCH"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "NOMATCH",
+          "got": "NOMATCH"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "MATCH",
+          "got": "MATCH"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s96_cjson_print_string",
+      "loc_c": 104,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "\"He said \\\"hi\\\"\"",
+          "got": "\"He said \\\"hi\\\"\""
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "\"line1\\ttab\"",
+          "got": "\"line1\\ttab\""
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "\"plain text\"",
+          "got": "\"plain text\""
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "\"back\\\\slash\"",
+          "got": "\"back\\\\slash\""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s97_cjson_hex4_unicode",
+      "loc_c": 42,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "8032",
+          "got": "8032"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "231",
+          "got": "231"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "65",
+          "got": "65"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "65535",
+          "got": "65535"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s98_musl_memmem",
+      "loc_c": 158,
+      "category": "runtime_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "functional_error",
+          "expected": "6",
+          "got": "-1"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "04.txt",
+          "category": "runtime_error",
+          "expected": "0",
+          "got": "",
+          "stderr": "thread 'main' (25136) panicked at C:\\Users\\ibrah\\OneDrive\\Masaüstü\\llm_ceviri_deneyi\\llm_ceviri_deneyi\\translations_rust_haiku\\s98_musl_memmem.rs:155:62:"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s99_musl_strsep",
+      "loc_c": 35,
+      "category": "functional_error",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "a\nb\nc\n\nd",
+          "got": "a\nb\nc\n\nd"
+        },
+        {
+          "input": "02.txt",
+          "category": "functional_error",
+          "expected": "the\nquick\nbrown\nfox",
+          "got": "the quick brown fox"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "single",
+          "got": "single"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    }
+  ]
+}

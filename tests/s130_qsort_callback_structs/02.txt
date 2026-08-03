@@ -1,0 +1,4 @@
+3 NAME
+bob 20
+ann 30
+cid 10

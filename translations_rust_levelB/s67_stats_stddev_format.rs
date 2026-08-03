@@ -1,6 +1,6 @@
 use std::io::{self, Read};
 
-fn trim_trailing(s: &str) -> String {
+fn trim_zeros(s: &str) -> String {
     if s.contains('.') {
         s.trim_end_matches('0').trim_end_matches('.').to_string()
     } else {
@@ -8,34 +8,28 @@ fn trim_trailing(s: &str) -> String {
     }
 }
 
-fn format_g(x: f64) -> String {
-    if x == 0.0 {
-        return "0".to_string();
+fn fmt_g(v: f64) -> String {
+    if v.is_nan() {
+        return "nan".to_string();
     }
-    let neg = x < 0.0;
-    let ax = x.abs();
-    let precision = 6i32;
-    let mut exp = ax.log10().floor() as i32;
-    if ax / 10f64.powi(exp) >= 10.0 {
-        exp += 1;
+    if v.is_infinite() {
+        return if v < 0.0 { "-inf" } else { "inf" }.to_string();
     }
-    if ax / 10f64.powi(exp) < 1.0 {
-        exp -= 1;
-    }
-
-    let s = if exp < -4 || exp >= precision {
-        let mantissa_decimals = (precision - 1).max(0) as usize;
-        let mant = ax / 10f64.powi(exp);
-        let mant_str = trim_trailing(&format!("{:.*}", mantissa_decimals, mant));
-        format!("{}e{}{:02}", mant_str, if exp >= 0 { "+" } else { "-" }, exp.abs())
+    let p: i32 = 6;
+    let e = format!("{:.*e}", (p - 1) as usize, v);
+    let pos = e.find('e').unwrap();
+    let exp: i32 = e[pos + 1..].parse().unwrap();
+    if exp < -4 || exp >= p {
+        let mant = trim_zeros(&e[..pos]);
+        format!(
+            "{}e{}{:02}",
+            mant,
+            if exp < 0 { "-" } else { "+" },
+            exp.abs()
+        )
     } else {
-        let decimals = (precision - 1 - exp).max(0) as usize;
-        trim_trailing(&format!("{:.*}", decimals, ax))
-    };
-    if neg {
-        format!("-{}", s)
-    } else {
-        s
+        let prec = (p - 1 - exp).max(0) as usize;
+        trim_zeros(&format!("{:.*}", prec, v))
     }
 }
 
@@ -43,21 +37,30 @@ fn main() {
     let mut input = String::new();
     io::stdin().read_to_string(&mut input).unwrap();
     let mut it = input.split_whitespace();
-    let n: usize = it.next().unwrap().parse().unwrap();
-    let mut vals = Vec::with_capacity(n);
-    let mut sum = 0.0;
+    let n: i32 = match it.next().and_then(|s| s.parse().ok()) {
+        Some(v) => v,
+        None => return,
+    };
+    if n <= 0 || n > 1000 {
+        return;
+    }
+    let mut vals: Vec<f64> = Vec::with_capacity(n as usize);
+    let mut sum = 0.0f64;
     for _ in 0..n {
-        let v: f64 = it.next().unwrap().parse().unwrap();
+        let v: f64 = match it.next().and_then(|s| s.parse().ok()) {
+            Some(v) => v,
+            None => return,
+        };
         vals.push(v);
         sum += v;
     }
     let mean = sum / n as f64;
-    let mut sq = 0.0;
+    let mut sq = 0.0f64;
     for v in &vals {
         let d = v - mean;
         sq += d * d;
     }
     let variance = sq / n as f64;
     let stddev = variance.sqrt();
-    println!("{} {}", format_g(mean), format_g(stddev));
+    println!("{} {}", fmt_g(mean), fmt_g(stddev));
 }

@@ -7,32 +7,44 @@ Linux: Docker `ubuntu:24.04`, apt gcc 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) + 
 
 | Kosul | Windows EA | Linux EA | Fark |
 |---|---|---|---|
-| Round 1 - dogrudan, debug | %70.18 (40/57) | %71.93 (41/57) | +1.75 puan |
-| Round 1 - dogrudan, release | %73.68 (42/57) | %75.44 (43/57) | +1.76 puan |
-| Round 2 - iyilestirilmis, debug | %100.00 (57/57) | %94.74 (54/57) | -5.26 puan |
+| Round 1 - dogrudan, debug | %70.77 (92/130) | %74.62 (97/130) | +3.85 puan |
+| Round 1 - dogrudan, release | %74.62 (97/130) | %78.46 (102/130) | +3.84 puan |
+| Round 2 - iyilestirilmis, debug | %100.00 (130/130) | %94.62 (123/130) | -5.38 puan |
 
 ## Platforma Gore Farklilik Gosteren Ornekler
 
 ### Round 1 - dogrudan, debug
 | Ornek | Windows | Linux |
 |---|---|---|
+| s103_nginx_hextoi | functional_error | pass |
 | s38_bsd_strtol | functional_error | pass |
 | s47_redis_sds | pass | functional_error |
 | s51_long_clamp | functional_error | pass |
+| s73_bsd_atoi_overflow | functional_error | pass |
+| s74_platform_loop_counter | functional_error | pass |
+| s75_bsd_strtoul | functional_error | pass |
 
 ### Round 1 - dogrudan, release
 | Ornek | Windows | Linux |
 |---|---|---|
+| s103_nginx_hextoi | functional_error | pass |
 | s38_bsd_strtol | functional_error | pass |
 | s47_redis_sds | pass | functional_error |
 | s51_long_clamp | functional_error | pass |
+| s73_bsd_atoi_overflow | functional_error | pass |
+| s74_platform_loop_counter | functional_error | pass |
+| s75_bsd_strtoul | functional_error | pass |
 
 ### Round 2 - iyilestirilmis, debug
 | Ornek | Windows | Linux |
 |---|---|---|
+| s103_nginx_hextoi | pass | functional_error |
 | s38_bsd_strtol | pass | functional_error |
 | s47_redis_sds | pass | functional_error |
 | s51_long_clamp | pass | functional_error |
+| s73_bsd_atoi_overflow | pass | functional_error |
+| s74_platform_loop_counter | pass | functional_error |
+| s75_bsd_strtoul | pass | functional_error |
 
 ## Yorum
 

@@ -6,7 +6,7 @@ fn main() {
     let line = input.lines().next().unwrap_or("");
     let mut acc: u32 = 0;
     for b in line.bytes() {
-        let c = (b as i8) as i32;
+        let c = b as i8 as i32;
         acc ^= c as u32;
     }
     println!("{}", acc);

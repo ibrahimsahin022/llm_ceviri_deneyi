@@ -1,0 +1,4 @@
+3
+SET 100
+SUB 30
+PRINT

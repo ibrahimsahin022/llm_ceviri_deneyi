@@ -1,0 +1,7 @@
+6
+I a
+I ab
+I abc
+S a
+S ab
+S abcd
