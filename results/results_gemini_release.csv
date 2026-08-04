@@ -31,6 +31,7 @@ s118_variadic_sum,52,pass,4,4
 s119_setjmp_error_handling,46,pass,3,3
 s11_collatz,17,pass,4,4
 s120_function_pointer_dispatch,63,pass,3,3
+s121_recursive_descent_calc2,85,pass,5,5
 s122_trie_insert_search,66,pass,3,3
 s123_avl_tree_insert,116,pass,4,4
 s124_graph_bfs,56,pass,3,3
@@ -38,6 +39,7 @@ s125_graph_dfs_cycle,51,pass,3,3
 s126_priority_queue_heap,79,pass,3,3
 s127_gauss_matrix_inverse,54,pass,4,4
 s128_custom_tokenizer,75,pass,3,3
+s129_command_dispatch_table,59,pass,3,3
 s12_matrix_mult,36,pass,2,2
 s130_qsort_callback_structs,58,pass,3,3
 s13_word_count,19,pass,4,4
@@ -109,6 +111,7 @@ s78_sliding_window_min,30,pass,4,4
 s79_http_status_class,26,pass,4,4
 s80_state_machine_fallthrough,23,pass,4,4
 s81_grade_bucket_fallthrough,25,pass,4,4
+s82_macro_minmax_sideeffect,22,pass,4,4
 s83_macro_swap_no_temp,31,pass,4,4
 s84_xmacro_enum_strings,44,pass,4,4
 s85_sqlite_stricmp,65,pass,5,5
@@ -116,4 +119,13 @@ s86_sqlite_strglob,185,pass,5,5
 s87_sqlite_utf8_read,54,pass,4,4
 s88_zlib_adler32_real,86,pass,4,4
 s89_zlib_crc32_table,61,pass,4,4
+s90_curl_urldecode,82,pass,4,4
+s91_redis_ll2string,71,pass,5,5
+s92_openssl_base64_encode,60,pass,4,4
+s93_libsodium_bin2hex,58,pass,4,4
+s94_freebsd_reallocarray,40,compilation_error,0,0
 s95_redis_stringmatchlen,152,pass,5,5
+s96_cjson_print_string,104,pass,4,4
+s97_cjson_hex4_unicode,42,pass,4,4
+s98_musl_memmem,158,pass,5,5
+s99_musl_strsep,35,pass,3,3

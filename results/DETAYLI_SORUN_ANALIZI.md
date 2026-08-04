@@ -771,18 +771,28 @@ aynı zero-shot istemle ölçülmüştür:
 |---|---|---|---|---|---|---|---|
 | Claude Sonnet 5 (referans, Round 1) | 130/130 | 92/130 | %70.77 | 1 | 9 | 28 | 0 |
 | Claude Haiku | 130/130 | 94/130 | %72.31 | 8 | 5 | 23 | 0 |
-| Google Gemini (`gemini-flash-latest`) | **99/130 (KISMİ)** | 86/99 | %86.87 | 9 | 0 | 4 | 0 |
+| Google Gemini (`gemini-flash-latest`) | 130/130 | 116/130 | %89.23 | 10 | 0 | 4 | 0 |
 
-> **⚠️ Gemini kapsamı kısmidir ve bu bölümdeki Gemini'ye ilişkin tüm
-> karşılaştırmalar geçicidir.** Google AI Studio ücretsiz katmanının günlük
-> kota sınırı (20 istek/gün/model) nedeniyle 130 örneğin yalnızca 99'u
-> çevrilebilmiştir; kalan 31 örnek (s80-s84, s85-s99, s120-s130) kota
-> sıfırlandıkça kademeli olarak tamamlanmaktadır. Gemini'nin %86.87'si bu 99
-> örneklik alt küme üzerinden hesaplanmıştır ve diğer iki modelin tam-kapsam
-> sayılarıyla **doğrudan karşılaştırılamaz**. Aşağıdaki §7.1-§7.5 vaka
-> analizleri, n=57 aşamasındaki TAM Gemini ölçümüne dayanır ve o örnekler
-> için hâlâ geçerlidir; §7.6 ise genişletmeyle gelen yeni gözlemleri
+> **Gemini ölçümü 130 örneğin tamamı üzerinde tamamlanmıştır.** Google AI
+> Studio ücretsiz katmanının günlük istek kotası nedeniyle çeviriler
+> 2026-07-22 – 2026-08-03 arasında birkaç güne yayılarak üretilmiştir, ancak
+> 130 örneğin **tamamı** gerçek API çağrısıyla çevrilmiş ve değerlendirilmiştir
+> (her çağrının istemi/zaman damgası/parametreleri `results/manifest_gemini.json`
+> içindedir). Dolayısıyla %89.23 tam kapsamlı bir ölçümdür ve diğer iki
+> modelin sayılarıyla **doğrudan karşılaştırılabilir**. Release modunda da
+> birebir aynı sonuç elde edilmiştir (116/130, %89.23 — hiçbir örnek debug ile
+> release arasında yer değiştirmemiştir). Aşağıdaki §7.1-§7.5 vaka analizleri,
+> veri seti n=57 aşamasındayken yapılan Gemini ölçümüne dayanır ve o örnekler
+> için hâlâ geçerlidir; §7.6 ise n=130'a genişletmeyle gelen yeni gözlemleri
 > özetler.
+
+**Gemini'nin 14 başarısızlığının tam listesi (n=130):** 10'u derleme
+hatasıdır (CE) — s26_rpn_calculator, s27_csv_stats, s46_musl_qsort,
+s48_cjson_number, s67_stats_stddev_format, s68_currency_round_format,
+s69_sqlite_snprintf_g, s75_bsd_strtoul, s94_freebsd_reallocarray,
+s112_producer_consumer_threads; 4'ü fonksiyonel hatadır (FE) — s15_float_avg,
+s47_redis_sds, s103_nginx_hextoi, s110_queue_module. Hiç çalışma zamanı
+hatası (RE) veya sonlanmama (NT) gözlenmemiştir.
 
 **Sessiz hata oranı modele göre çarpıcı biçimde değişiyor — bu, çalışmanın
 en aktarılabilir bulgularından biridir:**
@@ -791,7 +801,7 @@ en aktarılabilir bulgularından biridir:**
 |---|---|---|---|---|
 | Claude Sonnet 5 | 38 | 1 | 37 | **%97.4** |
 | Claude Haiku | 36 | 8 | 28 | %77.8 |
-| Gemini | 13 | 9 | 4 | **%30.8** |
+| Gemini | 14 | 10 | 4 | **%28.6** |
 
 Yani Gemini daha yüksek ham doğruluk gösterse de, **hatalarının çoğu
 derleyici tarafından yakalanan türdendir**; Claude Sonnet 5'in hataları ise
@@ -1051,6 +1061,18 @@ başarısızlıkları arasında **s112_producer_consumer_threads** (CE) ve
 seferde geçmiştir. Bu, §7.2b'de gözlenen "uzun/karmaşık gerçek kodda Claude
 üstün" örüntüsünün çok dosyalı ve eşzamanlı koda da uzandığını gösterir.
 
+**(c2) Tam kapsamla ortaya çıkan iki ek başarısızlık, aynı örüntüyü
+pekiştirir.** Gemini'nin kalan başarısızlıkları olan **s75_bsd_strtoul** ve
+**s94_freebsd_reallocarray** de gerçek BSD libc üretim kodudur ve ikisi de
+CE'dir. s75'te Gemini, bayt okuyucuyu değiştirilebilir bir kapanışa (closure)
+sarmış, sonra aynı indeksi kapanış dışından da okumaya çalışarak ödünç alma
+(borrow) hatası almıştır (`E0503` — §7.3'te raporlanan `E0499` örüntüsünün
+aynı ailesi). s94'te ise Gemini çeviriyi Rust'a taşımak yerine C'nin
+`scanf`/`printf`/`realloc` çağrılarını `extern "C"` FFI ile olduğu gibi
+bırakmış, üretilen ikili MSVC bağlayıcısında çözümlenememiştir — yani
+"çeviri" yerine "sarmalama" tercihinin doğrudan bir maliyeti. Her iki örnek
+de derleyicide yakalandığı için sessiz değildir.
+
 **(d) Claude Haiku: katman-eşleştirilmiş üçüncü model.** Haiku 130/130 tam
 kapsamda ölçülmüş ve EA = **%72.31 (94/130)** elde etmiştir — yani ham
 doğrulukta Claude Sonnet 5 ile neredeyse aynıdır (%70.77). Ancak **hata
@@ -1067,13 +1089,45 @@ güvenilirliğine bağlıdır. Bu, aynı aileden iki model arasında bile hata
 profilinin kategorik olarak farklılaşabildiğini gösterir ve "EA tek başına
 model seçimi için yeterli bir ölçüt değildir" sonucunu güçlendirir.
 
-**(e) McNemar testi geçicidir.** `results/stats_report.md`'de raporlanan
-McNemar sonucu (ortak değerlendirilen 78 örnek; ikisi de PASS 43, ikisi de
-FAIL 7, yalnızca Claude FAIL 25, yalnızca Gemini FAIL 3, kesin iki-yönlü
-p<0.0001) **Gemini'nin kısmi kapsamı nedeniyle nihai değildir.** Ortak örnek
-sayısı (78), Gemini'nin kalan 31 örneği tamamlandığında artacak ve testin
-tüm hücreleri değişecektir. **Bu analiz, Gemini tamamlandığında yeniden
-hesaplanıp güncellenmelidir.**
+**(e) McNemar testi (nihai, n=130 tam eşleştirilmiş karşılaştırma).**
+`results/stats_report.md`'de raporlanan McNemar sonucu artık 130 örneğin
+**tamamı** üzerinden hesaplanmıştır: ikisi de PASS 86, ikisi de FAIL 8,
+yalnızca Claude FAIL 30, yalnızca Gemini FAIL 6; McNemar kesin (binom
+tabanlı) iki-yönlü **p=0.0001**. İki modelin genel EA farkı bu nedenle
+istatistiksel olarak anlamlıdır. Ancak anlamlı bir genel fark,
+model×kategori etkileşiminin var olmadığı anlamına gelmez — §7.7'deki
+kırılım, farkın yönünün kategoriye göre değiştiğini göstermektedir.
+
+### 7.7 Model × kategori kırılımı (n=130, üç model)
+
+Genel EA sıralaması (Gemini > Haiku ≈ Claude Sonnet 5) veri setinin
+katmanları arasında sabit değildir; aşağıdaki kırılım, §7.5'te (d) olarak
+tanımlanan **model × kod-karmaşıklığı etkileşiminin** n=130'daki tam
+görünümüdür (her hücre: PASS/örnek sayısı):
+
+| Veri seti katmanı | n | Claude Sonnet 5 | Gemini | Claude Haiku |
+|---|---|---|---|---|
+| Temel algoritmalar | 24 | 17/24 | 23/24 | 14/24 |
+| Uzun özgün programlar | 5 | 4/5 | 3/5 | 2/5 |
+| Rosetta Code | 7 | 7/7 | 7/7 | 7/7 |
+| BSD libc | 3 | 2/3 | 3/3 | 0/3 |
+| Hedeflenmemiş boşluk | 6 | 4/6 | 6/6 | 5/6 |
+| musl/Redis/cJSON (en uzun üretim kodu) | 3 | 2/3 | **0/3** | 1/3 |
+| Kök-neden 2. örnekleri | 5 | 1/5 | 5/5 | 4/5 |
+| Çok dosyalı | 3 | 3/3 | 3/3 | 3/3 |
+| Karmaşık makro | 1 | 0/1 | 1/1 | 0/1 |
+| A-I derinleştirme (s58-s84) | 27 | 7/27 | 23/27 | 23/27 |
+| Gerçek OSS üretim kodu | 25 | **24/25** | 23/25 | 20/25 |
+| Çeşitlilik/çok-dosyalı/eşzamanlılık | 21 | **21/21** | 19/21 | 15/21 |
+| **Toplam** | **130** | **92/130 (%70.77)** | **116/130 (%89.23)** | **94/130 (%72.31)** |
+
+İki karşıt uç bu tabloda açıkça görülür: Gemini'nin üstünlüğü ezici biçimde
+kısa/hedefli sızıntı katmanlarından gelir (A-I derinleştirme 23/27 vs 7/27;
+kök-neden 2. örnekleri 5/5 vs 1/5), buna karşılık veri setinin en uzun ve
+en karmaşık üretim kodu katmanında sıralama tersine döner (musl/Redis/cJSON:
+Gemini 0/3, Claude 2/3) ve gerçek OSS üretim kodu ile eşzamanlılık
+katmanlarında Claude Sonnet 5 öndedir (24/25 ve 21/21). Yani toplam EA
+farkı tek başına "hangi model daha iyi" sorusuna cevap vermez.
 
 ---
 
@@ -1219,14 +1273,15 @@ etkisiyle) düşürüyor gibi görünüyor.
 
 **Model karşılaştırması:**
 
-- **McNemar testi — GEÇİCİ:** `harness/stats_report.py`
-  çıktısına göre ortak değerlendirilen 78 örnek üzerinden: ikisi de PASS 43,
-  ikisi de FAIL 7, yalnızca Claude FAIL 25, yalnızca Gemini FAIL 3; McNemar
-  kesin iki-yönlü **p<0.0001**. **⚠️ Bu analiz nihai değildir:** Gemini
-  yalnızca 99/130 örnekte ölçülebildiğinden ortak örnek sayısı (78) kısmi
-  kapsamın bir sonucudur ve **Gemini'nin kalan 31 örneği tamamlandığında
-  testin tüm hücreleri yeniden hesaplanmalıdır.** §7'deki kategori kırılımı
-  ayrıca bu farkın yönünün kategoriye göre değiştiğini göstermektedir.
+- **McNemar testi (Claude vs Gemini) — NİHAİ:** `harness/stats_report.py`
+  çıktısına göre ortak değerlendirilen **130 örneğin tamamı** üzerinden:
+  ikisi de PASS 86, ikisi de FAIL 8, yalnızca Claude FAIL 30, yalnızca
+  Gemini FAIL 6; McNemar kesin (binom tabanlı) iki-yönlü **p=0.0001**. İki
+  modelin genel EA farkı istatistiksel olarak anlamlıdır. Her iki model de
+  aynı 130 program üzerinde ölçüldüğü için eşleştirilmiş (paired) tasarıma
+  uygun olan test budur; bağımsız iki örneklem testi (ör. ki-kare) burada
+  uygun değildir. §7.7'deki kategori kırılımı ayrıca bu farkın yönünün
+  kategoriye göre değiştiğini göstermektedir.
 
 ---
 

@@ -321,7 +321,31 @@
   {
     "sample_id": "s121_recursive_descent_calc2",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.971317771s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+    "timestamp_utc": "2026-08-03T10:16:39.244102+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n#include <ctype.h>\n\n/* Girdi: tek satir boolean ifade (0/1 degerler, AND/OR/NOT operatorleri,\n   parantez). Ozyinelemeli-inisli ayristirici - s18_expr_eval'in FARKLI\n   bir grameri (aritmetik degil, mantiksal; NOT > AND > OR onceligi).\n   Cikti: ifadenin sonucu (0 veya 1).\n   Ornekler: \"1 AND 0\" -> 0 ; \"1 OR 0 AND 0\" -> 1 (AND OR'dan once) ;\n   \"NOT 0 AND 1\" -> 1 ; \"NOT (1 AND 0)\" -> 1 */\n\nstatic const char *p;\n\nstatic void skip_spaces(void) {\n    while (*p == ' ' || *p == '\\t') p++;\n}\n\nstatic int match_word(const char *word) {\n    size_t len = strlen(word);\n    if (strncmp(p, word, len) == 0) {\n        p += len;\n        return 1;\n    }\n    return 0;\n}\n\nstatic int parse_or(void);\n\n/* factor := '0' | '1' | '(' or_expr ')' | 'NOT' factor */\nstatic int parse_factor(void) {\n    skip_spaces();\n    if (*p == '(') {\n        p++;\n        int v = parse_or();\n        skip_spaces();\n        if (*p == ')') p++;\n        return v;\n    }\n    if (match_word(\"NOT\")) {\n        int v = parse_factor();\n        return !v;\n    }\n    if (*p == '0') { p++; return 0; }\n    if (*p == '1') { p++; return 1; }\n    return 0;\n}\n\n/* and_expr := factor ('AND' factor)* */\nstatic int parse_and(void) {\n    int value = parse_factor();\n    for (;;) {\n        skip_spaces();\n        if (match_word(\"AND\")) {\n            int rhs = parse_factor();\n            value = value && rhs;\n        } else {\n            break;\n        }\n    }\n    return value;\n}\n\n/* or_expr := and_expr ('OR' and_expr)* */\nstatic int parse_or(void) {\n    int value = parse_and();\n    for (;;) {\n        skip_spaces();\n        if (match_word(\"OR\")) {\n            int rhs = parse_and();\n            value = value || rhs;\n        } else {\n            break;\n        }\n    }\n    return value;\n}\n\nint main(void) {\n    char buf[4096];\n    if (fgets(buf, sizeof(buf), stdin) == NULL) return 0;\n    p = buf;\n    int result = parse_or();\n    printf(\"%d\\n\", result);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 883,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 924,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 924
+          }
+        ],
+        "thoughts_token_count": 2552,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4359,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s122_trie_insert_search",
@@ -529,7 +553,31 @@
   {
     "sample_id": "s129_command_dispatch_table",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.809264258s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+    "timestamp_utc": "2026-08-03T10:17:56.321739+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Girdi: ilk satirda komut sayisi n, ardindan n satir - \"<komut> <arg>\"\n   (komut: SET/ADD/SUB/MUL, arg tam sayi) veya \"PRINT\" (arg yok).\n   Cikti: her PRINT icin o anki durum (accumulator) degeri.\n   NOT: s120'den FARKLI olarak burada dispatch tablosundaki her fonksiyon\n   PAYLASILAN BIR DURUMU (int* state) DEGISTIRIR (yan etkili), salt\n   girdi->cikti degil - bu, basit bir \"komut yorumlayicisi\" (VM benzeri)\n   deseni ve fonksiyon isaretcisinin EK BIR PARAMETRE (durum isaretcisi)\n   ile birlikte tasinmasi gerektigini test eder. */\n\ntypedef void (*CmdFn)(int *state, int arg);\n\nstatic void cmd_set(int *state, int arg) { *state = arg; }\nstatic void cmd_add(int *state, int arg) { *state += arg; }\nstatic void cmd_sub(int *state, int arg) { *state -= arg; }\nstatic void cmd_mul(int *state, int arg) { *state *= arg; }\n\ntypedef struct {\n    const char *name;\n    CmdFn fn;\n} CmdEntry;\n\nstatic CmdEntry table[] = {\n    { \"SET\", cmd_set },\n    { \"ADD\", cmd_add },\n    { \"SUB\", cmd_sub },\n    { \"MUL\", cmd_mul },\n};\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int state = 0;\n\n    for (int i = 0; i < n; i++) {\n        char cmd[8];\n        if (scanf(\"%7s\", cmd) != 1) return 0;\n\n        if (strcmp(cmd, \"PRINT\") == 0) {\n            printf(\"%d\\n\", state);\n            continue;\n        }\n\n        int arg;\n        if (scanf(\"%d\", &arg) != 1) return 0;\n\n        for (size_t k = 0; k < sizeof(table) / sizeof(table[0]); k++) {\n            if (strcmp(cmd, table[k].name) == 0) {\n                table[k].fn(&state, arg);\n                break;\n            }\n        }\n    }\n\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 541,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 803,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 803
+          }
+        ],
+        "thoughts_token_count": 2562,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 3906,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s130_qsort_callback_structs",
@@ -2337,7 +2385,31 @@
   {
     "sample_id": "s82_macro_minmax_sideeffect",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.692388237s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+    "timestamp_utc": "2026-08-03T10:19:22.010969+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n\n#define MIN(a, b) ((a) < (b) ? (a) : (b))\n#define MAX(a, b) ((a) > (b) ? (a) : (b))\n\n/* Girdi: iki tam sayi x, y.\n   Cikti: \"min max x\" (MIN/MAX makrolari x++ gibi yan etkili bir ifadeyle\n   cagrilir).\n   NOT: Kok Neden I (makro coklu-degerlendirme) icin 2. bagimsiz ornek\n   (s56'nin X-Macro'suz, yalnizca coklu-degerlendirme tuzagina odaklanan\n   hali). C makrolari metinsel ikamedir; x++ gibi yan etkili bir arguman\n   govde icinde BIRDEN FAZLA kez gecerse birden fazla kez calisir.\n   Rust'ta fonksiyon/generic olarak cevrilen \"min/max\" argumanlarini TAM\n   OLARAK BIR KEZ degerlendirir. */\nint main(void) {\n    int x, y;\n    if (scanf(\"%d %d\", &x, &y) != 2) return 0;\n    int m = MIN(x++, y);\n    int M = MAX(x++, y);\n    printf(\"%d %d %d\\n\", m, M, x);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 354,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 541,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 541
+          }
+        ],
+        "thoughts_token_count": 5450,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 6345,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s83_macro_swap_no_temp",
@@ -2545,27 +2617,147 @@
   {
     "sample_id": "s90_curl_urldecode",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.528078375s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+    "timestamp_utc": "2026-08-03T10:21:02.682096+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n#include <ctype.h>\n\n/* Kaynak: curl lib/escape.c, Curl_urldecode() (curl-7_88_1 etiketi,\n   birebir).\n   https://raw.githubusercontent.com/curl/curl/curl-7_88_1/lib/escape.c\n   Lisans: curl/MIT-benzeri (SPDX: curl).\n   DEGISIKLIK: curl'un kendi ISXDIGIT/onehex2dec makrolari, curl_ctype.h'daki\n   ozel (locale'siz) tablo yerine islevsel esdegeri standart <ctype.h>\n   isxdigit() ile degistirildi (bu makale HTTP kutuphanesi degil, C->Rust\n   ceviri deneyi oldugu icin locale bagimsizligi konu disi); CURLcode/\n   malloc/DEBUGASSERT gibi kutuphane-ici altyapi soyutlamalari da yerel\n   escape.h/curl.h olmadan derlenebilecek sekilde sadelestirildi.\n   Curl_urldecode GOVDESININ MANTIGI (yuzde-kod cozme dongusu) DEGISTIRILMEDEN\n   alindi.\n   Girdi: bir satir, yuzde-kodlanmis metin (orn. \"a%20b%2Bc\").\n   Cikti: cozulmus metin. */\n\ntypedef enum { REJECT_NADA, REJECT_CTRL, REJECT_ZERO } urlreject;\n\n#define ISXDIGIT(x) (isxdigit((unsigned char)(x)))\n\nstatic int hexval(char x) {\n    if (x >= '0' && x <= '9') return x - '0';\n    if (x >= 'a' && x <= 'f') return x - 'a' + 10;\n    if (x >= 'A' && x <= 'F') return x - 'A' + 10;\n    return 0;\n}\n\nstatic int Curl_urldecode(const char *string, size_t length,\n                           char **ostring, size_t *olen,\n                           urlreject ctrl)\n{\n  size_t alloc;\n  char *ns;\n\n  alloc = (length ? length : strlen(string));\n  ns = malloc(alloc + 1);\n  if (!ns) return 1;\n\n  *ostring = ns;\n\n  while (alloc) {\n    unsigned char in = (unsigned char)*string;\n    if (('%' == in) && (alloc > 2) &&\n        ISXDIGIT(string[1]) && ISXDIGIT(string[2])) {\n      in = (unsigned char)((hexval(string[1]) << 4) | hexval(string[2]));\n      string += 3;\n      alloc -= 3;\n    } else {\n      string++;\n      alloc--;\n    }\n\n    if (((ctrl == REJECT_CTRL) && (in < 0x20)) ||\n        ((ctrl == REJECT_ZERO) && (in == 0))) {\n      free(*ostring);\n      return 1;\n    }\n\n    *ns++ = (char)in;\n  }\n  *ns = 0;\n\n  if (olen) *olen = ns - *ostring;\n  return 0;\n}\n\nint main(void) {\n    char line[512];\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    line[strcspn(line, \"\\r\\n\")] = 0;\n    char *out = NULL;\n    size_t olen = 0;\n    if (Curl_urldecode(line, 0, &out, &olen, REJECT_NADA) == 0) {\n        printf(\"%s\\n\", out);\n        free(out);\n    }\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 902,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1126,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1126
+          }
+        ],
+        "thoughts_token_count": 9008,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 11036,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s91_redis_ll2string",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.430777507s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+    "timestamp_utc": "2026-08-03T10:22:39.774193+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <limits.h>\n#include <string.h>\n\n/* Kaynak: Redis src/util.c, ll2string() (birebir).\n   https://raw.githubusercontent.com/redis/redis/unstable/src/util.c\n   Lisans: BSD-3-Clause.\n   DEGISIKLIK: ll2string'in cagirdigi ull2string() (iki-hane ondalik arama\n   tablosuyla hizlandirilmis donusum) performans-odakli oldugu icin BASIT\n   bir rakam-cikarma donguswiyle degistirildi (sonuc birebir ayni bayt\n   dizisini uretir); ll2string GOVDESI - ozellikle LLONG_MIN icin ozel\n   isaretli-tasma-guvenli dal (svalue != LLONG_MIN kontrolu) - DEGISTIRILMEDEN\n   alindi. Bu ozel dal, Kok Neden A/G ile dogrudan ilgilidir: \"-svalue\" ifadesi\n   svalue == LLONG_MIN iken TANIMSIZ DAVRANIS/tasmadir (2'nin tumleyeninde\n   LLONG_MIN'in pozitif esdegeri LLONG_MAX'i asar); Redis bunu acikca\n   LLONG_MAX+1 ile telafi eder. Rust'a naif cevrilirse (`-svalue` veya\n   `.abs()`) i64::MIN girdisinde PANIK verir.\n   Girdi: bir satir, imzali 64-bit tam sayi (orn. -9223372036854775808).\n   Cikti: ayni sayinin ondalik metin hali. */\n\nstatic int ull2string(char *dst, size_t dstlen, unsigned long long value) {\n    char tmp[20];\n    int len = 0;\n    if (value == 0) {\n        tmp[len++] = '0';\n    } else {\n        while (value > 0) {\n            tmp[len++] = (char)('0' + (value % 10));\n            value /= 10;\n        }\n    }\n    if (dstlen < (size_t)len) return 0;\n    for (int i = 0; i < len; i++) {\n        dst[i] = tmp[len - 1 - i];\n    }\n    return len;\n}\n\nint ll2string(char *dst, size_t dstlen, long long svalue) {\n    unsigned long long value;\n    int negative = 0;\n\n    if (svalue < 0) {\n        if (svalue != LLONG_MIN) {\n            value = -svalue;\n        } else {\n            value = ((unsigned long long) LLONG_MAX)+1;\n        }\n        if (dstlen < 2) return 0;\n        negative = 1;\n        dst[0] = '-';\n        dst++;\n        dstlen--;\n    } else {\n        value = svalue;\n    }\n\n    int length = ull2string(dst, dstlen, value);\n    if (length == 0) return 0;\n    return length + negative;\n}\n\nint main(void) {\n    long long v;\n    if (scanf(\"%lld\", &v) != 1) return 0;\n    char buf[32];\n    int n = ll2string(buf, sizeof(buf), v);\n    buf[n] = 0;\n    printf(\"%s\\n\", buf);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 635,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1055,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1055
+          }
+        ],
+        "thoughts_token_count": 6294,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 7984,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s92_openssl_base64_encode",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.236504135s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+    "timestamp_utc": "2026-08-03T10:24:12.146699+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Kaynak: OpenSSL crypto/evp/encode.c, evp_encodeblock_int() /\n   EVP_EncodeBlock() (OpenSSL_1_1_1w etiketi, birebir; AVX2/SIMD yollari\n   olmayan klasik surum).\n   https://raw.githubusercontent.com/openssl/openssl/OpenSSL_1_1_1w/crypto/evp/encode.c\n   Lisans: Apache-2.0.\n   DEGISIKLIK: EVP_ENCODE_CTX/SRP-alfabesi secim mantigi (yalnizca SRP\n   protokolu icin alternatif tabloya gecis) CIKARILDI - her zaman standart\n   data_bin2ascii tablosu kullanilir. 3-baytlik gruplari 4 base64 karakterine\n   ceviren ana dongu ve `=` doldurma mantigi DEGISTIRILMEDEN alindi.\n   Girdi: bir satir metin (bayt dizisi olarak islenir).\n   Cikti: base64 kodlanmis metin. */\n\nstatic const unsigned char data_bin2ascii[65] =\n    \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\";\n\n#define conv_bin2ascii(a, table) ((table)[(a)&0x3f])\n\nstatic int evp_encodeblock_int(unsigned char *t, const unsigned char *f, int dlen) {\n    int i, ret = 0;\n    unsigned long l;\n    const unsigned char *table = data_bin2ascii;\n\n    for (i = dlen; i > 0; i -= 3) {\n        if (i >= 3) {\n            l = (((unsigned long)f[0]) << 16L) |\n                (((unsigned long)f[1]) << 8L) | f[2];\n            *(t++) = conv_bin2ascii(l >> 18L, table);\n            *(t++) = conv_bin2ascii(l >> 12L, table);\n            *(t++) = conv_bin2ascii(l >> 6L, table);\n            *(t++) = conv_bin2ascii(l, table);\n        } else {\n            l = ((unsigned long)f[0]) << 16L;\n            if (i == 2)\n                l |= ((unsigned long)f[1] << 8L);\n\n            *(t++) = conv_bin2ascii(l >> 18L, table);\n            *(t++) = conv_bin2ascii(l >> 12L, table);\n            *(t++) = (i == 1) ? '=' : conv_bin2ascii(l >> 6L, table);\n            *(t++) = '=';\n        }\n        ret += 4;\n        f += 3;\n    }\n\n    *t = '\\0';\n    return ret;\n}\n\nint main(void) {\n    char line[1024];\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    line[strcspn(line, \"\\r\\n\")] = 0;\n    unsigned char out[2048];\n    evp_encodeblock_int(out, (const unsigned char *)line, (int)strlen(line));\n    printf(\"%s\\n\", out);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 855,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1014,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1014
+          }
+        ],
+        "thoughts_token_count": 5220,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 7089,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s93_libsodium_bin2hex",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 46.124614992s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}"
+    "timestamp_utc": "2026-08-03T10:26:01.960297+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n#include <stdint.h>\n\n/* Kaynak: libsodium src/libsodium/sodium/codecs.c, sodium_bin2hex()\n   (birebir).\n   https://raw.githubusercontent.com/jedisct1/libsodium/master/src/libsodium/sodium/codecs.c\n   Lisans: ISC.\n   DEGISIKLIK: sodium_misuse() guvenlik-durdurma cagrisi (SIZE_MAX/2 tasma\n   korumasi) test kolayligi icin bir hata mesaji + erken donuse cevrildi;\n   asil HEX KODLAMA ARITMETIGI (sabit-zamanli, dallanmasiz bit numaralari\n   ile rakam/harf secimi) DEGISTIRILMEDEN alindi. Bu aritmetik ilginctir:\n   `((c - 10U) >> 8)` gibi ifadeler unsigned int uzerinde KASITLI ALT TASMA\n   (underflow) kullanarak dallanmasiz secim yapar - Kok Neden A ile dogrudan\n   ilgili, \"hatali\" degil KASITLI bir taşma deseni; Rust'a debug modda\n   birebir cevrilirse (u32 uzerinde ayni cikarma) TASMA PANIGI verir, cunku\n   Rust bu KASITLI tasmayi normal C'nin aksine varsayilan olarak yakalar.\n   Girdi: bir satir metin (bayt dizisi olarak islenir, ikili veri gibi\n   islenir).\n   Cikti: kucuk harfli hex string. */\n\nstatic char *\nsodium_bin2hex(char *const hex, const size_t hex_maxlen,\n               const unsigned char *const bin, const size_t bin_len)\n{\n    size_t       i = (size_t) 0U;\n    unsigned int x;\n    int          b;\n    int          c;\n\n    if (hex_maxlen <= bin_len * 2U) {\n        return NULL;\n    }\n    while (i < bin_len) {\n        c = bin[i] & 0xf;\n        b = bin[i] >> 4;\n        x = (unsigned char) (87U + c + (((c - 10U) >> 8) & ~38U)) << 8 |\n            (unsigned char) (87U + b + (((b - 10U) >> 8) & ~38U));\n        hex[i * 2U] = (char) x;\n        x >>= 8;\n        hex[i * 2U + 1U] = (char) x;\n        i++;\n    }\n    hex[i * 2U] = 0U;\n\n    return hex;\n}\n\nint main(void) {\n    char line[512];\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    line[strcspn(line, \"\\r\\n\")] = 0;\n    size_t blen = strlen(line);\n    char hex[1024];\n    char *r = sodium_bin2hex(hex, sizeof(hex), (const unsigned char *)line, blen);\n    if (r) printf(\"%s\\n\", r);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 654,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 996,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 996
+          }
+        ],
+        "thoughts_token_count": 8750,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 10400,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s94_freebsd_reallocarray",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.963013033s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}"
+    "timestamp_utc": "2026-08-03T10:27:43.208775+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <stdint.h>\n#include <errno.h>\n\n/* Kaynak: OpenBSD src/lib/libc/stdlib/reallocarray.c (birebir, DEF_WEAK\n   satiri haric).\n   https://raw.githubusercontent.com/openbsd/src/master/lib/libc/stdlib/reallocarray.c\n   Telif: Copyright (c) 2008 Otto Moerbeek. Lisans: ISC-benzeri (OpenBSD izin\n   veren lisans metni).\n   Bu, s103 icin planlanan orijinal OSS kaynagiydi; Grup 2 sirasi\n   duzenlenirken s94 slotuna alindi (Kok Neden A ile guclu ortusme:\n   MUL_NO_OVERFLOW = sqrt(SIZE_MAX+1) esigiyle CARPMA TASMASINI proaktif\n   tespit eden klasik, gercek uretim kodu deseni).\n   Girdi: iki satir - nmemb ve size (ikisi de size_t, ondalik).\n   Cikti: tasma tespit edilirse \"OVERFLOW\", edilmezse \"OK size=<nmemb*size>\". */\n\n#define MUL_NO_OVERFLOW ((size_t)1 << (sizeof(size_t) * 4))\n\nvoid *reallocarray(void *optr, size_t nmemb, size_t size) {\n    if ((nmemb >= MUL_NO_OVERFLOW || size >= MUL_NO_OVERFLOW) &&\n        nmemb > 0 && SIZE_MAX / nmemb < size) {\n        errno = ENOMEM;\n        return NULL;\n    }\n    return realloc(optr, size * nmemb);\n}\n\nint main(void) {\n    unsigned long long nmemb, size;\n    if (scanf(\"%llu %llu\", &nmemb, &size) != 2) return 0;\n    void *p = reallocarray(NULL, (size_t)nmemb, (size_t)size);\n    if (p == NULL) {\n        printf(\"OVERFLOW\\n\");\n    } else {\n        printf(\"OK size=%llu\\n\", nmemb * size);\n        free(p);\n    }\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 455,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 748,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 748
+          }
+        ],
+        "thoughts_token_count": 8981,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 10184,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s95_redis_stringmatchlen",
@@ -2599,21 +2791,117 @@
   {
     "sample_id": "s96_cjson_print_string",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.848613646s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}"
+    "timestamp_utc": "2026-08-03T10:29:24.191005+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n/* Kaynak: cJSON (DaveGamble/cJSON) cJSON.c, print_string_ptr() - JSON\n   string kacislama mantigi birebir.\n   https://raw.githubusercontent.com/DaveGamble/cJSON/master/cJSON.c\n   Lisans: MIT.\n   DEGISIKLIK: cJSON'un kendi buyume-tamponu (printbuffer/ensure())\n   soyutlamasi, sabit boyutlu bir yerel dizi ile degistirildi (test\n   girdileri kisa oldugu icin tampon tasmasi riski yok); asil KACISLAMA\n   DONGUSU (\\\", \\\\, \\b, \\f, \\n, \\r, \\t icin tek-karakter kacis, < 32 icin\n   \\\\uXXXX) DEGISTIRILMEDEN alindi.\n   Girdi: bir satir metin.\n   Cikti: JSON-uyumlu, tirnakli ve kacislanmis metin. */\n\nstatic void print_string_ptr(const unsigned char *input, char *output) {\n    const unsigned char *input_pointer = NULL;\n    char *output_pointer = NULL;\n    size_t output_length = 0;\n    size_t escape_characters = 0;\n\n    if (input == NULL) {\n        strcpy(output, \"\\\"\\\"\");\n        return;\n    }\n\n    for (input_pointer = input; *input_pointer; input_pointer++) {\n        switch (*input_pointer) {\n            case '\\\"':\n            case '\\\\':\n            case '\\b':\n            case '\\f':\n            case '\\n':\n            case '\\r':\n            case '\\t':\n                escape_characters++;\n                break;\n            default:\n                if (*input_pointer < 32) {\n                    escape_characters += 5;\n                }\n                break;\n        }\n    }\n    output_length = (size_t)(input_pointer - input) + escape_characters;\n\n    if (escape_characters == 0) {\n        output[0] = '\\\"';\n        memcpy(output + 1, input, output_length);\n        output[output_length + 1] = '\\\"';\n        output[output_length + 2] = '\\0';\n        return;\n    }\n\n    output[0] = '\\\"';\n    output_pointer = output + 1;\n    for (input_pointer = input; *input_pointer != '\\0'; (void)input_pointer++, output_pointer++) {\n        if ((*input_pointer > 31) && (*input_pointer != '\\\"') && (*input_pointer != '\\\\')) {\n            *output_pointer = (char)*input_pointer;\n        } else {\n            *output_pointer++ = '\\\\';\n            switch (*input_pointer) {\n                case '\\\\':\n                    *output_pointer = '\\\\';\n                    break;\n                case '\\\"':\n                    *output_pointer = '\\\"';\n                    break;\n                case '\\b':\n                    *output_pointer = 'b';\n                    break;\n                case '\\f':\n                    *output_pointer = 'f';\n                    break;\n                case '\\n':\n                    *output_pointer = 'n';\n                    break;\n                case '\\r':\n                    *output_pointer = 'r';\n                    break;\n                case '\\t':\n                    *output_pointer = 't';\n                    break;\n                default:\n                    sprintf(output_pointer, \"u%04x\", *input_pointer);\n                    output_pointer += 4;\n                    break;\n            }\n        }\n    }\n    output[output_length + 1] = '\\\"';\n    output[output_length + 2] = '\\0';\n}\n\nint main(void) {\n    char line[256];\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    line[strcspn(line, \"\\r\\n\")] = 0;\n    char out[1024];\n    print_string_ptr((const unsigned char *)line, out);\n    printf(\"%s\\n\", out);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 993,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 1198,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1198
+          }
+        ],
+        "thoughts_token_count": 8878,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 11069,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s97_cjson_hex4_unicode",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.678242971s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}"
+    "timestamp_utc": "2026-08-03T10:30:47.077269+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Kaynak: cJSON (DaveGamble/cJSON) cJSON.c, parse_hex4() - \\uXXXX unicode\n   kacis cozumleyicisi, birebir.\n   https://raw.githubusercontent.com/DaveGamble/cJSON/master/cJSON.c\n   Lisans: MIT.\n   Girdi: bir satir, 4 hex karakter (orn. \"00e7\" veya \"1F600\" - fazla\n   karakter yoksayilir, ilk 4'u okunur).\n   Cikti: cozumlenen deger, ondalik. */\n\nstatic unsigned parse_hex4(const unsigned char *input) {\n    unsigned int h = 0;\n    size_t i = 0;\n\n    for (i = 0; i < 4; i++) {\n        if ((input[i] >= '0') && (input[i] <= '9')) {\n            h += (unsigned int)input[i] - '0';\n        } else if ((input[i] >= 'A') && (input[i] <= 'F')) {\n            h += (unsigned int)10 + input[i] - 'A';\n        } else if ((input[i] >= 'a') && (input[i] <= 'f')) {\n            h += (unsigned int)10 + input[i] - 'a';\n        } else {\n            return 0;\n        }\n\n        if (i < 3) {\n            h = h << 4;\n        }\n    }\n\n    return h;\n}\n\nint main(void) {\n    char line[64];\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    line[strcspn(line, \"\\r\\n\")] = 0;\n    unsigned r = parse_hex4((const unsigned char *)line);\n    printf(\"%u\\n\", r);\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 358,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 679,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 679
+          }
+        ],
+        "thoughts_token_count": 3702,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 4739,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s98_musl_memmem",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.564149973s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}"
+    "timestamp_utc": "2026-08-03T10:33:30.091461+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <stdint.h>\n#include <string.h>\n\n/* Kaynak: musl libc src/string/memmem.c - TAMAMI birebir (twobyte/threebyte/\n   fourbyte hizli yollar + twoway_memmem Two-Way dize eslestirme algoritmasi).\n   https://raw.githubusercontent.com/kraj/musl/master/src/string/memmem.c\n   Lisans: MIT.\n   NOT: Bu, Grup 2'deki EN UZUN/EN KARMASIK gercek fonksiyondur (~120 satir,\n   bit-kumesi tablosu + periyodiklik analizi). Kasitli olarak \"zor\" bir\n   ceviri testi: dogru cevrilmesi hem usize aritmetigi (Kok Neden G ile\n   guclu kesisim - `ip = -1` gibi size_t alt-tasmasi ICIN KASITLI kullanilan\n   bir C deyimi var!) hem de dogru bit-duzeyi mantik gerektirir.\n   Girdi: iki satir - saman ligi (haystack), aranan (needle).\n   Cikti: ilk eslesmenin 0-tabanli indeksi, bulunamazsa -1. */\n\nstatic char *twobyte_memmem(const unsigned char *h, size_t k, const unsigned char *n) {\n    uint16_t nw = n[0]<<8 | n[1], hw = h[0]<<8 | h[1];\n    for (h+=2, k-=2; k; k--, hw = hw<<8 | *h++)\n        if (hw == nw) return (char *)h-2;\n    return hw == nw ? (char *)h-2 : 0;\n}\n\nstatic char *threebyte_memmem(const unsigned char *h, size_t k, const unsigned char *n) {\n    uint32_t nw = (uint32_t)n[0]<<24 | n[1]<<16 | n[2]<<8;\n    uint32_t hw = (uint32_t)h[0]<<24 | h[1]<<16 | h[2]<<8;\n    for (h+=3, k-=3; k; k--, hw = (hw|*h++)<<8)\n        if (hw == nw) return (char *)h-3;\n    return hw == nw ? (char *)h-3 : 0;\n}\n\nstatic char *fourbyte_memmem(const unsigned char *h, size_t k, const unsigned char *n) {\n    uint32_t nw = (uint32_t)n[0]<<24 | n[1]<<16 | n[2]<<8 | n[3];\n    uint32_t hw = (uint32_t)h[0]<<24 | h[1]<<16 | h[2]<<8 | h[3];\n    for (h+=4, k-=4; k; k--, hw = hw<<8 | *h++)\n        if (hw == nw) return (char *)h-4;\n    return hw == nw ? (char *)h-4 : 0;\n}\n\n#define MAX(a,b) ((a)>(b)?(a):(b))\n#define MIN(a,b) ((a)<(b)?(a):(b))\n\n#define BITOP(a,b,op) \\\n ((a)[(size_t)(b)/(8*sizeof *(a))] op (size_t)1<<((size_t)(b)%(8*sizeof *(a))))\n\nstatic char *twoway_memmem(const unsigned char *h, const unsigned char *z, const unsigned char *n, size_t l) {\n    size_t i, ip, jp, k, p, ms, p0, mem, mem0;\n    size_t byteset[32 / sizeof(size_t)] = { 0 };\n    size_t shift[256];\n\n    for (i=0; i<l; i++)\n        BITOP(byteset, n[i], |=), shift[n[i]] = i+1;\n\n    ip = -1; jp = 0; k = p = 1;\n    while (jp+k<l) {\n        if (n[ip+k] == n[jp+k]) {\n            if (k == p) {\n                jp += p;\n                k = 1;\n            } else k++;\n        } else if (n[ip+k] > n[jp+k]) {\n            jp += k;\n            k = 1;\n            p = jp - ip;\n        } else {\n            ip = jp++;\n            k = p = 1;\n        }\n    }\n    ms = ip;\n    p0 = p;\n\n    ip = -1; jp = 0; k = p = 1;\n    while (jp+k<l) {\n        if (n[ip+k] == n[jp+k]) {\n            if (k == p) {\n                jp += p;\n                k = 1;\n            } else k++;\n        } else if (n[ip+k] < n[jp+k]) {\n            jp += k;\n            k = 1;\n            p = jp - ip;\n        } else {\n            ip = jp++;\n            k = p = 1;\n        }\n    }\n    if (ip+1 > ms+1) ms = ip;\n    else p = p0;\n\n    if (memcmp(n, n+p, ms+1)) {\n        mem0 = 0;\n        p = MAX(ms, l-ms-1) + 1;\n    } else mem0 = l-p;\n    mem = 0;\n\n    for (;;) {\n        if ((size_t)(z-h) < l) return 0;\n\n        if (BITOP(byteset, h[l-1], &)) {\n            k = l-shift[h[l-1]];\n            if (k) {\n                if (k < mem) k = mem;\n                h += k;\n                mem = 0;\n                continue;\n            }\n        } else {\n            h += l;\n            mem = 0;\n            continue;\n        }\n\n        for (k=MAX(ms+1,mem); k<l && n[k] == h[k]; k++);\n        if (k < l) {\n            h += k-ms;\n            mem = 0;\n            continue;\n        }\n        for (k=ms+1; k>mem && n[k-1] == h[k-1]; k--);\n        if (k <= mem) return (char *)h;\n        h += p;\n        mem = mem0;\n    }\n}\n\nvoid *my_memmem(const void *h0, size_t k, const void *n0, size_t l) {\n    const unsigned char *h = h0, *n = n0;\n\n    if (!l) return (void *)h;\n    if (k<l) return 0;\n\n    h = memchr(h0, *n, k);\n    if (!h || l==1) return (void *)h;\n    k -= h - (const unsigned char *)h0;\n    if (k<l) return 0;\n    if (l==2) return twobyte_memmem(h, k, n);\n    if (l==3) return threebyte_memmem(h, k, n);\n    if (l==4) return fourbyte_memmem(h, k, n);\n\n    return twoway_memmem(h, h+k, n, l);\n}\n\nint main(void) {\n    char hay[512], needle[512];\n    if (!fgets(hay, sizeof(hay), stdin)) return 0;\n    if (!fgets(needle, sizeof(needle), stdin)) return 0;\n    hay[strcspn(hay, \"\\r\\n\")] = 0;\n    needle[strcspn(needle, \"\\r\\n\")] = 0;\n    void *r = my_memmem(hay, strlen(hay), needle, strlen(needle));\n    if (r) {\n        printf(\"%ld\\n\", (long)((char *)r - hay));\n    } else {\n        printf(\"-1\\n\");\n    }\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 2641,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 2194,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 2194
+          }
+        ],
+        "thoughts_token_count": 23143,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 27978,
+        "traffic_type": null
+      }
+    }
   },
   {
     "sample_id": "s99_musl_strsep",
     "model_id": "gemini-flash-latest",
-    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.391890885s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}"
+    "timestamp_utc": "2026-08-03T10:35:05.583225+00:00",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "prompt_text": "Asagidaki C programini, davranissal olarak TAM ESDEGER bir Rust programina cevir.\n\nKurallar:\n- Program stdin'den okuyup stdout'a yazmalidir; giris/cikis sozlesmesi (format) C ile birebir ayni kalmalidir.\n- Yalnizca Rust kaynak kodunu dondur; aciklama, markdown code fence (```), veya baska hicbir metin ekleme.\n- Kodun derlenebilir ve calisir olmasi gerekir (rustc ile dogrudan derlenecek, Cargo projesi degil).\n- C kodunun semantigini (tasma davranisi, string/bayt modeli, bicimlendirme vb.) olabildigince sadik yansit;\n  ancak idiyomatik/guvenli Rust yazmaktan cekinme (orn. unsafe yalnizca gercekten gerekliyse).\n\nC kaynak kodu:\n```c\n#include <stdio.h>\n#include <string.h>\n\n/* Kaynak: musl libc src/string/strsep.c - birebir.\n   https://raw.githubusercontent.com/kraj/musl/master/src/string/strsep.c\n   Lisans: MIT.\n   Girdi: iki satir - once ayrac karakter kumesi (orn. \",;\"), sonra\n   ayrilacak metin.\n   Cikti: her token, kendi satirinda (strsep ile NULL donene kadar\n   cagrilir). */\n\nchar *my_strsep(char **str, const char *sep) {\n    char *s = *str, *end;\n    if (!s) return NULL;\n    end = s + strcspn(s, sep);\n    if (*end) *end++ = 0;\n    else end = 0;\n    *str = end;\n    return s;\n}\n\nint main(void) {\n    char sep[64], text[512];\n    if (!fgets(sep, sizeof(sep), stdin)) return 0;\n    if (!fgets(text, sizeof(text), stdin)) return 0;\n    sep[strcspn(sep, \"\\r\\n\")] = 0;\n    text[strcspn(text, \"\\r\\n\")] = 0;\n\n    char *p = text;\n    char *tok;\n    while ((tok = my_strsep(&p, sep)) != NULL) {\n        printf(\"%s\\n\", tok);\n    }\n    return 0;\n}\n\n```\n\nRust kodu:",
+    "raw_response_meta": {
+      "finish_reason": "STOP",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 604,
+        "candidates_tokens_details": null,
+        "prompt_token_count": 579,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 579
+          }
+        ],
+        "thoughts_token_count": 5819,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 7002,
+        "traffic_type": null
+      }
+    }
   }
 ]

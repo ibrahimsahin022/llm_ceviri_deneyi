@@ -16,8 +16,8 @@ libsodium, OpenBSD/FreeBSD, nginx, musl, cJSON, Apache) üretim kodundan alınan
 
 Deney **üç bağımsız model** üzerinde gerçek, otomatik ölçüm içerir: Claude
 Sonnet 5 (130/130, EA=%70.77), Claude Haiku (130/130, EA=%72.31) ve Google
-Gemini (gerçek API çağrısıyla, günlük 20 istek/gün kota sınırı nedeniyle kademeli
-tamamlanıyor — bkz. `harness/translators/`). Ayrıca **çok dosyalı kod** (bkz.
+Gemini (130/130, EA=%89.23; gerçek API çağrısıyla üretilmiş, tam kapsamlı
+ölçüm — bkz. `harness/translators/`). Ayrıca **çok dosyalı kod** (bkz.
 `samples_c/s54_stack_module/`, `s55_config_parser/`, `s57_shared_counter_threads/`,
 `s110_queue_module/`, `s111_linked_list_module/`, `s112_producer_consumer_threads/`,
 `s113_rwlock_counter/`, `s114_simple_threadpool/`) ve **çoklu platform**
@@ -53,7 +53,7 @@ llm_ceviri_deneyi/
 ├── translations_rust_levelB/    # Claude, Round 2 — Seviye B (orta ayrintili geri bildirim)
 ├── translations_rust_levelC/    # Claude, Round 2 — Seviye C (minimal geri bildirim)
 ├── translations_rust_haiku/     # Claude Haiku cevirileri (130/130, Agent tool ile zero-shot)
-├── translations_rust__gemini/   # Google Gemini cevirileri (gercek API cagrisi, gunluk kota nedeniyle kademeli)
+├── translations_rust__gemini/   # Google Gemini cevirileri (130/130, gercek API cagrisi)
 ├── translations_rust__gpt4o/    # (bos - API anahtari yok, bkz. asagida)
 ├── translations_rust__deepseek/ # (bos - API anahtari yok, bkz. asagida)
 ├── harness/
@@ -129,14 +129,19 @@ ve ikisini karşılaştıran bir tablo üretir. `translations_rust__gpt4o/` ve
 aşağıdaki "Çoklu-model" bölümü) bu iki model için `[atlandi] ... bulunamadi`
 mesajı görürsünüz — bu **beklenen bir durumdur, hata değildir.**
 
-**Beklenen çıktı** (`results/model_comparison.md`, gerçek ölçüm — Gemini günlük
-20 istek/gün kota sınırı nedeniyle şu an kısmi kapsamda, kalan örnekler
-otomatik günlük tamamlanmaktadır):
+**Beklenen çıktı** (`results/model_comparison.md`, gerçek ölçüm — her iki model
+de 130 örneğin tamamı üzerinde değerlendirilmiştir):
 
 | Model | Kapsam (degerlendirilen/toplam 130) | EA (örnek) | EA % | CE | RE | FE | NT |
 |---|---|---|---|---|---|---|---|
 | claude-sonnet-5 (referans, round1) | 130/130 | 92/130 | %70.77 | 1 | 9 | 28 | 0 |
-| gemini | 99/130 [KISMI - kota/hata nedeniyle eksik] | 86/99 | %86.87 | 9 | 0 | 4 | 0 |
+| gemini | 130/130 | 116/130 | %89.23 | 10 | 0 | 4 | 0 |
+
+Aynı sayılar release modunda da geçerlidir (Gemini release: 116/130, %89.23).
+İki modelin eşleştirilmiş (paired) karşılaştırması `results/stats_report.md`
+içindeki McNemar testindedir: n=130 ortak örnekte ikisi de PASS=86, ikisi de
+FAIL=8, yalnızca Claude FAIL=30, yalnızca Gemini FAIL=6, iki yönlü p=0.0001
+(istatistiksel olarak anlamlı).
 
 ## Makaledeki ana sayılar nerede üretiliyor?
 
@@ -196,9 +201,9 @@ python harness/compare_models.py
 Her çağrının tam istemi (prompt), model kimliği, zaman damgası ve sampling
 parametreleri `results/manifest_<model>.json` içine kaydedilir (Gemini için:
 `temperature=0.2`, `top_p=1.0`, model kimliği `gemini-flash-latest`, gerçek
-erişim tarihleri 2026-07-22 – devam ediyor; ücretsiz katmanın günde 20
-istek/model kotası nedeniyle 130 örneğin tamamı tek günde çevrilememiş,
-kalan örnekler günlük olarak tamamlanmaktadır). GPT-4o ve DeepSeek adaptörleri
+erişim tarihleri 2026-07-22 – 2026-08-03; ücretsiz katmanın günlük istek
+kotası nedeniyle çeviriler birkaç güne yayılmış, ancak 130 örneğin tamamı
+çevrilmiş ve değerlendirilmiştir). GPT-4o ve DeepSeek adaptörleri
 yazılmıştır (`harness/translators/`) ama API anahtarı olmadığından hiç
 çalıştırılmamıştır — bu, makalenin §V-B (Sınırlamalar) bölümünde açıkça
 belirtilmiştir.

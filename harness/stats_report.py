@@ -328,11 +328,11 @@ def main():
         lines.append(f"- Yalnizca Gemini FAIL (Claude PASS): {only_gemini_fail}")
         lines.append(f"- McNemar kesin (binom-tabanli) iki-yonlu p={p_mcnemar:.4f}")
         lines.append(
-            "  (Iki modelin genel EA farkinin istatistiksel olarak anlamli olup "
-            "olmadigini, eslesmis/paired tasarima uygun bicimde test eder - bagimsiz "
-            "iki orneklem testi (ör. ki-kare) burada uygun degildir cunku iki model "
-            "AYNI 57 program uzerinde olculmustur. Anlamli bir genel fark, "
-            "model×kategori etkilesiminin var olmadigi anlamina gelmez - bkz. Tablo VI.)\n"
+            f"  (Iki modelin genel EA farkinin istatistiksel olarak anlamli olup "
+            f"olmadigini, eslesmis/paired tasarima uygun bicimde test eder - bagimsiz "
+            f"iki orneklem testi (ör. ki-kare) burada uygun degildir cunku iki model "
+            f"AYNI {len(shared_ids)} program uzerinde olculmustur. Anlamli bir genel fark, "
+            f"model×kategori etkilesiminin var olmadigi anlamina gelmez - bkz. Tablo VI.)\n"
         )
 
     out_path = ROOT / "results" / "stats_report.md"

@@ -39,9 +39,9 @@ Olcum tanimlari (tekrarlanabilirlik icin): isaretci kullanimi = kaynakta `->` VE
 
 ## McNemar Testi (Claude vs Gemini, eslestirilmis karsilastirma)
 
-- Ortak degerlendirilen ornek sayisi: 101
-- Ikisi de PASS: 61 | Ikisi de FAIL: 8
-- Yalnizca Claude FAIL (Gemini PASS): 27
-- Yalnizca Gemini FAIL (Claude PASS): 5
+- Ortak degerlendirilen ornek sayisi: 130
+- Ikisi de PASS: 86 | Ikisi de FAIL: 8
+- Yalnizca Claude FAIL (Gemini PASS): 30
+- Yalnizca Gemini FAIL (Claude PASS): 6
 - McNemar kesin (binom-tabanli) iki-yonlu p=0.0001
-  (Iki modelin genel EA farkinin istatistiksel olarak anlamli olup olmadigini, eslesmis/paired tasarima uygun bicimde test eder - bagimsiz iki orneklem testi (ör. ki-kare) burada uygun degildir cunku iki model AYNI 57 program uzerinde olculmustur. Anlamli bir genel fark, model×kategori etkilesiminin var olmadigi anlamina gelmez - bkz. Tablo VI.)
+  (Iki modelin genel EA farkinin istatistiksel olarak anlamli olup olmadigini, eslesmis/paired tasarima uygun bicimde test eder - bagimsiz iki orneklem testi (ör. ki-kare) burada uygun degildir cunku iki model AYNI 130 program uzerinde olculmustur. Anlamli bir genel fark, model×kategori etkilesiminin var olmadigi anlamina gelmez - bkz. Tablo VI.)

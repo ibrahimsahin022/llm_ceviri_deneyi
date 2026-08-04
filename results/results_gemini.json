@@ -2,24 +2,24 @@
   "label": "gemini",
   "rust_dir": "translations_rust__gemini",
   "release": false,
-  "total_samples": 118,
-  "passed_samples": 105,
-  "execution_accuracy_pct": 88.98,
+  "total_samples": 130,
+  "passed_samples": 116,
+  "execution_accuracy_pct": 89.23,
   "sample_category_counts": {
-    "compilation_error": 9,
+    "compilation_error": 10,
     "non_termination": 0,
     "runtime_error": 0,
     "functional_error": 4,
-    "pass": 105
+    "pass": 116
   },
   "case_category_counts": {
     "compilation_error": 0,
     "non_termination": 0,
     "runtime_error": 0,
     "functional_error": 4,
-    "pass": 427
+    "pass": 472
   },
-  "total_cases": 431,
+  "total_cases": 476,
   "results": [
     {
       "id": "s01_sum",
@@ -1017,6 +1017,45 @@
       "notes": ""
     },
     {
+      "id": "s121_recursive_descent_calc2",
+      "loc_c": 85,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
       "id": "s122_trie_insert_search",
       "loc_c": 66,
       "category": "pass",
@@ -1212,6 +1251,33 @@
           "category": "pass",
           "expected": "BRACE:{\nSTRING:x\nCOLON::\nNULL:null\nCOMMA:,\nSTRING:y\nCOLON::\nBOOL:false\nBRACE:}",
           "got": "BRACE:{\nSTRING:x\nCOLON::\nNULL:null\nCOMMA:,\nSTRING:y\nCOLON::\nBOOL:false\nBRACE:}"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s129_command_dispatch_table",
+      "loc_c": 59,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "15\n30",
+          "got": "15\n30"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "70",
+          "got": "70"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
         }
       ],
       "compile_error": "",
@@ -2988,7 +3054,7 @@
       "loc_c": 28,
       "category": "compilation_error",
       "cases": [],
-      "compile_error": "error: linking with `link.exe` failed: exit code: 1120\n  |\n  = note: \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\VC\\\\Tools\\\\MSVC\\\\14.44.35207\\\\bin\\\\HostX64\\\\x64\\\\link.exe\" \"/NOLOGO\" \"C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm_ceviri_deneyi\\\\llm_ceviri_deneyi\\\\build\\\\rustcEel4Wl\\\\symbols.o\" \"<2 object files omitted>\" \"<sysroot>\\\\lib\\\\rustlib\\\\x86_64-pc-windows-msvc\\\\lib/{libstd-*,libpanic_unwind-*,libcfg_if-*,libwindows_link-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libunwind-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib\" \"kernel32.lib\" \"kernel32.lib\" \"kernel32.lib\" \"ntdll.lib\" \"userenv.lib\" \"ws2_32.lib\" \"dbghelp.lib\" \"/defaultlib:msvcrt\" \"/NXCOMPAT\" \"/OUT:C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm",
+      "compile_error": "error: linking with `link.exe` failed: exit code: 1120\n  |\n  = note: \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\VC\\\\Tools\\\\MSVC\\\\14.44.35207\\\\bin\\\\HostX64\\\\x64\\\\link.exe\" \"/NOLOGO\" \"C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm_ceviri_deneyi\\\\llm_ceviri_deneyi\\\\build\\\\rustcMuS9lA\\\\symbols.o\" \"<2 object files omitted>\" \"<sysroot>\\\\lib\\\\rustlib\\\\x86_64-pc-windows-msvc\\\\lib/{libstd-*,libpanic_unwind-*,libcfg_if-*,libwindows_link-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libunwind-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib\" \"kernel32.lib\" \"kernel32.lib\" \"kernel32.lib\" \"ntdll.lib\" \"userenv.lib\" \"ws2_32.lib\" \"dbghelp.lib\" \"/defaultlib:msvcrt\" \"/NXCOMPAT\" \"/OUT:C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm",
       "notes": ""
     },
     {
@@ -2996,7 +3062,7 @@
       "loc_c": 16,
       "category": "compilation_error",
       "cases": [],
-      "compile_error": "error: linking with `link.exe` failed: exit code: 1120\n  |\n  = note: \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\VC\\\\Tools\\\\MSVC\\\\14.44.35207\\\\bin\\\\HostX64\\\\x64\\\\link.exe\" \"/NOLOGO\" \"C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm_ceviri_deneyi\\\\llm_ceviri_deneyi\\\\build\\\\rustc37VXpl\\\\symbols.o\" \"<2 object files omitted>\" \"<sysroot>\\\\lib\\\\rustlib\\\\x86_64-pc-windows-msvc\\\\lib/{libstd-*,libpanic_unwind-*,libcfg_if-*,libwindows_link-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libunwind-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib\" \"kernel32.lib\" \"kernel32.lib\" \"kernel32.lib\" \"ntdll.lib\" \"userenv.lib\" \"ws2_32.lib\" \"dbghelp.lib\" \"/defaultlib:msvcrt\" \"/NXCOMPAT\" \"/OUT:C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm",
+      "compile_error": "error: linking with `link.exe` failed: exit code: 1120\n  |\n  = note: \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\VC\\\\Tools\\\\MSVC\\\\14.44.35207\\\\bin\\\\HostX64\\\\x64\\\\link.exe\" \"/NOLOGO\" \"C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm_ceviri_deneyi\\\\llm_ceviri_deneyi\\\\build\\\\rustcqZrgjm\\\\symbols.o\" \"<2 object files omitted>\" \"<sysroot>\\\\lib\\\\rustlib\\\\x86_64-pc-windows-msvc\\\\lib/{libstd-*,libpanic_unwind-*,libcfg_if-*,libwindows_link-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libunwind-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib\" \"kernel32.lib\" \"kernel32.lib\" \"kernel32.lib\" \"ntdll.lib\" \"userenv.lib\" \"ws2_32.lib\" \"dbghelp.lib\" \"/defaultlib:msvcrt\" \"/NXCOMPAT\" \"/OUT:C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm",
       "notes": ""
     },
     {
@@ -3004,7 +3070,7 @@
       "loc_c": 17,
       "category": "compilation_error",
       "cases": [],
-      "compile_error": "error: linking with `link.exe` failed: exit code: 1120\n  |\n  = note: \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\VC\\\\Tools\\\\MSVC\\\\14.44.35207\\\\bin\\\\HostX64\\\\x64\\\\link.exe\" \"/NOLOGO\" \"C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm_ceviri_deneyi\\\\llm_ceviri_deneyi\\\\build\\\\rustcJ4Mcbz\\\\symbols.o\" \"<2 object files omitted>\" \"<sysroot>\\\\lib\\\\rustlib\\\\x86_64-pc-windows-msvc\\\\lib/{libstd-*,libpanic_unwind-*,libcfg_if-*,libwindows_link-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libunwind-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib\" \"kernel32.lib\" \"kernel32.lib\" \"kernel32.lib\" \"ntdll.lib\" \"userenv.lib\" \"ws2_32.lib\" \"dbghelp.lib\" \"/defaultlib:msvcrt\" \"/NXCOMPAT\" \"/OUT:C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm",
+      "compile_error": "error: linking with `link.exe` failed: exit code: 1120\n  |\n  = note: \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\VC\\\\Tools\\\\MSVC\\\\14.44.35207\\\\bin\\\\HostX64\\\\x64\\\\link.exe\" \"/NOLOGO\" \"C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm_ceviri_deneyi\\\\llm_ceviri_deneyi\\\\build\\\\rustcRU8QNj\\\\symbols.o\" \"<2 object files omitted>\" \"<sysroot>\\\\lib\\\\rustlib\\\\x86_64-pc-windows-msvc\\\\lib/{libstd-*,libpanic_unwind-*,libcfg_if-*,libwindows_link-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libunwind-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib\" \"kernel32.lib\" \"kernel32.lib\" \"kernel32.lib\" \"ntdll.lib\" \"userenv.lib\" \"ws2_32.lib\" \"dbghelp.lib\" \"/defaultlib:msvcrt\" \"/NXCOMPAT\" \"/OUT:C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm",
       "notes": ""
     },
     {
@@ -3379,6 +3445,39 @@
       "notes": ""
     },
     {
+      "id": "s82_macro_minmax_sideeffect",
+      "loc_c": 22,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "6 10 8",
+          "got": "6 10 8"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "5 12 13",
+          "got": "5 12 13"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0 2 3",
+          "got": "0 2 3"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-2 3 0",
+          "got": "-2 3 0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
       "id": "s83_macro_swap_no_temp",
       "loc_c": 31,
       "category": "pass",
@@ -3622,6 +3721,152 @@
       "notes": ""
     },
     {
+      "id": "s90_curl_urldecode",
+      "loc_c": 82,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "a b+c",
+          "got": "a b+c"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "hello world",
+          "got": "hello world"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "no_encoding_here",
+          "got": "no_encoding_here"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "100%done",
+          "got": "100%done"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s91_redis_ll2string",
+      "loc_c": 71,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "-9223372036854775808",
+          "got": "-9223372036854775808"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "9223372036854775807",
+          "got": "9223372036854775807"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "42",
+          "got": "42"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s92_openssl_base64_encode",
+      "loc_c": 60,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "TWFu",
+          "got": "TWFu"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "aGVsbG8=",
+          "got": "aGVsbG8="
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "YWI=",
+          "got": "YWI="
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "YQ==",
+          "got": "YQ=="
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s93_libsodium_bin2hex",
+      "loc_c": 58,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "616263",
+          "got": "616263"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "68656c6c6f",
+          "got": "68656c6c6f"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "61",
+          "got": "61"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "74657374313233",
+          "got": "74657374313233"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s94_freebsd_reallocarray",
+      "loc_c": 40,
+      "category": "compilation_error",
+      "cases": [],
+      "compile_error": "error: linking with `link.exe` failed: exit code: 1120\n  |\n  = note: \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\VC\\\\Tools\\\\MSVC\\\\14.44.35207\\\\bin\\\\HostX64\\\\x64\\\\link.exe\" \"/NOLOGO\" \"C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm_ceviri_deneyi\\\\llm_ceviri_deneyi\\\\build\\\\rustcHFKTCC\\\\symbols.o\" \"<2 object files omitted>\" \"<sysroot>\\\\lib\\\\rustlib\\\\x86_64-pc-windows-msvc\\\\lib/{libstd-*,libpanic_unwind-*,libcfg_if-*,libwindows_link-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libunwind-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib\" \"kernel32.lib\" \"kernel32.lib\" \"kernel32.lib\" \"ntdll.lib\" \"userenv.lib\" \"ws2_32.lib\" \"dbghelp.lib\" \"/defaultlib:msvcrt\" \"/NXCOMPAT\" \"/OUT:C:\\\\Users\\\\ibrah\\\\OneDrive\\\\Masaüstü\\\\llm",
+      "notes": ""
+    },
+    {
       "id": "s95_redis_stringmatchlen",
       "loc_c": 152,
       "category": "pass",
@@ -3655,6 +3900,138 @@
           "category": "pass",
           "expected": "MATCH",
           "got": "MATCH"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s96_cjson_print_string",
+      "loc_c": 104,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "\"He said \\\"hi\\\"\"",
+          "got": "\"He said \\\"hi\\\"\""
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "\"line1\\ttab\"",
+          "got": "\"line1\\ttab\""
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "\"plain text\"",
+          "got": "\"plain text\""
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "\"back\\\\slash\"",
+          "got": "\"back\\\\slash\""
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s97_cjson_hex4_unicode",
+      "loc_c": 42,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "8032",
+          "got": "8032"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "231",
+          "got": "231"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "65",
+          "got": "65"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "65535",
+          "got": "65535"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s98_musl_memmem",
+      "loc_c": 158,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "6",
+          "got": "6"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "1",
+          "got": "1"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "-1",
+          "got": "-1"
+        },
+        {
+          "input": "04.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        },
+        {
+          "input": "05.txt",
+          "category": "pass",
+          "expected": "0",
+          "got": "0"
+        }
+      ],
+      "compile_error": "",
+      "notes": ""
+    },
+    {
+      "id": "s99_musl_strsep",
+      "loc_c": 35,
+      "category": "pass",
+      "cases": [
+        {
+          "input": "01.txt",
+          "category": "pass",
+          "expected": "a\nb\nc\n\nd",
+          "got": "a\nb\nc\n\nd"
+        },
+        {
+          "input": "02.txt",
+          "category": "pass",
+          "expected": "the\nquick\nbrown\nfox",
+          "got": "the\nquick\nbrown\nfox"
+        },
+        {
+          "input": "03.txt",
+          "category": "pass",
+          "expected": "single",
+          "got": "single"
         }
       ],
       "compile_error": "",

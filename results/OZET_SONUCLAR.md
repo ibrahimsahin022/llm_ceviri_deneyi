@@ -777,8 +777,10 @@ devam ettiğini ve bu ölçekte bile gözlenmediğini gösterir.
    doğasından etkilendiğini n=130 ölçeğinde doğrular.
 10. **Çoklu model ve çoklu platform:** Bulgular tek modele özgü değildir ama
    model×kategori etkileşimi belirleyicidir (bkz. aşağıdaki çoklu model
-   bölümü): Claude %70.77, Claude Haiku %72.31 (130/130), Gemini %86.87
-   (99/130, kısmi kapsam). Platform tarafında ise Round 2'nin Windows'taki
+   bölümü): Claude %70.77, Claude Haiku %72.31 (130/130), Gemini %89.23
+   (130/130). Üç modelin üçü de tam kapsamda ölçülmüştür. Claude ile
+   Gemini arasındaki fark, eşleştirilmiş McNemar testinde istatistiksel
+   olarak anlamlıdır (n=130, p=0.0001). Platform tarafında ise Round 2'nin Windows'taki
    %100'ü Linux'ta %94.62'ye düşmektedir — kategori F'nin altı örneğinin
    tamamı platformlar arasında PASS/FAIL yer değiştirir.
 
@@ -790,14 +792,23 @@ devam ettiğini ve bu ölçekte bile gözlenmediğini gösterir.
 |---|---|---|---|---|---|---|---|
 | Claude Sonnet 5 (referans, Round 1) | 130/130 | 92/130 | %70.77 | 1 | 9 | 28 | 0 |
 | Claude Haiku | 130/130 | 94/130 | %72.31 | 8 | 5 | 23 | 0 |
-| Google Gemini (`gemini-flash-latest`) | **99/130 (kısmi)** | 86/99 | %86.87 | 9 | 0 | 4 | 0 |
+| Google Gemini (`gemini-flash-latest`) | 130/130 | 116/130 | %89.23 | 10 | 0 | 4 | 0 |
 
-**⚠️ Gemini kapsamı kısmidir:** Google AI Studio ücretsiz katmanının günlük
-kota sınırı (20 istek/gün/model) nedeniyle 130 örneğin 99'u çevrilebilmiştir;
-kalan 31 örnek (s80-s84, s85-s99 ve s120-s130) kota sıfırlandıkça kademeli
-olarak tamamlanmaktadır. Gemini'nin %86.87'si bu 99
-örneklik alt küme üzerinden hesaplanmıştır ve diğer iki modelin tam-kapsam
-sayılarıyla **doğrudan karşılaştırılamaz**.
+**Gemini ölçümü tamamlanmıştır:** Gemini çevirileri gerçek API çağrılarıyla
+(model kimliği `gemini-flash-latest`, `temperature=0.2`, `top_p=1.0`)
+üretilmiş ve 130 örneğin **tamamı** değerlendirilmiştir. Ücretsiz katmanın
+günlük istek kotası nedeniyle çeviriler 2026-07-22 – 2026-08-03 arasında
+birkaç güne yayılmıştır; her çağrının istemi ve zaman damgası
+`results/manifest_gemini.json` içinde kayıtlıdır. Release modunda da birebir
+aynı sonuç elde edilmiştir (116/130, %89.23). Üç modelin sayıları aynı
+kapsam üzerinden **doğrudan karşılaştırılabilir**.
+
+**Gemini'nin 14 başarısızlığı:** 10'u derleme hatası (CE) —
+s26_rpn_calculator, s27_csv_stats, s46_musl_qsort, s48_cjson_number,
+s67_stats_stddev_format, s68_currency_round_format, s69_sqlite_snprintf_g,
+s75_bsd_strtoul, s94_freebsd_reallocarray, s112_producer_consumer_threads;
+4'ü fonksiyonel hata (FE) — s15_float_avg, s47_redis_sds, s103_nginx_hextoi,
+s110_queue_module. Hiç RE veya NT gözlenmemiştir.
 
 **Sessiz hata oranı modele göre belirgin biçimde değişiyor** — bu, makalenin
 en aktarılabilir bulgularından biridir:
@@ -805,8 +816,8 @@ en aktarılabilir bulgularından biridir:
   gürültülü ama derlenen); yalnızca 1'i derlemede yakalanır.
 - Claude Haiku: 36 başarısızlığın 8'i derlemede yakalanır (%22.2), 28'i
   derlenir.
-- Gemini: 13 başarısızlığın 9'u derlemede yakalanır (%69.2), yalnızca 4'ü
-  sessizdir.
+- Gemini: 14 başarısızlığın 10'u derlemede yakalanır (%71.4), yalnızca 4'ü
+  sessizdir (%28.6).
 
 Yani Gemini daha yüksek ham doğruluk gösterse de, **hataları büyük ölçüde
 derleyici tarafından yakalanan türdendir**; Claude Sonnet 5'in hataları ise
@@ -825,12 +836,41 @@ Yeni eklenen **s103_nginx_hextoi**'de ise Gemini de Claude ile aynı hataya
 düşmüştür (FE) — yani `c_long` tercihi tutarlı bir çözüm değil, örneğe bağlı
 bir tesadüftür.
 
-**McNemar testi (Claude vs Gemini):** Ortak değerlendirilen 78 örnek
-üzerinden — ikisi de PASS 43, ikisi de FAIL 7, yalnızca Claude FAIL 25,
-yalnızca Gemini FAIL 3; McNemar kesin iki-yönlü p<0.0001.
-**⚠️ Bu analiz geçicidir:** Gemini kapsamı kısmi olduğu için ortak örnek
-sayısı (78) nihai değildir ve **Gemini'nin kalan 31 örneği tamamlandığında
-yeniden hesaplanıp güncellenmesi gerekmektedir.**
+**McNemar testi (Claude vs Gemini, n=130 tam eşleştirilmiş karşılaştırma):**
+130 örneğin tamamı üzerinden — ikisi de PASS 86, ikisi de FAIL 8, yalnızca
+Claude FAIL 30, yalnızca Gemini FAIL 6; McNemar kesin (binom tabanlı)
+iki-yönlü **p=0.0001**. İki modelin genel EA farkı istatistiksel olarak
+anlamlıdır. Her iki model de aynı 130 program üzerinde ölçüldüğünden
+eşleştirilmiş tasarıma uygun test budur (ayrıntı: `results/stats_report.md`).
+Anlamlı genel fark, model×kategori etkileşiminin yokluğu anlamına gelmez —
+aşağıdaki kırılım bunu göstermektedir.
+
+**Model × kategori kırılımı (n=130, üç model):** Genel EA sıralaması veri
+seti katmanları arasında sabit değildir (her hücre: PASS/örnek sayısı):
+
+| Veri seti katmanı | n | Claude Sonnet 5 | Gemini | Claude Haiku |
+|---|---|---|---|---|
+| Temel algoritmalar | 24 | 17/24 | 23/24 | 14/24 |
+| Uzun özgün programlar | 5 | 4/5 | 3/5 | 2/5 |
+| Rosetta Code | 7 | 7/7 | 7/7 | 7/7 |
+| BSD libc | 3 | 2/3 | 3/3 | 0/3 |
+| Hedeflenmemiş boşluk | 6 | 4/6 | 6/6 | 5/6 |
+| musl/Redis/cJSON (en uzun üretim kodu) | 3 | 2/3 | **0/3** | 1/3 |
+| Kök-neden 2. örnekleri | 5 | 1/5 | 5/5 | 4/5 |
+| Çok dosyalı | 3 | 3/3 | 3/3 | 3/3 |
+| Karmaşık makro | 1 | 0/1 | 1/1 | 0/1 |
+| A-I derinleştirme (s58-s84) | 27 | 7/27 | 23/27 | 23/27 |
+| Gerçek OSS üretim kodu | 25 | **24/25** | 23/25 | 20/25 |
+| Çeşitlilik/çok-dosyalı/eşzamanlılık | 21 | **21/21** | 19/21 | 15/21 |
+| **Toplam** | **130** | **92/130 (%70.77)** | **116/130 (%89.23)** | **94/130 (%72.31)** |
+
+Gemini'nin üstünlüğü ezici biçimde kısa/hedefli sızıntı katmanlarından gelir
+(A-I derinleştirme 23/27 vs Claude 7/27; kök-neden 2. örnekleri 5/5 vs 1/5);
+buna karşılık veri setinin en uzun ve en karmaşık üretim kodu katmanında
+sıralama tersine döner (musl/Redis/cJSON: Gemini 0/3, Claude 2/3) ve gerçek
+OSS üretim kodu (24/25) ile eşzamanlılık katmanında (21/21) Claude Sonnet 5
+öndedir. Yani toplam EA farkı tek başına "hangi model daha iyi" sorusuna
+cevap vermez.
 
 ## Çoklu Platform Karşılaştırması (n=130)
 
